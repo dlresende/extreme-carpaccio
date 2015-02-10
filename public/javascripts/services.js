@@ -3,6 +3,10 @@ var sellers = {
 
     register: function (url) {
         this.all.push(url);
+    },
+
+    sendRequest: function (callBack) {
+    	this.all.map(callBack);
     }
 };
 
