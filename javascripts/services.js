@@ -1,9 +1,12 @@
 'use strict';
 
 var httpDefault = require('http');
+var _ = require('lodash');
+var repositories = require('./repositories');
 
 var Dispatcher = function(http) {
     this.http = http || httpDefault;
+    this.countries = new repositories.Countries();
 };
 
 Dispatcher.prototype = {
@@ -20,6 +23,23 @@ Dispatcher.prototype = {
         var request = this.http.request(options);
         request.write(order);
         request.end();
+    },
+
+    createOrder: function(numberOfItems) {
+        var items = numberOfItems || 1;
+        var prices = new Array(items);
+        var quantities = new Array(items);
+
+        for(var item = 0; item < items; item++) {
+            prices[item] = _.random(1, 1000, true).toFixed(2);
+            quantities[item] = _.random(1, 100);
+        }
+
+        return {
+            prices: prices,
+            quantities: quantities,
+            country: _.sample(this.countries.fromEurope)
+        };
     }
 };
 
