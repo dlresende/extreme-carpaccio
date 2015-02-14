@@ -4,12 +4,12 @@ var httpDefault = require('http');
 var _ = require('lodash');
 var repositories = require('./repositories');
 
-var Dispatcher = function(http) {
+var OrderService = function(http) {
     this.http = http || httpDefault;
     this.countries = new repositories.Countries();
 };
 
-Dispatcher.prototype = {
+OrderService.prototype = {
     sendOrder: function(seller, order) {
         var options = {
             hostname: seller.hostname,
@@ -45,4 +45,4 @@ Dispatcher.prototype = {
 
 exports = module.exports;
 
-exports.Dispatcher = Dispatcher;
+exports.OrderService = OrderService;
