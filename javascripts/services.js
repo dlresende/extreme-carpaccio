@@ -26,7 +26,7 @@ Dispatcher.prototype = {
     },
 
     createOrder: function(numberOfItems) {
-        var items = numberOfItems || 1;
+        var items = numberOfItems || _.random(1, 100);
         var prices = new Array(items);
         var quantities = new Array(items);
 
