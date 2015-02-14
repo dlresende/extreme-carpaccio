@@ -1,18 +1,18 @@
 'use strict';
 
-var http = require('http');
 var _ = require('lodash');
-var OrderService = require('../javascripts/services').OrderService;
-var Countries = require('../javascripts/repositories').Countries;
+var services = require('../javascripts/services');
+var repositories = require('../javascripts/repositories');
 
-describe('sellers', function(){
+describe('Order Service', function() {
 
+    var http = require('http');
     var orderService;
     var countries;
 
     beforeEach(function(){
-        orderService = new OrderService(http);
-        countries = new Countries();
+        orderService = new services.OrderService(http);
+        countries = new repositories.Countries();
     });
 
     it('should send order to seller with request', function() {
@@ -67,8 +67,29 @@ describe('sellers', function(){
 
         expect(countries.fromEurope).toContain(order.country);
     });
+});
 
-    it('should send orders to registered sellers', function() {
-        //OrderService.startPurchasing();
+describe('Dispatcher', function() {
+    var dispatcher;
+    var sellers;
+    var orderService;
+
+    beforeEach(function(){
+        sellers = new repositories.Sellers();
+        orderService = new services.OrderService();
+        dispatcher = new services.Dispatcher(sellers, orderService);
+    });
+
+    it('should send the same order to each seller', function() {
+        var seller = { hostname : 'seller', port : '8080', path : '/' };
+        sellers.add(seller);
+        var fakeOrder = {};
+        spyOn(orderService, 'createOrder').andReturn(fakeOrder);
+        spyOn(orderService, 'sendOrder');
+
+        dispatcher.sendOrderToSellers();
+
+        expect(orderService.createOrder).toHaveBeenCalled();
+        expect(orderService.sendOrder).toHaveBeenCalledWith(seller, fakeOrder);
     });
 });

@@ -43,6 +43,35 @@ OrderService.prototype = {
     }
 };
 
+var Dispatcher = function(sellers, orderService) {
+    this.sellers = sellers || new repositories.Sellers();
+    this.orderService = orderService || new OrderService();
+    this.continueShopping = false;
+};
+
+Dispatcher.prototype = {
+    sendOrderToSellers: function() {
+        var orderService = this.orderService;
+        var sellers = this.sellers;
+
+        _.forEach(sellers.all, function(seller) {
+            var order = orderService.createOrder();
+            orderService.sendOrder(seller, order);
+        });
+    },
+
+    startBuying: function(intervalInMillis) {
+        var self = this;
+        
+        setTimeout(function () {
+            if(self.continueShopping) {
+                this.startBuying();
+            }
+        }, intervalInMillis);
+    }
+};
+
 exports = module.exports;
 
 exports.OrderService = OrderService;
+exports.Dispatcher = Dispatcher;

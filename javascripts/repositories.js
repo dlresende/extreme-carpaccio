@@ -14,6 +14,10 @@ Sellers.prototype = {
             port: parsedUrl.port,
             path: parsedUrl.path
         };
+        this.add(seller);
+    },
+
+    add: function(seller) {
         this.all.push(seller);
     }
 };
