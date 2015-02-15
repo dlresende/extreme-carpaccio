@@ -3,6 +3,29 @@
 var _ = require('lodash');
 var services = require('../javascripts/services');
 var repositories = require('../javascripts/repositories');
+var utils = require('../javascripts/utils');
+
+var Dispatcher = services.Dispatcher;
+var OrderService = services.OrderService;
+var SellerService = services.SellerService;
+var Countries = repositories.Countries;
+var Sellers = repositories.Sellers;
+
+describe('Seller Service', function() {
+    var sellers;
+    var sellerService;
+
+    beforeEach(function() {
+        sellers = new Sellers();
+        sellerService = new SellerService(sellers);
+    });
+
+    it('should register new seller', function() {
+        sellerService.register('http://localhost:3000/path');
+
+        expect(sellerService.all()).toContain({hostname: 'localhost', port: '3000', path: '/path'});
+    });
+});
 
 describe('Order Service', function() {
 
@@ -11,11 +34,11 @@ describe('Order Service', function() {
     var countries;
 
     beforeEach(function(){
-        orderService = new services.OrderService(http);
-        countries = new repositories.Countries();
+        orderService = new OrderService(http);
+        countries = new Countries();
     });
 
-    it('should send order to seller with request', function() {
+    it('should send order to seller', function() {
         var fakeRequest = {
             write: function() {},
             end: function() {}
@@ -23,7 +46,7 @@ describe('Order Service', function() {
         spyOn(http, 'request').andReturn(fakeRequest);
         spyOn(fakeRequest, 'write');
         spyOn(fakeRequest, 'end');
-        var order ={
+        var order = {
             quantity: [1, 2, 3],
             prices: [12.1, 10, 11],
             state: "CA"
@@ -40,7 +63,7 @@ describe('Order Service', function() {
                 'Content-Type' : 'application/json'
             }
         });
-        expect(fakeRequest.write).toHaveBeenCalledWith(order);
+        expect(fakeRequest.write).toHaveBeenCalledWith(utils.stringify(order));
         expect(fakeRequest.end).toHaveBeenCalled();
     });
 
@@ -75,9 +98,9 @@ describe('Dispatcher', function() {
     var orderService;
 
     beforeEach(function(){
-        sellers = new repositories.Sellers();
-        orderService = new services.OrderService();
-        dispatcher = new services.Dispatcher(sellers, orderService);
+        sellers = new Sellers();
+        orderService = new OrderService();
+        dispatcher = new Dispatcher(sellers, orderService);
     });
 
     it('should send the same order to each seller', function() {

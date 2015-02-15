@@ -5,7 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var routes = require('./javascripts/routes');
+var services = require('./javascripts/services');
+var repositories = require('./javascripts/repositories');
+
+var sellers = new repositories.Sellers();
+
+var sellerService = new services.SellerService(sellers);
+var orderService = new services.OrderService();
+var dispatcher = new services.Dispatcher(sellers, orderService);
+
+var routes = require('./javascripts/routes')(sellerService);
 
 var app = express();
 
@@ -54,5 +63,6 @@ app.use(function(err, req, res, next) {
     });
 });
 
+dispatcher.startBuying(5000);
 
 module.exports = app;

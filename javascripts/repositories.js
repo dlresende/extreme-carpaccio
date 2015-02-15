@@ -1,24 +1,21 @@
 'use strict';
 
-var url = require("url");
-
 var Sellers = function() {
     this.all = [];
 };
 
-Sellers.prototype = {
-    register: function (sellerUrl) {
-        var parsedUrl = url.parse(sellerUrl);
-        var seller = {
-            hostname: parsedUrl.hostname,
-            port: parsedUrl.port,
-            path: parsedUrl.path
-        };
-        this.add(seller);
-    },
 
+Sellers.prototype = {
     add: function(seller) {
         this.all.push(seller);
+    },
+
+    count: function() {
+        return this.all.length;
+    },
+
+    isEmpty: function() {
+        return this.count() === 0;
     }
 };
 
