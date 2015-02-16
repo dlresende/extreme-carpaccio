@@ -12,6 +12,7 @@
     "debug": "~2.1.1",
     "express": "~4.11.1",
     "jade": "~1.9.1",
+    "lodash": "^3.2.0",
     "morgan": "~1.5.1",
     "serve-favicon": "~2.2.0"
   },
