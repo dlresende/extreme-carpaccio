@@ -19,19 +19,32 @@ var SellerService = function(_sellers) {
 };
 
 SellerService.prototype = {
-    register: function (sellerUrl) {
+    register: function (sellerUrl, name) {
         var parsedUrl = url.parse(sellerUrl);
         var seller = {
+            name: name || parsedUrl.hostname,
             hostname: parsedUrl.hostname,
             port: parsedUrl.port,
-            path: parsedUrl.path
+            path: parsedUrl.path,
+            cash: 0.0
         };
         this.sellers.add(seller);
         console.log('New seller registered: ' + utils.stringify(seller))
     },
 
     all: function() {
-        return this.sellers.all;
+        return this.sellers.all();
+    },
+
+    updateCash: function(sellerName, expectedBill, actualBill) {
+        if(actualBill && expectedBill.total === actualBill.total) {
+            console.log('Hey, ' + sellerName + ' earned ' + expectedBill.total);
+            this.sellers.updateCash(sellerName, expectedBill.total);
+        }
+
+        else {
+            console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+        }
     }
 };
 
@@ -40,7 +53,7 @@ var OrderService = function(_http) {
 };
 
 OrderService.prototype = {
-    sendOrder: function(seller, order) {
+    sendOrder: function(seller, order, cashUpdater) {
         var orderStringified = utils.stringify(order);
         console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
         
@@ -53,7 +66,7 @@ OrderService.prototype = {
                 'Content-Type': 'application/json'
             }
         };
-        var request = this.http.request(options);
+        var request = this.http.request(options, cashUpdater);
         request.write(orderStringified);
         request.end();
     },
@@ -74,27 +87,41 @@ OrderService.prototype = {
             quantities: quantities,
             country: _.sample(countries.fromEurope)
         };
+    },
+
+    bill: function(order) {
+        var sum = 0;
+        var tax = countries.tax(order.country);
+
+        for(var item = 0; item < order.prices.length; item++) {
+            var price = order.prices[item];
+            var quantity = order.quantities[item];
+            sum += price * quantity * tax;
+        }
+
+       return { total: sum };
     }
 };
 
-var Dispatcher = function(_sellers, _orderService) {
-    this.Sellers = _sellers || sellers;
-    this.OrderService = _orderService || exports.OrderService;
+var Dispatcher = function(_sellerService, _orderService) {
+    this.Sellers = _sellerService || exports.SellerService;
+    this.orderService = _orderService || exports.orderService;
 };
 
 Dispatcher.prototype = {
     sendOrderToSellers: function() {
-        var orderService = this.OrderService;
-        var sellers = this.Sellers;
+        var orderService = this.orderService;
+        var sellerService = this.Sellers;
 
-        if(sellers.isEmpty()) {
-            console.log('No sellers currently registered.');
-            return;
-        }
+        var order = orderService.createOrder();
+        var bill = orderService.bill(order);
 
-        _.forEach(sellers.all, function(seller) {
-            var order = orderService.createOrder();
-            orderService.sendOrder(seller, order);
+        _.forEach(sellerService.all(), function(seller) {
+            orderService.sendOrder(seller, order, function (response) {
+                response.on('data', function (sellerResponse) {
+                    sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
+                });
+            });
         });
     },
 
@@ -113,6 +140,6 @@ Dispatcher.prototype = {
 
 exports = module.exports;
 
-exports.OrderService = OrderService;
+exports.orderService = OrderService;
 exports.Dispatcher = Dispatcher;
 exports.SellerService = SellerService;

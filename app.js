@@ -11,8 +11,8 @@ var repositories = require('./javascripts/repositories');
 var sellers = new repositories.Sellers();
 
 var sellerService = new services.SellerService(sellers);
-var orderService = new services.OrderService();
-var dispatcher = new services.Dispatcher(sellers, orderService);
+var orderService = new services.orderService();
+var dispatcher = new services.Dispatcher(sellerService, orderService);
 
 var routes = require('./javascripts/routes')(sellerService);
 

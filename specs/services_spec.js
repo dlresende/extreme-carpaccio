@@ -6,7 +6,7 @@ var repositories = require('../javascripts/repositories');
 var utils = require('../javascripts/utils');
 
 var Dispatcher = services.Dispatcher;
-var OrderService = services.OrderService;
+var OrderService = services.orderService;
 var SellerService = services.SellerService;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
@@ -21,9 +21,18 @@ describe('Seller Service', function() {
     });
 
     it('should register new seller', function() {
-        sellerService.register('http://localhost:3000/path');
+        sellerService.register('http://localhost:3000/path', 'bob');
 
-        expect(sellerService.all()).toContain({hostname: 'localhost', port: '3000', path: '/path'});
+        expect(sellerService.all()).toContain({name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0});
+    });
+
+    it('should compute seller\'s cash based on the order\'s amount', function() {
+        var bob = {name: 'bob', cash: 0};
+        sellers.add(bob);
+
+        sellerService.updateCash('bob', {total: 100}, {total: 100});
+
+        expect(sellerService.all()).toContain({name: 'bob', cash: 100})
     });
 });
 
@@ -51,8 +60,9 @@ describe('Order Service', function() {
             prices: [12.1, 10, 11],
             state: "CA"
         };
+        var cashUpdater = function() {};
 
-        orderService.sendOrder({hostname: 'localhost', port: 3000, path: '/test'}, order);
+        orderService.sendOrder({hostname: 'localhost', port: 3000, path: '/test'}, order, cashUpdater);
 
         expect(http.request).toHaveBeenCalledWith({
             hostname : 'localhost',
@@ -62,7 +72,7 @@ describe('Order Service', function() {
             headers : {
                 'Content-Type' : 'application/json'
             }
-        });
+        }, cashUpdater);
         expect(fakeRequest.write).toHaveBeenCalledWith(utils.stringify(order));
         expect(fakeRequest.end).toHaveBeenCalled();
     });
@@ -90,6 +100,14 @@ describe('Order Service', function() {
 
         expect(countries.fromEurope).toContain(order.country);
     });
+
+    it('should calculate the sum of the order', function() {
+        var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
+
+        var bill = orderService.bill(order);
+
+        expect(bill).toEqual({total: (100 + 2 * 50) * 1.2});
+    });
 });
 
 describe('Dispatcher', function() {
@@ -104,15 +122,18 @@ describe('Dispatcher', function() {
     });
 
     it('should send the same order to each seller', function() {
-        var seller = { hostname : 'seller', port : '8080', path : '/' };
-        sellers.add(seller);
-        var fakeOrder = {};
-        spyOn(orderService, 'createOrder').andReturn(fakeOrder);
+        var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
+        sellers.add(alice);
+        var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
+        sellers.add(bob);
+        var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
+        spyOn(orderService, 'createOrder').andReturn(order);
         spyOn(orderService, 'sendOrder');
 
         dispatcher.sendOrderToSellers();
 
         expect(orderService.createOrder).toHaveBeenCalled();
-        expect(orderService.sendOrder).toHaveBeenCalledWith(seller, fakeOrder);
+        expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function));
+        expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function));
     });
 });
