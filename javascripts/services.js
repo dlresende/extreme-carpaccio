@@ -116,12 +116,18 @@ Dispatcher.prototype = {
         var order = orderService.createOrder();
         var bill = orderService.bill(order);
 
+        function cashUpdater(seller) {
+            return function(response) {
+                if(response.statusCode === 200) {
+                    response.on('data', function (sellerResponse) {
+                        sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
+                    });
+                }
+            }
+        }
+
         _.forEach(sellerService.all(), function(seller) {
-            orderService.sendOrder(seller, order, function (response) {
-                response.on('data', function (sellerResponse) {
-                    sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
-                });
-            });
+            orderService.sendOrder(seller, order, cashUpdater(seller));
         });
     },
 
