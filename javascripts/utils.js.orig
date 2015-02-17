@@ -8,7 +8,15 @@ Utils.prototype = {
     },
 
     jsonify: function(string) {
+<<<<<<< HEAD
+    	if(string == '' || string == undefined)
+    		return null;
+
         return JSON.parse(string);
+
+=======
+        return JSON.parse(string);
+>>>>>>> e9644c481ece2ea582b5aadae0e3fb1a2a0df376
     }
 };
 

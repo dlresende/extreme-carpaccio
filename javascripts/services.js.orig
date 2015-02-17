@@ -129,7 +129,16 @@ Dispatcher.prototype = {
         }
 
         _.forEach(sellerService.all(), function(seller) {
+<<<<<<< HEAD
+            orderService.sendOrder(seller, order, function (response) {
+                response.on('data', function (sellerResponse) {
+                    if(sellerResponse.status == 200)
+                    {sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));}
+                });
+            });
+=======
             orderService.sendOrder(seller, order, cashUpdater(seller));
+>>>>>>> e9644c481ece2ea582b5aadae0e3fb1a2a0df376
         });
     },
 

@@ -14,6 +14,10 @@ block content
             th Cash
       tbody
       for seller in sellers
+<<<<<<< HEAD
+        li= seller.hostname + ':' + seller.port + '/' + seller.path + " Score : " + seller.cash
+=======
         tr
           td= seller.name
           td= seller.cash
+>>>>>>> e9644c481ece2ea582b5aadae0e3fb1a2a0df376
