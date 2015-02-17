@@ -8,7 +8,11 @@ Utils.prototype = {
     },
 
     jsonify: function(string) {
-        return JSON.parse(string);;
+    	if(string == '' || string == undefined)
+    		return null;
+
+        return JSON.parse(string);
+
     }
 };
 

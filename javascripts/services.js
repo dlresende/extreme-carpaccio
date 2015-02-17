@@ -56,7 +56,7 @@ OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater) {
         var orderStringified = utils.stringify(order);
         console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
-        
+    
         var options = {
             hostname: seller.hostname,
             port: seller.port,
@@ -98,7 +98,9 @@ OrderService.prototype = {
             var quantity = order.quantities[item];
             sum += price * quantity * tax;
         }
-
+        if(sum > 1000){
+                sum = sum * 0.97;
+        }    
        return { total: sum };
     }
 };

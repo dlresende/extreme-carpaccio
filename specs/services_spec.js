@@ -108,6 +108,14 @@ describe('Order Service', function() {
 
         expect(bill).toEqual({total: (100 + 2 * 50) * 1.2});
     });
+
+    it('should calculate the sum of the order with reduction when the sum is 1500', function() {
+        var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
+
+        var bill = orderService.bill(order);
+
+        expect(bill).toEqual({total: 1746});
+    });
 });
 
 describe('Dispatcher', function() {
