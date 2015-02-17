@@ -98,9 +98,12 @@ OrderService.prototype = {
             var quantity = order.quantities[item];
             sum += price * quantity * tax;
         }
-        if(sum > 1000){
-                sum = sum * 0.97;
-        }    
+        if(sum > 5000){
+                sum = sum * 0.95;
+        } 
+        else if(sum > 1000){
+            sum = sum *0.97;
+        }  
        return { total: sum };
     }
 };

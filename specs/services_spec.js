@@ -116,6 +116,14 @@ describe('Order Service', function() {
 
         expect(bill).toEqual({total: 1746});
     });
+
+    it('should calculate the sum of the order with reduction of 5% when the sum is 5500', function() {
+        var order = {prices: [500, 10], quantities: [10, 50], country: 'IT'};
+
+        var bill = orderService.bill(order);
+
+        expect(bill).toEqual({total: 6270});
+    });
 });
 
 describe('Dispatcher', function() {
