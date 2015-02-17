@@ -9,6 +9,7 @@ var utils = require('./utils');
 
 var countries = new repositories.Countries();
 var sellers = new repositories.Sellers();
+var reductions = new repositories.Reductions();
 
 function fixPrecision(number, precision) {
     return parseFloat(number.toFixed(precision));
@@ -96,14 +97,10 @@ OrderService.prototype = {
         for(var item = 0; item < order.prices.length; item++) {
             var price = order.prices[item];
             var quantity = order.quantities[item];
-            sum += price * quantity * tax;
+            sum += price * quantity;
         }
-        if(sum > 5000){
-                sum = sum * 0.95;
-        } 
-        else if(sum > 1000){
-            sum = sum *0.97;
-        }  
+        var reduction = reductions.reductionFor(sum);
+        sum= sum*tax*(1-reduction);
        return { total: sum };
     }
 };
@@ -124,7 +121,8 @@ Dispatcher.prototype = {
         _.forEach(sellerService.all(), function(seller) {
             orderService.sendOrder(seller, order, function (response) {
                 response.on('data', function (sellerResponse) {
-                    sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
+                    if(sellerResponse.status == 200)
+                    {sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));}
                 });
             });
         });

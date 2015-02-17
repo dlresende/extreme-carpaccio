@@ -84,7 +84,38 @@ Countries.prototype = (function() {
     };
 })();
 
+var Reductions = function() {};
+
+Reductions.prototype = (function (){
+    var Reduction = function(sum, reduction) {
+        this.sum = sum;
+        this.reduction = reduction;
+    };
+
+    var reductions = [
+            new Reduction(50000, 0.15),
+            new Reduction(10000, 0.10),
+            new Reduction(7000, 0.07),
+            new Reduction(5000, 0.05),
+            new Reduction(1000, 0.03)
+        ];
+
+
+    return {
+        reductionFor: function(total) {
+            var reduc = _.result(_.find(reductions, function(reduc) { return reduc.sum < total; }), 'reduction');
+
+            if(reduc == undefined)
+                return 0;
+
+            return reduc;
+        }
+    };
+})();
+
+
 exports = module.exports;
 
 exports.Sellers = Sellers;
 exports.Countries = Countries;
+exports.Reductions = Reductions;

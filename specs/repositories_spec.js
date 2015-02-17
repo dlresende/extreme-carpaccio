@@ -3,6 +3,7 @@
 var repositories = require('../javascripts/repositories');
 var Sellers = repositories.Sellers;
 var Countries = repositories.Countries;
+var Reductions = repositories.Reductions;
 
 describe('Sellers', function(){
     var bob;
@@ -79,5 +80,28 @@ describe('Countries', function() {
         expect(countries.tax('FI')).toBe(1.12);
         expect(countries.tax('SE')).toBe(1.13);
         expect(countries.tax('UK')).toBe(1.14);
+    });
+});
+
+var _ = require('lodash');
+
+
+describe('Reductions', function() {
+    var reductions;
+
+    beforeEach(function() {
+        reductions = new Reductions();
+    });
+
+    it('should get the corresponding reduction for a total', function() {
+        expect(reductions.reductionFor(5500)).toBe(0.05);
+    });
+
+    it('should return 0 when the total is less than 1000', function() {
+        expect(reductions.reductionFor(500)).toBe(0.00);
+    });
+
+    it('should return 0.15 when the total is 55000', function() {
+        expect(reductions.reductionFor(55000)).toBe(0.15);
     });
 });
