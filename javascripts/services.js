@@ -92,7 +92,6 @@ OrderService.prototype = {
 
     bill: function(order) {
         var sum = 0;
-        var tax = countries.tax(order.country);
 
         for(var item = 0; item < order.prices.length; item++) {
             var price = order.prices[item];
@@ -100,6 +99,7 @@ OrderService.prototype = {
             sum += price * quantity;
         }
         var reduction = reductions.reductionFor(sum);
+        var tax = countries.tax(order.country);
         sum= sum*tax*(1-reduction);
        return { total: sum };
     }
