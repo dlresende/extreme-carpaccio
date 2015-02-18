@@ -16,5 +16,9 @@ module.exports = function (sellerService) {
         sellerService.register(sellerUrl);
         response.redirect('/sellers');
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> ffda524a9eca7683bd902e8c106d4bd52d0e8032
     return router;
 };

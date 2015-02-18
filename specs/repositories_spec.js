@@ -83,9 +83,6 @@ describe('Countries', function() {
     });
 });
 
-var _ = require('lodash');
-
-
 describe('Reductions', function() {
     var reductions;
 
@@ -93,15 +90,15 @@ describe('Reductions', function() {
         reductions = new Reductions();
     });
 
-    it('should get the corresponding reduction for a total', function() {
+    it('should be reduced by 5% when total is less than or equal to 5 000', function() {
         expect(reductions.reductionFor(5500)).toBe(0.05);
     });
 
-    it('should return 0 when the total is less than 1000', function() {
+    it('should not be reduced when when the total is less than or equal to 1 000', function() {
         expect(reductions.reductionFor(500)).toBe(0.00);
     });
 
-    it('should return 0.15 when the total is 55000', function() {
+    it('should de reduced by 15% when total is less than or equal to 50 000', function() {
         expect(reductions.reductionFor(55000)).toBe(0.15);
     });
 });

@@ -93,22 +93,22 @@ Reductions.prototype = (function (){
     };
 
     var reductions = [
-            new Reduction(50000, 0.15),
-            new Reduction(10000, 0.10),
-            new Reduction(7000, 0.07),
-            new Reduction(5000, 0.05),
-            new Reduction(1000, 0.03)
-        ];
-
+        new Reduction(50000, 0.15),
+        new Reduction(10000, 0.10),
+        new Reduction(7000, 0.07),
+        new Reduction(5000, 0.05),
+        new Reduction(1000, 0.03)
+    ];
 
     return {
         reductionFor: function(total) {
-            var reduc = _.result(_.find(reductions, function(reduc) { return reduc.sum < total; }), 'reduction');
+            var reduction = _.result(_.find(reductions, function(reduc) { return reduc.sum < total; }), 'reduction');
 
-            if(reduc == undefined)
+            if(reduction == undefined) {
                 return 0;
+            }
 
-            return reduc;
+            return reduction;
         }
     };
 })();
