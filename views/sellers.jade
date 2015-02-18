@@ -1,6 +1,6 @@
 extends layout
-
 block content
+    meta(http-equiv="refresh" content="5")
     h1= title
     form(action='/sellers',method='post')
         label(for='url') Add seller URL
@@ -17,3 +17,4 @@ block content
         tr
           td= seller.name
           td= seller.cash
+
