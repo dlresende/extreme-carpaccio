@@ -14,7 +14,7 @@ var sellerService = new services.SellerService(sellers);
 var orderService = new services.orderService();
 var dispatcher = new services.Dispatcher(sellerService, orderService);
 
-var routes = require('./javascripts/routes')(sellerService);
+var routes = require('./javascripts/routes')(sellerService, orderService);
 
 var app = express();
 

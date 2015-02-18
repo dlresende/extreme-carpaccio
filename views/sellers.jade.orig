@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1= title
+    form(action='/sellers',method='post')
+        label(for='url') Add seller URL
+        input(id='url',type='text',value='',placeholder='http://192.168.1.1:3000',name='url')
+        input(type='submit',value='Register')
+    h2 Registered sellers
+    table
+      thead
+        tr
+            th Seller
+            th Cash
+      tbody
+      for seller in sellers
+<<<<<<< HEAD
+        li= seller.hostname + ':' + seller.port + '/' + seller.path + " Score : " + seller.cash
+=======
+        tr
+          td= seller.name
+          td= seller.cash
+>>>>>>> e9644c481ece2ea582b5aadae0e3fb1a2a0df376

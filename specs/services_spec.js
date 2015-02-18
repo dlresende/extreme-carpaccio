@@ -34,6 +34,15 @@ describe('Seller Service', function() {
 
         expect(sellerService.all()).toContain({name: 'bob', cash: 100})
     });
+
+    it('should float comparaison be based on rounded number', function() {
+        var bob = {name: 'bob', cash: 0};
+        sellers.add(bob);
+
+        sellerService.updateCash('bob', {total: 100.12345}, {total: 100.12});
+
+        expect(sellerService.all()).toContain({name: 'bob', cash: 100.12})
+    });
 });
 
 describe('Order Service', function() {
@@ -108,6 +117,15 @@ describe('Order Service', function() {
 
         expect(bill).toEqual({total: (100 + 2 * 50) * 1.2});
     });
+
+    it('should calculate the sum of the order with reduction', function() {
+        var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
+
+        var bill = orderService.bill(order);
+
+        expect(bill).toEqual({total: 1746});
+    });
+
 });
 
 describe('Dispatcher', function() {

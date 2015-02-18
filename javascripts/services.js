@@ -9,6 +9,7 @@ var utils = require('./utils');
 
 var countries = new repositories.Countries();
 var sellers = new repositories.Sellers();
+var reductions = new repositories.Reductions();
 
 function fixPrecision(number, precision) {
     return parseFloat(number.toFixed(precision));
@@ -37,9 +38,11 @@ SellerService.prototype = {
     },
 
     updateCash: function(sellerName, expectedBill, actualBill) {
-        if(actualBill && expectedBill.total === actualBill.total) {
-            console.log('Hey, ' + sellerName + ' earned ' + expectedBill.total);
-            this.sellers.updateCash(sellerName, expectedBill.total);
+        var totalExpectedBill = fixPrecision(expectedBill.total, 2);
+        var totalActualBill = fixPrecision(actualBill.total, 2);
+        if(actualBill && totalExpectedBill === totalActualBill) {
+            console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
+            this.sellers.updateCash(sellerName, totalExpectedBill);
         }
 
         else {
@@ -56,7 +59,7 @@ OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater) {
         var orderStringified = utils.stringify(order);
         console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
-        
+    
         var options = {
             hostname: seller.hostname,
             port: seller.port,
@@ -91,15 +94,16 @@ OrderService.prototype = {
 
     bill: function(order) {
         var sum = 0;
-        var tax = countries.tax(order.country);
 
         for(var item = 0; item < order.prices.length; item++) {
             var price = order.prices[item];
             var quantity = order.quantities[item];
-            sum += price * quantity * tax;
+            sum += price * quantity;
         }
-
-       return { total: sum };
+        var reduction = reductions.reductionFor(sum);
+        var tax = countries.tax(order.country);
+        sum = sum * tax * (1 - reduction);
+        return { total: sum };
     }
 };
 
