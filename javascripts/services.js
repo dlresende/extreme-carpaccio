@@ -70,9 +70,7 @@ OrderService.prototype = {
             }
         };
         var request = this.http.request(options, cashUpdater);
-
         request.on('error', function(err) {
-            // Handle error
             console.log(err);
         });
         request.write(orderStringified);
@@ -107,8 +105,8 @@ OrderService.prototype = {
         }
         var reduction = reductions.reductionFor(sum);
         var tax = countries.tax(order.country);
-        sum= sum*tax*(1-reduction);
-       return { total: sum };
+        sum = sum * tax * (1 - reduction);
+        return { total: sum };
     }
 };
 
