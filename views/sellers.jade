@@ -3,8 +3,10 @@ extends layout
 block content
     h1= title
     form(action='/sellers',method='post')
+        label(for='name') Add seller URL
+        input(id='name', type='text', value='', placeholder='your name', name='name')
         label(for='url') Add seller URL
-        input(id='url',type='text',value='',placeholder='http://192.168.1.1:3000',name='url')
+        input(id='url', type='text', value='', placeholder='http://192.168.1.1:3000', name='url')
         input(type='submit',value='Register')
     h2 Registered sellers
     - var formatMoney = function(number, currency) {

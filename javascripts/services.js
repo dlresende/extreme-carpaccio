@@ -23,7 +23,7 @@ SellerService.prototype = {
     register: function (sellerUrl, name) {
         var parsedUrl = url.parse(sellerUrl);
         var seller = {
-            name: name || parsedUrl.hostname,
+            name: name,
             hostname: parsedUrl.hostname,
             port: parsedUrl.port,
             path: parsedUrl.path,

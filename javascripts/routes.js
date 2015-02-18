@@ -12,8 +12,9 @@ module.exports = function (sellerService) {
     });
 
     router.post('/sellers', function(request, response) {
+        var sellerName = request.body.name;
         var sellerUrl = request.body.url;
-        sellerService.register(sellerUrl);
+        sellerService.register(sellerUrl, sellerName);
         response.redirect('/sellers');
     });
 
