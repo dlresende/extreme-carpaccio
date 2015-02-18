@@ -38,9 +38,11 @@ SellerService.prototype = {
     },
 
     updateCash: function(sellerName, expectedBill, actualBill) {
-        if(actualBill && expectedBill.total === actualBill.total) {
-            console.log('Hey, ' + sellerName + ' earned ' + expectedBill.total);
-            this.sellers.updateCash(sellerName, expectedBill.total);
+        var totalExpectedBill = fixPrecision(expectedBill.total, 2);
+        var totalActualBill = fixPrecision(actualBill.total, 2);
+        if(actualBill && totalExpectedBill === totalActualBill) {
+            console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
+            this.sellers.updateCash(sellerName, totalExpectedBill);
         }
 
         else {

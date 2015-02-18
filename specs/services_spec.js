@@ -34,6 +34,15 @@ describe('Seller Service', function() {
 
         expect(sellerService.all()).toContain({name: 'bob', cash: 100})
     });
+
+    it('should float comparaison be based on rounded number', function() {
+        var bob = {name: 'bob', cash: 0};
+        sellers.add(bob);
+
+        sellerService.updateCash('bob', {total: 100.12345}, {total: 100.12});
+
+        expect(sellerService.all()).toContain({name: 'bob', cash: 100.12})
+    });
 });
 
 describe('Order Service', function() {
