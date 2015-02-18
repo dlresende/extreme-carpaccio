@@ -7,6 +7,9 @@ block content
         input(id='url',type='text',value='',placeholder='http://192.168.1.1:3000',name='url')
         input(type='submit',value='Register')
     h2 Registered sellers
+    - var formatMoney = function(number, currency) {
+    -   return number.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,") + " " + currency;
+    - }
     table
       thead
         tr
@@ -15,5 +18,5 @@ block content
       tbody
       for seller in sellers
         tr
-          td= seller.name
-          td= seller.cash
+          td #{seller.name}
+          td #{formatMoney(seller.cash, 'EUR')}
