@@ -8,14 +8,13 @@ module.exports = function(sellerService) {
     });
 
     router.get('/sellers', function(request, response) {
-        console.log(sellerService.all());
         response.render('sellers', { title: 'Sellers', sellers: sellerService.all() });
     });
 
     router.post('/sellers', function(request, response) {
         var sellerUrl = request.body.url;
         sellerService.register(sellerUrl);
-        response.render('sellers', { title: 'Sellers', sellers: sellerService.all()});
+        response.redirect('/sellers');
     });
 
     return router;
