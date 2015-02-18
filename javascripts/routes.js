@@ -1,6 +1,6 @@
 var express = require('express');
 
-module.exports = function(sellerService, orderService) {
+module.exports = function (sellerService) {
     var router = express.Router();
 
     router.get('/', function(request, response) {
@@ -17,11 +17,5 @@ module.exports = function(sellerService, orderService) {
         response.redirect('/sellers');
     });
 
-    router.post('/test', function(request, response) {
-
-        console.log(request.body);
-        var bill = orderService.bill(request.body);
-        response.send(bill);
-    });
     return router;
 };
