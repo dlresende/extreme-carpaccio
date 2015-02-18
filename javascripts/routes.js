@@ -17,12 +17,5 @@ module.exports = function(sellerService, orderService) {
         sellerService.register(sellerUrl);
         response.render('sellers', { title: 'Sellers', sellers: sellerService.all()});
     });
-
-    router.post('/test', function(request, response) {
-
-        console.log(request.body);
-        var bill = orderService.bill(request.body);
-        response.send(bill);
-    });
     return router;
 };

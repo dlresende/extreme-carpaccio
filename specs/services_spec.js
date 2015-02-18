@@ -59,6 +59,7 @@ describe('Order Service', function() {
     it('should send order to seller', function() {
         var fakeRequest = {
             write: function() {},
+            on: function() {},
             end: function() {}
         };
         spyOn(http, 'request').andReturn(fakeRequest);

@@ -70,6 +70,11 @@ OrderService.prototype = {
             }
         };
         var request = this.http.request(options, cashUpdater);
+
+        request.on('error', function(err) {
+            // Handle error
+            console.log(err);
+        });
         request.write(orderStringified);
         request.end();
     },
@@ -122,6 +127,7 @@ Dispatcher.prototype = {
 
         function cashUpdater(seller) {
             return function(response) {
+                console.log('here we are ' + response.statusCode)
                 if(response.statusCode === 200) {
                     response.on('data', function (sellerResponse) {
                         sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
