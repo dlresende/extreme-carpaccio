@@ -6,7 +6,10 @@ var Sellers = function() {
     var sellersMap = {};
 
     this.all = function() {
-        return _.map(sellersMap, function(seller) { return seller; });
+        var sellers = _.map(sellersMap, function (seller) {
+            return seller;
+        });
+        return _.sortBy(sellers, function(seller) {return -seller.cash});
     };
 
     this.add = function(seller) {

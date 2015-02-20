@@ -14,6 +14,18 @@ describe('Sellers', function(){
         sellers = new Sellers();
     });
 
+    it('should return all sellers sorted by cash in decresing order', function() {
+        sellers.add(bob);
+        var alice = {name: 'alice', hostname: 'hostname', port: '3001', path: '/path', cash: 10.0};
+        sellers.add(alice);
+        var carol = {name: 'carol', hostname: 'hostname', port: '3002', path: '/path', cash: 5.0};
+        sellers.add(carol);
+
+        expect(sellers.all()[0]).toEqual(alice);
+        expect(sellers.all()[1]).toEqual(carol);
+        expect(sellers.all()[2]).toEqual(bob);
+    });
+
     it('should add sellers', function() {
         sellers.add(bob);
 
