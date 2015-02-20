@@ -4,14 +4,13 @@ kata + extreme startup + [elephant carpaccio](https://docs.google.com/document/d
 ## Instructions
 1. Go to the sellers view and register yourself
 2. The server will start sending orders like this:
-´´´
 POST /sellers HTTP/1.1
 {
     "prices": [65.6,27.26,32.68],
     "quantities": [6,8,10],
     "country": "IE"
 }
-´´´
+
 3. You should calculate the total and answer with an object bill, i.e.: { "total": 1000.0 }
 4. Your score will be shown in the /sellers view
 
