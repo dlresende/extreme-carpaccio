@@ -1,5 +1,9 @@
 A Java client to with a simple com.sun.net.httpserver.HttpServer implementation.
 
+## Dependencies
+- maven 3
+- JDK 8
+
 ## Install
 - `mvn clean install`
 
