@@ -1,0 +1,11 @@
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Content\nancy-logo.png
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Views\index.sshtml
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\katazon.client.exe
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\katazon.client.pdb
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Nancy.dll
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Nancy.Hosting.Self.dll
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Nancy.xml
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\bin\Debug\Nancy.Hosting.Self.xml
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\obj\Debug\katazon.client.csprojResolveAssemblyReference.cache
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\obj\Debug\katazon.client.exe
+c:\users\radwane.hassen\documents\visual studio 2013\Projects\katazon.client\katazon.client\obj\Debug\katazon.client.pdb
