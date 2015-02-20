@@ -12,13 +12,11 @@ module.exports = function (sellerService) {
     });
 
     router.post('/sellers', function(request, response) {
+        var sellerName = request.body.name;
         var sellerUrl = request.body.url;
-        sellerService.register(sellerUrl);
+        sellerService.register(sellerUrl, sellerName);
         response.redirect('/sellers');
     });
-<<<<<<< HEAD
-=======
 
->>>>>>> ffda524a9eca7683bd902e8c106d4bd52d0e8032
     return router;
 };

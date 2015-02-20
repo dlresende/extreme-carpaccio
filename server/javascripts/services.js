@@ -23,7 +23,7 @@ SellerService.prototype = {
     register: function (sellerUrl, name) {
         var parsedUrl = url.parse(sellerUrl);
         var seller = {
-            name: name || parsedUrl.hostname,
+            name: name,
             hostname: parsedUrl.hostname,
             port: parsedUrl.port,
             path: parsedUrl.path,
@@ -70,9 +70,7 @@ OrderService.prototype = {
             }
         };
         var request = this.http.request(options, cashUpdater);
-
         request.on('error', function(err) {
-            // Handle error
             console.log(err);
         });
         request.write(orderStringified);
@@ -80,14 +78,14 @@ OrderService.prototype = {
     },
 
     createOrder: function(numberOfItems) {
-        var items = numberOfItems || _.random(1, 100);
+        var items = numberOfItems || _.random(1, 10);
         var prices = new Array(items);
         var quantities = new Array(items);
 
         for(var item = 0; item < items; item++) {
-            var price = _.random(1, 1000, true);
+            var price = _.random(1, 100, true);
             prices[item] = fixPrecision(price, 2);
-            quantities[item] = _.random(1, 100);
+            quantities[item] = _.random(1, 10);
         }
 
         return {
@@ -127,7 +125,6 @@ Dispatcher.prototype = {
 
         function cashUpdater(seller) {
             return function(response) {
-                console.log('here we are ' + response.statusCode)
                 if(response.statusCode === 200) {
                     response.on('data', function (sellerResponse) {
                         sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
