@@ -6,7 +6,7 @@ var repositories = require('../javascripts/repositories');
 var utils = require('../javascripts/utils');
 
 var Dispatcher = services.Dispatcher;
-var OrderService = services.orderService;
+var OrderService = services.OrderService;
 var SellerService = services.SellerService;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
