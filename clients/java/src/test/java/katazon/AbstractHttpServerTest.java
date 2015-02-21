@@ -4,10 +4,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Scanner;
+
+import static katazon.StringUtils.stringify;
 
 public abstract class AbstractHttpServerTest
 {
@@ -29,11 +29,6 @@ public abstract class AbstractHttpServerTest
         HttpURLConnection connection = (HttpURLConnection) localhost.openConnection();
         connection.disconnect();
         return stringify(connection.getInputStream());
-    }
-
-    private String stringify(InputStream is) {
-        Scanner scanner = new Scanner(is).useDelimiter("\\A");
-        return scanner.hasNext() ? scanner.next() : "";
     }
 
     @AfterClass
