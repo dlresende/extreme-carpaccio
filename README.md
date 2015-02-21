@@ -2,19 +2,20 @@
 kata + extreme startup + [elephant carpaccio](https://docs.google.com/document/d/1TCuuu-8Mm14oxsOnlk8DqfZAA1cvtYu9WGv67Yj_sSk/pub)
 
 ## Instructions
-1. Go to the sellers view and register yourself
+1. Go to the sellers view and register yourself (URL example: http://192.168.1.12:8080/mypath)
 2. The server will start sending orders like this:
-POST /sellers HTTP/1.1
+```
+POST /mypath HTTP/1.1
 {
     "prices": [65.6,27.26,32.68],
     "quantities": [6,8,10],
     "country": "IE"
 }
+```
+3. You should calculate the total and answer with an object bill, i.e.: `{ "total": 1000.0 }`
+4. Your score will be shown in the dashboard
 
-3. You should calculate the total and answer with an object bill, i.e.: { "total": 1000.0 }
-4. Your score will be shown in the /sellers view
-
-To calculate the bill, you need to consider the tax of country from which the order come from and the reduction.
+To calculate the bill, you need to consider the tax of the country from which the order came from and the reduction.
 
 ### Taxes
 *Country* | *Tax*
@@ -50,8 +51,8 @@ UK | 14 %
 ### Recuctions
 *Total* | *Reduction*
 --- | ---
-50 000 EUR | 15 %
-10 000 EUR | 10 %
-7 000 EUR | 7 %
-5 000 EUR | 5 %
-1 000 EUR | 3 %
+>= 50 000 EUR | 15 %
+>= 10 000 EUR | 10 %
+>= 7 000 EUR | 7 %
+>= 5 000 EUR | 5 %
+>= 1 000 EUR | 3 %
