@@ -38,15 +38,21 @@ SellerService.prototype = {
     },
 
     updateCash: function(sellerName, expectedBill, actualBill) {
-        var totalExpectedBill = fixPrecision(expectedBill.total, 2);
-        var totalActualBill = fixPrecision(actualBill.total, 2);
-        if(actualBill && totalExpectedBill === totalActualBill) {
-            console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
-            this.sellers.updateCash(sellerName, totalExpectedBill);
-        }
+        try{
+            var totalExpectedBill = fixPrecision(expectedBill.total, 2);
+            var totalActualBill = fixPrecision(actualBill.total, 2);
+            if(actualBill && totalExpectedBill === totalActualBill) {
+                console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
+                this.sellers.updateCash(sellerName, totalExpectedBill);
+            }
 
-        else {
-            console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            else {
+                console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            }
+        }
+        catch(e)
+        {
+            console.log('error in parameter expectedBill : '+ expectedBill.total + ' or actualBill : ' + actualBill.total);
         }
     }
 };
@@ -126,6 +132,10 @@ Dispatcher.prototype = {
         function cashUpdater(seller) {
             return function(response) {
                 if(response.statusCode === 200) {
+                    response.on('error', function(err) {
+                        // Handle error
+                        console.log(err);
+                    });
                     response.on('data', function (sellerResponse) {
                         sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
                     });
