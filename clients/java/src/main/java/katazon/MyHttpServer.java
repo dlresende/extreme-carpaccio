@@ -8,13 +8,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
-import static java.lang.Integer.parseInt;
-
 public class MyHttpServer
 {
     private final int port;
     private HttpServer server;
-
 
     MyHttpServer(int port) {
         this.port = port;

@@ -105,7 +105,7 @@ Reductions.prototype = (function (){
 
     return {
         reductionFor: function(total) {
-            var reduction = _.result(_.find(reductions, function(reduc) { return reduc.sum < total; }), 'reduction');
+            var reduction = _.result(_.find(reductions, function(reduc) { return reduc.sum <= total; }), 'reduction');
 
             if(reduction == undefined) {
                 return 0;

@@ -11,10 +11,6 @@ var countries = new repositories.Countries();
 var sellers = new repositories.Sellers();
 var reductions = new repositories.Reductions();
 
-function fixPrecision(number, precision) {
-    return parseFloat(number.toFixed(precision));
-}
-
 var SellerService = function(_sellers) {
     this.sellers = _sellers || sellers;
 };
@@ -38,9 +34,9 @@ SellerService.prototype = {
     },
 
     updateCash: function(sellerName, expectedBill, actualBill) {
-        try{
-            var totalExpectedBill = fixPrecision(expectedBill.total, 2);
-            var totalActualBill = fixPrecision(actualBill.total, 2);
+        var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
+        var totalActualBill = utils.fixPrecision(actualBill.total, 2);
+
             if(actualBill && totalExpectedBill === totalActualBill) {
                 console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
                 this.sellers.updateCash(sellerName, totalExpectedBill);
@@ -90,7 +86,7 @@ OrderService.prototype = {
 
         for(var item = 0; item < items; item++) {
             var price = _.random(1, 100, true);
-            prices[item] = fixPrecision(price, 2);
+            prices[item] = utils.fixPrecision(price, 2);
             quantities[item] = _.random(1, 10);
         }
 
@@ -109,21 +105,23 @@ OrderService.prototype = {
             var quantity = order.quantities[item];
             sum += price * quantity;
         }
+
         var reduction = reductions.reductionFor(sum);
         var tax = countries.tax(order.country);
         sum = sum * tax * (1 - reduction);
+
         return { total: sum };
     }
 };
 
 var Dispatcher = function(_sellerService, _orderService) {
     this.Sellers = _sellerService || exports.SellerService;
-    this.orderService = _orderService || exports.orderService;
+    this.OrderService = _orderService || exports.OrderService;
 };
 
 Dispatcher.prototype = {
     sendOrderToSellers: function() {
-        var orderService = this.orderService;
+        var orderService = this.OrderService;
         var sellerService = this.Sellers;
 
         var order = orderService.createOrder();
@@ -163,6 +161,6 @@ Dispatcher.prototype = {
 
 exports = module.exports;
 
-exports.orderService = OrderService;
+exports.OrderService = OrderService;
 exports.Dispatcher = Dispatcher;
 exports.SellerService = SellerService;

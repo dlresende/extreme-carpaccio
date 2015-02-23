@@ -8,7 +8,23 @@ Utils.prototype = {
     },
 
     jsonify: function(string) {
-        return JSON.parse(string);
+        try {
+            return JSON.parse(string);
+        }
+        catch (exception) {
+            console.log(exception);
+            return {};
+        }
+    },
+
+    fixPrecision: function(number, precision) {
+        try {
+            return parseFloat(number.toFixed(precision));
+        }
+        catch (exception) {
+            console.log(exception);
+            return 0.00;
+        }
     }
 };
 
