@@ -1,5 +1,17 @@
+## Install
+
+```
+npm install
+```
+
 ## Run
-- npm start
+
+```
+npm start
+```
 
 ## Test
-- npm test
+
+```
+npm test
+```
