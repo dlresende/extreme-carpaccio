@@ -1,0 +1,14 @@
+{
+  "name": "katazon-client-nodejs",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node main.js",
+    "test": "./node_modules/jasmine-node/bin/jasmine-node ."
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
+  }
+}
