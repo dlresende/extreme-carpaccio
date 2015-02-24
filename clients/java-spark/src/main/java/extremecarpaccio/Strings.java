@@ -1,4 +1,4 @@
-package katazon;
+package extremecarpaccio;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

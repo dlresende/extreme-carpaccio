@@ -1,4 +1,4 @@
-package katazon;
+package extremecarpaccio;
 
 import com.google.gson.Gson;
 import spark.ResponseTransformer;

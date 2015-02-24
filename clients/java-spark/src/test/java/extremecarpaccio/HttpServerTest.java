@@ -1,4 +1,4 @@
-package katazon;
+package extremecarpaccio;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static katazon.Strings.stringify;
+import static extremecarpaccio.Strings.stringify;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class HttpServerTest {
