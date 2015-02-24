@@ -1,4 +1,4 @@
-package katazon;
+package extreme_carpaccio;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

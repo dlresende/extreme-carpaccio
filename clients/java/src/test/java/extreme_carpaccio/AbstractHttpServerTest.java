@@ -1,4 +1,4 @@
-package katazon;
+package extreme_carpaccio;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static katazon.StringUtils.stringify;
+import static extreme_carpaccio.StringUtils.stringify;
 
 public abstract class AbstractHttpServerTest
 {

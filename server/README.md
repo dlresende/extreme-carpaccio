@@ -10,10 +10,10 @@ npm install
 npm start
 ```
 
-Start in debug mode (activate debug mode for `katazon:server`):
+Start in debug mode (activate debug mode for `extreme_carpaccio:server`):
 
 ```
-DEBUG=katazon:server npm start
+DEBUG=extreme_carpaccio:server npm start
 ```
 
 ## Test

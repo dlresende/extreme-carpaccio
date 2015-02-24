@@ -1,4 +1,4 @@
-package katazon;
+package extreme_carpaccio;
 
 import java.io.InputStream;
 import java.util.Scanner;
