@@ -28,6 +28,12 @@ public class HttpServer {
 
         get("/hello", (req, res) -> "Hello World");
         post("/ping", (req, res) -> "pong", asJson);
+        post("/", (req, res) -> {
+            JsonObject body = gson.fromJson(req.body(), JsonObject.class);
+            logger.info("Incoming request on '/': {}", body.entrySet());
+            return "pong";
+        }, asJson);
+
     }
 
 }
