@@ -18,7 +18,7 @@ results
 npm-debug.log
 node_modules
 
-/public/components
+server/public/components
 *.sublime-project
 *.sublime-workspace
 .DS_Store
