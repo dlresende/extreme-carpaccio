@@ -2,6 +2,7 @@ package katazon;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ResponseTransformer;
@@ -33,6 +34,11 @@ public class HttpServer {
 
         get("/hello", (req, res) -> "Hello World");
         post("/ping", (req, res) -> "pong", asJson);
+        post("/", (req, res) -> {
+            JsonObject body = gson.fromJson(req.body(), JsonObject.class);
+            logger.info("Incoming request on '/': {}", body.entrySet());
+            return "pong";
+        }, asJson);
     }
 
 }
