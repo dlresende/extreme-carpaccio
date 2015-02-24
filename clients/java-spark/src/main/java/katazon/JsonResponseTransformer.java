@@ -3,9 +3,6 @@ package katazon;
 import com.google.gson.Gson;
 import spark.ResponseTransformer;
 
-/**
-* @author <a href="http://twitter.com/aloyer">@aloyer</a>
-*/
 public class JsonResponseTransformer implements ResponseTransformer {
     private final Gson gson;
 
