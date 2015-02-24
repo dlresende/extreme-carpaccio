@@ -34,15 +34,31 @@ SellerService.prototype = {
     },
 
     updateCash: function(sellerName, expectedBill, actualBill) {
+<<<<<<< HEAD
+        try{
+            var totalExpectedBill = fixPrecision(expectedBill.total, 2);
+            var totalActualBill = fixPrecision(actualBill.total, 2);
+            if(actualBill && totalExpectedBill === totalActualBill) {
+                console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
+                this.sellers.updateCash(sellerName, totalExpectedBill);
+            }
+=======
         var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
         var totalActualBill = utils.fixPrecision(actualBill.total, 2);
+
         if(actualBill && totalExpectedBill === totalActualBill) {
             console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
             this.sellers.updateCash(sellerName, totalExpectedBill);
         }
+>>>>>>> 0ad1541d71d19deed72dae43d2f48abaf9467a30
 
-        else {
-            console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            else {
+                console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            }
+        }
+        catch(e)
+        {
+            console.log('error in parameter expectedBill : '+ expectedBill.total + ' or actualBill : ' + actualBill.total);
         }
     }
 };

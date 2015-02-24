@@ -8,7 +8,7 @@ module.exports = function (sellerService) {
     });
 
     router.get('/sellers', function(request, response) {
-        response.render('sellers', { title: 'Sellers', sellers: sellerService.all() });
+        response.send('sellers', sellerService.all() );
     });
 
     router.post('/sellers', function(request, response) {
