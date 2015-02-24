@@ -36,7 +36,6 @@ SellerService.prototype = {
     updateCash: function(sellerName, expectedBill, actualBill) {
         var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
         var totalActualBill = utils.fixPrecision(actualBill.total, 2);
-
         if(actualBill && totalExpectedBill === totalActualBill) {
             console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
             this.sellers.updateCash(sellerName, totalExpectedBill);
@@ -125,6 +124,10 @@ Dispatcher.prototype = {
         function cashUpdater(seller) {
             return function(response) {
                 if(response.statusCode === 200) {
+                    response.on('error', function(err) {
+                        // Handle error
+                        console.log(err);
+                    });
                     response.on('data', function (sellerResponse) {
                         sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
                     });
