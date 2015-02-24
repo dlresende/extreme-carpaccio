@@ -1,6 +1,7 @@
 'use strict';
 
-var repositories = require('../javascripts/repositories');
+var repositories = require('../javascripts/repositories'),
+    _ = require('lodash');
 var Sellers = repositories.Sellers;
 var Countries = repositories.Countries;
 var Reductions = repositories.Reductions;
@@ -92,6 +93,22 @@ describe('Countries', function() {
         expect(countries.tax('FI')).toBe(1.12);
         expect(countries.tax('SE')).toBe(1.13);
         expect(countries.tax('UK')).toBe(1.14);
+    });
+
+    it('should return random country according to its frequency', function() {
+        var sampleSize = 200,
+            samples = _.times(sampleSize, countries.randomOne),
+            lengthOf = function(arr) {
+              return (arr||[]).length;
+            };
+
+        var occurences = _.groupBy(samples);
+
+        expect(lengthOf(occurences['FR'])).toBeGreaterThan(20);
+        expect(lengthOf(occurences['UK'])).toBeGreaterThan(20);
+        expect(lengthOf(occurences['LT'])).toBeLessThan(10);
+        expect(lengthOf(occurences['NL'])).toBeLessThan(10);
+
     });
 });
 
