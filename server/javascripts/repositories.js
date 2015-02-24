@@ -43,43 +43,56 @@ Countries.prototype = (function() {
         this.tax = tax;
     };
 
-    var europeanCountries = [
-        new Country('BG', 1.1),
-        new Country('CZ', 1.11),
-        new Country('DK', 1.12),
-        new Country('DE', 1.13),
-        new Country('EE', 1.14),
-        new Country('IE', 1.15),
-        new Country('EL', 1.16),
-        new Country('ES', 1.17),
-        new Country('FR', 1.18),
-        new Country('HR', 1.19),
-        new Country('IT', 1.2),
-        new Country('CY', 1.1),
-        new Country('LV', 1.11),
-        new Country('LT', 1.12),
-        new Country('LU', 1.13),
-        new Country('HU', 1.14),
-        new Country('MT', 1.15),
-        new Country('NL', 1.16),
-        new Country('AT', 1.17),
-        new Country('PL', 1.18),
-        new Country('PT', 1.19),
-        new Country('RO', 1.2),
-        new Country('SI', 1.1),
-        new Country('SK', 1.11),
-        new Country('FI', 1.12),
-        new Country('SE', 1.13),
-        new Country('UK', 1.14)
-    ];
+    var europeanCountries = {
+        'BG': [1.1, 1],
+        'CZ': [1.11, 1],
+        'DK': [1.12, 1],
+        'DE': [1.13, 1],
+        'EE': [1.14, 1],
+        'IE': [1.15, 1],
+        'EL': [1.16, 1],
+        'ES': [1.17, 1],
+        'FR': [1.18, 20],
+        'HR': [1.19, 1],
+        'IT': [1.2,  1],
+        'CY': [1.1,  1],
+        'LV': [1.11, 1],
+        'LT': [1.12, 1],
+        'LU': [1.13, 1],
+        'HU': [1.14, 1],
+        'MT': [1.15, 1],
+        'NL': [1.16, 1],
+        'AT': [1.17, 1],
+        'PL': [1.18, 1],
+        'PT': [1.19, 1],
+        'RO': [1.2,  1],
+        'SI': [1.1,  1],
+        'SK': [1.11, 1],
+        'FI': [1.12, 1],
+        'SE': [1.13, 1],
+        'UK': [1.14, 20]
+    };
 
-    var countryMap = _.reduce(europeanCountries, function(map, country) {
-        map[country.name] = country;
+    var countryDistributionByWeight = _.reduce(europeanCountries, function(distrib, infos, country) {
+        var i;
+        for(i=0; i<infos[1]; i++) {
+            distrib.push(country);
+        }
+        return distrib;
+    }, []);
+    _.shuffle(countryDistributionByWeight);
+
+    var countryMap = _.reduce(europeanCountries, function(map, infos, country) {
+        map[country] = new Country(country, infos[0]);
         return map;
     }, {});
 
     return {
         fromEurope: Object.keys(countryMap),
+
+        randomOne: function() {
+            return _.sample(countryDistributionByWeight);
+        },
 
         tax: function(countryName) {
             return countryMap[countryName].tax;

@@ -55,7 +55,7 @@ OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater) {
         var orderStringified = utils.stringify(order);
         console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
-    
+
         var options = {
             hostname: seller.hostname,
             port: seller.port,
@@ -87,7 +87,7 @@ OrderService.prototype = {
         return {
             prices: prices,
             quantities: quantities,
-            country: _.sample(countries.fromEurope)
+            country: countries.randomOne()
         };
     },
 
