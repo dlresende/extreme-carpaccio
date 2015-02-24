@@ -18,10 +18,6 @@ var routes = require('./javascripts/routes')(sellerService);
 
 var app = express();
 
-// view engine setup
-app.set('public', path.join(__dirname, 'public'));
-app.use(express.static('public'));
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
@@ -56,6 +52,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+    res.render('public/index.html');
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

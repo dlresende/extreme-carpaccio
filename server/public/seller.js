@@ -25,7 +25,7 @@ var SellerForm = React.createClass({
 			            </div>
 			              <p className="form-group">Add seller url</p>
 			            <div className="form-group">
-			              <input type="text" placeholder="192.168.1.1:3000" className="form-control" ref="url" />
+			              <input type="text" placeholder="http://192.168.1.1:3000" className="form-control" ref="url" />
 			            </div>
 			            <button type="submit" className="btn btn-success">Register</button>
 		          	</form>
@@ -72,7 +72,7 @@ var SellerView = React.createClass({
 		        </div>
 		        <hr/>
 		        <footer>
-			      <p>&copy; Diego & Radwane </p>
+			      <p>&copy; Diego &amp; Radwane </p>
 			    </footer>
 		    </div>
 		);
