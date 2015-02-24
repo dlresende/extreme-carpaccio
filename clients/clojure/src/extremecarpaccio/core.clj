@@ -11,7 +11,7 @@
    :headers {"Content-Type" "text/html"}
    :body "pong"})
 
-(defroutes routes
+(defroutes my-app
            (GET "/" [] "I'm alive!")
            (GET "/ping" [] pong)
            (not-found "No page"))

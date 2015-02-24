@@ -1,9 +1,9 @@
 (ns extremecarpaccio.core-test
   (:require [clojure.test :refer :all]
             [ring.mock.request :as mock]
-            [katazon.core :refer :all]))
+            [extremecarpaccio.core :refer :all]))
 
-(deftest testme
+(deftest test-routes
   (testing "main route"
     (let [response (my-app (mock/request :get "/"))]
       (is (= (:status response) 200))
