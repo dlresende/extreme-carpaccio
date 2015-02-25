@@ -1,0 +1,13 @@
+{application, xcarpaccio,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  cowboy
+                 ]},
+  {mod, { xcarpaccio_app, []}},
+  {env, [{http_port, 1337}]}
+ ]}.
