@@ -15,6 +15,7 @@ Debug/
 [Oo]bj/
 [Bb]in
 [Rr]elease
+*.suo
 
 pids
 logs

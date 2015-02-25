@@ -2,7 +2,7 @@
 {
     using Nancy;
     using System;
-using System.Collections.Generic;
+    using System.Collections.Generic;
     using Nancy.ModelBinding;
 
     public class IndexModule : NancyModule
@@ -12,7 +12,7 @@ using System.Collections.Generic;
             Post["/"] = _ =>
             {
                 var param = this.Bind<Order>();
-                return Response.AsJson(new { total=0 });
+                return Response.AsJson(new { total = 0 });
             };
         }
     }
