@@ -11,10 +11,10 @@ lib-cov
 *.gz
 *.orig
 
+Debug/
 [Oo]bj/
 [Bb]in
-[Dd]ebug*/
-[Rr]elease*/
+[Rr]elease
 
 pids
 logs

@@ -4,7 +4,7 @@ module.exports = function (sellerService) {
     var router = express.Router();
 
     router.get('/sellers', function(request, response) {
-        response.send('sellers', sellerService.all() );
+        response.json(sellerService.all() );
     });
 
     router.post('/sellers', function(request, response) {
