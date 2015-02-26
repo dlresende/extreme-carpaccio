@@ -7,10 +7,11 @@
 %% ===================================================================
 
 parsing_test() ->
-  Vals = json_utils:decode(<<"{\"prices\":[75.87],\"quantities\":[5],\"country\":\"FR\"}">>),
-  ?assertEqual({ok, [75.87]}, json_utils:get_value(Vals, <<"prices">>)).
+  Vals = jsx:decode(<<"{\"prices\":[75.87],\"quantities\":[5],\"country\":\"FR\"}">>),
+  Key = <<"prices">>,
+  ?assertEqual({Key, [75.87]}, proplists:lookup(Key, Vals)).
 
 encoding_test() ->
   Data = #{total => 0.0},
-  Json = json_utils:encode(Data),
+  Json = jsx:encode(Data),
   ?assertEqual(<<"{\"total\":0.0}">>, Json).

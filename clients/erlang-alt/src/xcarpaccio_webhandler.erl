@@ -42,8 +42,8 @@ terminate(_Reason, _Req, _State) ->
 %% @private
 %%
 handle0(Method = <<"POST">>, Path = <<"/">>, Req2) ->
-  Result = #{total=>0.0},
-  Body = json_utils:encode(Result),
+  Result = #{total=>37.0},
+  Body = jsx:encode(Result),
   io:format("xcarpaccio:handle0:[~p][~p] : ~p ~n", [Method, Path, Result]),
   cowboy_req:reply(200, [{<<"content-type">>, <<"application/json">>},
                          {<<"content-encoding">>, <<"utf-8">>}], Body, Req2);
@@ -58,14 +58,6 @@ handle0(Method = <<"GET">>, Path = <<"/ping">>, Req2) ->
   Body = <<"pong">>,
   cowboy_req:reply(200, [{<<"content-type">>, <<"text/plain">>},
                          {<<"content-encoding">>, <<"utf-8">>}], Body, Req2);
-
-%%
-%% @doc All Other GET cases returns a 404 (not found) HTTP response
-%% @private
-%%
-handle0(Method = <<"GET">>, Path, Req2) ->
-  io:format("xcarpaccio:handle0:[~p][~p] not found ~n", [Method, Path]),
-  cowboy_req:reply(404, Req2);
 
 %%
 %% @doc Any other Method cases returns a 405 (not allowed) HTTP response
