@@ -11,10 +11,10 @@ bower install
 npm start
 ```
 
-Start in debug mode (activate debug mode for `extreme_carpaccio:server`):
+Start in debug mode (activate debug mode for `xcarpaccio:server`):
 
 ```
-DEBUG=extreme_carpaccio:server npm start
+DEBUG=xcarpaccio:server npm start
 ```
 
 ## Test
