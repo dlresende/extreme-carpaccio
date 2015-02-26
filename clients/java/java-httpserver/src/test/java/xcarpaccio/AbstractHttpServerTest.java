@@ -1,38 +1,45 @@
 package xcarpaccio;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 
 import static xcarpaccio.StringUtils.stringify;
 
 public abstract class AbstractHttpServerTest
 {
-    private static final int TEST_PORT = 8001;
-    private static final String LOCALHOST = "http://localhost:" + TEST_PORT;
-    private static MyHttpServer server = new MyHttpServer(TEST_PORT);
+    private static final String UTF_8 = "utf-8";
 
-    @BeforeClass
-    public static void startServer() throws Exception {
-        server.start();
+    protected String get(String url) throws IOException {
+        return get(url, "");
     }
 
-    protected String get(String path) throws IOException {
-        return get(path, "");
-    }
-
-    protected String get(String path, String query) throws IOException {
-        URL localhost = new URL(LOCALHOST + path + "?" + query);
+    protected String get(String url, String query) throws IOException {
+        URL localhost = new URL(url + "?" + query);
         HttpURLConnection connection = (HttpURLConnection) localhost.openConnection();
+        connection.setRequestMethod( "GET" );
         connection.disconnect();
         return stringify(connection.getInputStream());
     }
 
-    @AfterClass
-    public static void stopServer() {
-        server.shutdown();
+    protected String post(String path, String body) throws IOException {
+        URL url = new URL(path);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("charset", UTF_8);
+        connection.setRequestProperty("Content-Length", Integer.toString(body.length()));
+        connection.setUseCaches(false);
+        try( DataOutputStream wr = new DataOutputStream( connection.getOutputStream())) {
+            wr.write( body.getBytes(UTF_8) );
+            return stringify(connection.getInputStream());
+        } finally {
+            connection.disconnect();
+        }
     }
 }
