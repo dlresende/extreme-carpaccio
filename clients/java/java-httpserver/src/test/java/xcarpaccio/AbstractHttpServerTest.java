@@ -1,4 +1,4 @@
-package extreme_carpaccio;
+package xcarpaccio;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static extreme_carpaccio.StringUtils.stringify;
+import static xcarpaccio.StringUtils.stringify;
 
 public abstract class AbstractHttpServerTest
 {

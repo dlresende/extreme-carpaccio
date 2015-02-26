@@ -1,4 +1,4 @@
-package extreme_carpaccio;
+package xcarpaccio;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

@@ -8,6 +8,6 @@ A Java client to with a simple com.sun.net.httpserver.HttpServer implementation.
 - `mvn clean install`
 
 ## Run
-- `mvn exec:java -Dexec.mainClass="extreme_carpaccio.MyHttpServer"`
+- `mvn exec:java -Dexec.mainClass="xcarpaccio.MyHttpServer"`
 
 The server listens on port 9000: [http://localhost:9000/ping](http://localhost:9000/ping)
