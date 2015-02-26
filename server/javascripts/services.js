@@ -62,7 +62,8 @@ OrderService.prototype = {
             path: seller.path,
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Content-Length' : orderStringified.length
             }
         };
         var request = this.http.request(options, cashUpdater);
