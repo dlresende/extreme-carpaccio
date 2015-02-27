@@ -4,6 +4,7 @@ var _ = require('lodash');
 var services = require('../javascripts/services');
 var repositories = require('../javascripts/repositories');
 var utils = require('../javascripts/utils');
+var http = require('http');
 
 var Dispatcher = services.Dispatcher;
 var OrderService = services.OrderService;
@@ -12,42 +13,69 @@ var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
 
 describe('Seller Service', function() {
-    var sellers;
-    var sellerService;
+    var sellers, sellerService, bob;
 
     beforeEach(function() {
+        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path/', cash: 0};
         sellers = new Sellers();
-        sellerService = new SellerService(sellers);
+        sellerService = new SellerService(sellers, http);
     });
 
     it('should register new seller', function() {
-        sellerService.register('http://localhost:3000/path', 'bob');
+        sellerService.register('http://localhost:3000/path/', 'bob');
 
-        expect(sellerService.all()).toContain({name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0});
+        expect(sellerService.all()).toContain(bob);
     });
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.add(bob);
 
-        sellerService.updateCash('bob', {total: 100}, {total: 100});
+        sellerService.updateCash(bob, {total: 100}, {total: 100});
 
         expect(sellerService.all()).toContain({name: 'bob', cash: 100})
     });
 
-    it('should float comparaison be based on rounded number', function() {
+    it('should compare seller\'s response with expected one using precision 2', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.add(bob);
 
-        sellerService.updateCash('bob', {total: 100.12345}, {total: 100.12});
+        sellerService.updateCash(bob, {total: 100.12345}, {total: 100.12});
 
         expect(sellerService.all()).toContain({name: 'bob', cash: 100.12})
+    });
+
+    it('should send notification to seller', function() {
+        var fakeRequest = {
+            write: function() {},
+            on: function() {},
+            end: function() {}
+        };
+        spyOn(http, 'request').andReturn(fakeRequest);
+        spyOn(fakeRequest, 'write');
+        spyOn(fakeRequest, 'end');
+        var message = {type: 'info', content: 'test'};
+
+        sellerService.notify(bob, message);
+
+        var messageStringified = utils.stringify(message);
+        expect(http.request).toHaveBeenCalledWith({
+            hostname : 'localhost',
+            port : '3000',
+            path : '/path/feedback',
+            method : 'POST',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Content-Length' : messageStringified.length
+            }
+        });
+        expect(fakeRequest.write).toHaveBeenCalledWith(messageStringified);
+        expect(fakeRequest.end).toHaveBeenCalled();
     });
 });
 
 describe('Order Service', function() {
 
-    var http = require('http');
     var orderService;
     var countries;
 
@@ -72,20 +100,20 @@ describe('Order Service', function() {
         };
         var cashUpdater = function() {};
 
-        orderService.sendOrder({hostname: 'localhost', port: 3000, path: '/test'}, order, cashUpdater);
+        orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater);
 
-        var orderStringyfied = utils.stringify(order);
+        var orderStringified = utils.stringify(order);
         expect(http.request).toHaveBeenCalledWith({
             hostname : 'localhost',
-            port : 3000,
+            port : '3000',
             path : '/test',
             method : 'POST',
             headers : {
                 'Content-Type' : 'application/json',
-                'Content-Length' : orderStringyfied.length
+                'Content-Length' : orderStringified.length
             }
         }, cashUpdater);
-        expect(fakeRequest.write).toHaveBeenCalledWith(orderStringyfied);
+        expect(fakeRequest.write).toHaveBeenCalledWith(orderStringified);
         expect(fakeRequest.end).toHaveBeenCalled();
     });
 
@@ -129,6 +157,13 @@ describe('Order Service', function() {
         expect(bill).toEqual({total: 1746});
     });
 
+    it('should not validate bill when total field is missing', function() {
+        expect(function(){orderService.validateBill({})}).toThrow('The field \"total\" in the response is missing.');
+    });
+
+    it('should not validate bill when total is not a number', function() {
+        expect(function(){orderService.validateBill({total: 'NaN'})}).toThrow('\"Total\" is not a number.');
+    });
 });
 
 describe('Dispatcher', function() {

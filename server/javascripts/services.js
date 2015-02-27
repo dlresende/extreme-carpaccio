@@ -11,7 +11,8 @@ var countries = new repositories.Countries();
 var sellers = new repositories.Sellers();
 var reductions = new repositories.Reductions();
 
-var SellerService = function(_sellers) {
+var SellerService = function(_sellers, _http) {
+    this.http = _http || httpDefault;
     this.sellers = _sellers || sellers;
 };
 
@@ -33,17 +34,46 @@ SellerService.prototype = {
         return this.sellers.all();
     },
 
-    updateCash: function(sellerName, expectedBill, actualBill) {
-        var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
-        var totalActualBill = utils.fixPrecision(actualBill.total, 2);
-        if(actualBill && totalExpectedBill === totalActualBill) {
-            console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
-            this.sellers.updateCash(sellerName, totalExpectedBill);
-        }
+    updateCash: function(seller, expectedBill, actualBill) {
+        try {
+            var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
+            var totalActualBill = utils.fixPrecision(actualBill.total, 2);
 
-        else {
-            console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            if(actualBill && totalExpectedBill === totalActualBill) {
+                var message = 'Hey, ' + seller.name + ' earned ' + totalExpectedBill;
+                this.sellers.updateCash(seller.name, totalExpectedBill);
+                this.notify(seller, {'type': 'INFO', 'content': message});
+            }
+
+            else {
+                var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill;
+                this.notify(seller, {'type': 'ERROR', 'content': message});
+            }
         }
+        catch (exception) {
+            this.notify(seller, {'type': 'ERROR', 'content': exception.message});
+        }
+    },
+
+    notify: function(seller, message) {
+        var messageStringified = utils.stringify(message);
+        var options = {
+            hostname: seller.hostname,
+            port: seller.port,
+            path: seller.path + 'feedback',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length' : messageStringified.length
+            }
+        };
+        var request = this.http.request(options);
+        request.on('error', function(err) {
+            console.log(err);
+        });
+        request.write(messageStringified);
+        request.end();
+        console.log(message.type + ": " + message.content);
     }
 };
 
@@ -106,6 +136,16 @@ OrderService.prototype = {
         sum = sum * tax * (1 - reduction);
 
         return { total: sum };
+    },
+
+    validateBill: function(bill) {
+        if(!_.has(bill, 'total')) {
+            throw {message: 'The field \"total\" in the response is missing.'};
+        }
+
+        if(!_.isNumber(bill.total)) {
+            throw {message: '\"Total\" is not a number.'};
+        }
     }
 };
 
@@ -120,17 +160,22 @@ Dispatcher.prototype = {
         var sellerService = this.Sellers;
 
         var order = orderService.createOrder();
-        var bill = orderService.bill(order);
+        var expectedBill = orderService.bill(order);
 
         function cashUpdater(seller) {
             return function(response) {
                 if(response.statusCode === 200) {
                     response.on('error', function(err) {
-                        // Handle error
                         console.log(err);
                     });
                     response.on('data', function (sellerResponse) {
-                        sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
+                        try {
+                            var actualBill = utils.jsonify(sellerResponse);
+                            orderService.validateBill(actualBill);
+                            sellerService.updateCash(seller, expectedBill, actualBill);
+                        } catch(exception) {
+                            sellerService.notify(seller, {'type': 'ERROR', 'content': exception.message});
+                        }
                     });
                 }
             }
