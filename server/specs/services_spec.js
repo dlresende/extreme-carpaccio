@@ -74,16 +74,18 @@ describe('Order Service', function() {
 
         orderService.sendOrder({hostname: 'localhost', port: 3000, path: '/test'}, order, cashUpdater);
 
+        var orderStringyfied = utils.stringify(order);
         expect(http.request).toHaveBeenCalledWith({
             hostname : 'localhost',
             port : 3000,
             path : '/test',
             method : 'POST',
             headers : {
-                'Content-Type' : 'application/json'
+                'Content-Type' : 'application/json',
+                'Content-Length' : orderStringyfied.length
             }
         }, cashUpdater);
-        expect(fakeRequest.write).toHaveBeenCalledWith(utils.stringify(order));
+        expect(fakeRequest.write).toHaveBeenCalledWith(orderStringyfied);
         expect(fakeRequest.end).toHaveBeenCalled();
     });
 

@@ -10,6 +10,9 @@
   "dependencies": {
     "react": "~0.12.2",
     "bootstrap": "~3.3.2",
-    "react-bootstrap": "~0.15.1"
+    "react-bootstrap": "~0.15.1",
+    "respond": "~1.4.2",
+    "html5shiv": "~3.7.2",
+    "jquery": "~2.1.3"
   }
 }

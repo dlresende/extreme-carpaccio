@@ -1,4 +1,4 @@
-package extreme_carpaccio;
+package xcarpaccio;
 
 import java.io.InputStream;
 import java.util.Scanner;
