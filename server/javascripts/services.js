@@ -75,9 +75,9 @@ SellerService.prototype = {
         request.end();
 
         if(message.type === 'ERROR') {
-            console.error(message.content);
+            console.error('Notifying ' + seller.name + ': ' + message.content);
         } else {
-            console.info(message.content);
+            console.info('Notifying ' + seller.name + ': ' + message.content);
         }
     }
 };
