@@ -22,7 +22,7 @@ describe('Seller Service', function() {
     beforeEach(function() {
         bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path/', cash: 0};
         sellers = new Sellers();
-        sellerService = new SellerService(sellers, http);
+        sellerService = new SellerService(sellers);
     });
 
     it('should register new seller', function() {
@@ -50,31 +50,12 @@ describe('Seller Service', function() {
     });
 
     it('should send notification to seller', function() {
-        var fakeRequest = {
-            write: function() {},
-            on: function() {},
-            end: function() {}
-        };
-        spyOn(http, 'request').andReturn(fakeRequest);
-        spyOn(fakeRequest, 'write');
-        spyOn(fakeRequest, 'end');
+        spyOn(utils, 'post');
         var message = {type: 'info', content: 'test'};
 
         sellerService.notify(bob, message);
 
-        var messageStringified = utils.stringify(message);
-        expect(http.request).toHaveBeenCalledWith({
-            hostname : 'localhost',
-            port : '3000',
-            path : '/path/feedback',
-            method : 'POST',
-            headers : {
-                'Content-Type' : 'application/json',
-                'Content-Length' : messageStringified.length
-            }
-        });
-        expect(fakeRequest.write).toHaveBeenCalledWith(messageStringified);
-        expect(fakeRequest.end).toHaveBeenCalled();
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/path/feedback', message);
     });
 });
 
@@ -84,19 +65,12 @@ describe('Order Service', function() {
     var countries;
 
     beforeEach(function(){
-        orderService = new OrderService(http);
+        orderService = new OrderService();
         countries = new Countries();
     });
 
     it('should send order to seller', function() {
-        var fakeRequest = {
-            write: function() {},
-            on: function() {},
-            end: function() {}
-        };
-        spyOn(http, 'request').andReturn(fakeRequest);
-        spyOn(fakeRequest, 'write');
-        spyOn(fakeRequest, 'end');
+        spyOn(utils, 'post');
         var order = {
             quantity: [1, 2, 3],
             prices: [12.1, 10, 11],
@@ -106,19 +80,7 @@ describe('Order Service', function() {
 
         orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater);
 
-        var orderStringified = utils.stringify(order);
-        expect(http.request).toHaveBeenCalledWith({
-            hostname : 'localhost',
-            port : '3000',
-            path : '/test',
-            method : 'POST',
-            headers : {
-                'Content-Type' : 'application/json',
-                'Content-Length' : orderStringified.length
-            }
-        }, cashUpdater);
-        expect(fakeRequest.write).toHaveBeenCalledWith(orderStringified);
-        expect(fakeRequest.end).toHaveBeenCalled();
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test', order, cashUpdater);
     });
 
     it('should create an order with N item prices', function() {

@@ -1,6 +1,10 @@
 'use strict';
 
-var Utils = function() {};
+var http = require('http');
+
+var Utils = function(_http) {
+    this.http = _http || http;
+};
 
 Utils.prototype = {
     stringify: function(object) {
@@ -18,6 +22,26 @@ Utils.prototype = {
 
     fixPrecision: function(number, precision) {
         return parseFloat(number.toFixed(precision));
+    },
+
+    post: function(hostname, port, path, body, callback) {
+        var bodyStringified = this.stringify(body);
+        var options = {
+            hostname: hostname,
+            port: port,
+            path: path,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length' : bodyStringified.length
+            }
+        };
+        var request = this.http.request(options, callback);
+        request.on('error', function(err) {
+            console.error(err);
+        });
+        request.write(bodyStringified);
+        request.end();
     }
 };
 

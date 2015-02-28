@@ -1,5 +1,7 @@
 'use strict';
 
+var http = require('http');
+
 var utils = require('../javascripts/utils');
 
 describe('Utils', function() {
@@ -17,5 +19,34 @@ describe('Utils', function() {
         expect(function(){utils.jsonify('not valid json object')}).toThrow();
         expect(function(){utils.jsonify('')}).toThrow();
         expect(function(){utils.jsonify(undefined)}).toThrow();
+    });
+
+    it('should send post request to someone else', function() {
+        var fakeRequest = {
+            write: function() {},
+            on: function() {},
+            end: function() {}
+        };
+        spyOn(http, 'request').andReturn(fakeRequest);
+        spyOn(fakeRequest, 'write');
+        spyOn(fakeRequest, 'end');
+        var body = {content: 'some content'};
+        var callback = function() {};
+
+        utils.post('localhost', '3000', '/path', body, callback);
+
+        var bodyStringified = utils.stringify(body);
+        expect(http.request).toHaveBeenCalledWith({
+            hostname : 'localhost',
+            port : '3000',
+            path : '/path',
+            method : 'POST',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Content-Length' : bodyStringified.length
+            }
+        }, callback);
+        expect(fakeRequest.write).toHaveBeenCalledWith(bodyStringified);
+        expect(fakeRequest.end).toHaveBeenCalled();
     });
 });

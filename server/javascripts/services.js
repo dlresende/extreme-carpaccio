@@ -1,6 +1,5 @@
 'use strict';
 
-var httpDefault = require('http');
 var _ = require('lodash');
 var url = require("url");
 
@@ -11,8 +10,7 @@ var countries = new repositories.Countries();
 var sellers = new repositories.Sellers();
 var reductions = new repositories.Reductions();
 
-var SellerService = function(_sellers, _http) {
-    this.http = _http || httpDefault;
+var SellerService = function(_sellers) {
     this.sellers = _sellers || sellers;
 };
 
@@ -56,23 +54,7 @@ SellerService.prototype = {
     },
 
     notify: function(seller, message) {
-        var messageStringified = utils.stringify(message);
-        var options = {
-            hostname: seller.hostname,
-            port: seller.port,
-            path: seller.path + 'feedback',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length' : messageStringified.length
-            }
-        };
-        var request = this.http.request(options);
-        request.on('error', function(err) {
-            console.error(err);
-        });
-        request.write(messageStringified);
-        request.end();
+        utils.post(seller.hostname, seller.port, seller.path + 'feedback', message);
 
         if(message.type === 'ERROR') {
             console.error('Notifying ' + seller.name + ': ' + message.content);
@@ -82,31 +64,13 @@ SellerService.prototype = {
     }
 };
 
-var OrderService = function(_http) {
-    this.http = _http || httpDefault;
+var OrderService = function() {
 };
 
 OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater) {
-        var orderStringified = utils.stringify(order);
-        console.info('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
-
-        var options = {
-            hostname: seller.hostname,
-            port: seller.port,
-            path: seller.path,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length' : orderStringified.length
-            }
-        };
-        var request = this.http.request(options, cashUpdater);
-        request.on('error', function(err) {
-            console.error(err);
-        });
-        request.write(orderStringified);
-        request.end();
+        console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
+        utils.post(seller.hostname, seller.port, seller.path, order, cashUpdater);
     },
 
     createOrder: function(numberOfItems) {
