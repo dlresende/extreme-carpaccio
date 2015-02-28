@@ -28,7 +28,7 @@ SellerService.prototype = {
         console.info('New seller registered: ' + utils.stringify(seller))
     },
 
-    all: function() {
+    allSellers: function() {
         return this.sellers.all();
     },
 
@@ -119,14 +119,14 @@ OrderService.prototype = {
 };
 
 var Dispatcher = function(_sellerService, _orderService) {
-    this.Sellers = _sellerService || exports.SellerService;
+    this.SellerService = _sellerService || exports.SellerService;
     this.OrderService = _orderService || exports.OrderService;
 };
 
 Dispatcher.prototype = {
     sendOrderToSellers: function() {
         var orderService = this.OrderService;
-        var sellerService = this.Sellers;
+        var sellerService = this.SellerService;
 
         var order = orderService.createOrder();
         var expectedBill = orderService.bill(order);
@@ -150,7 +150,7 @@ Dispatcher.prototype = {
             }
         }
 
-        _.forEach(sellerService.all(), function(seller) {
+        _.forEach(sellerService.allSellers(), function(seller) {
             orderService.sendOrder(seller, order, cashUpdater(seller));
         });
     },

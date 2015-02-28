@@ -28,7 +28,7 @@ describe('Seller Service', function() {
     it('should register new seller', function() {
         sellerService.register('http://localhost:3000/path/', 'bob');
 
-        expect(sellerService.all()).toContain(bob);
+        expect(sellerService.allSellers()).toContain(bob);
     });
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
@@ -37,7 +37,7 @@ describe('Seller Service', function() {
 
         sellerService.updateCash(bob, {total: 100}, {total: 100});
 
-        expect(sellerService.all()).toContain({name: 'bob', cash: 100})
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100})
     });
 
     it('should compare seller\'s response with expected one using precision 2', function() {
@@ -46,7 +46,7 @@ describe('Seller Service', function() {
 
         sellerService.updateCash(bob, {total: 100.12345}, {total: 100.12});
 
-        expect(sellerService.all()).toContain({name: 'bob', cash: 100.12})
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100.12})
     });
 
     it('should send notification to seller', function() {
@@ -134,20 +134,19 @@ describe('Order Service', function() {
 
 describe('Dispatcher', function() {
     var dispatcher;
-    var sellers;
     var orderService;
+    var sellerService;
 
     beforeEach(function(){
-        sellers = new Sellers();
+        sellerService = new SellerService();
         orderService = new OrderService();
-        dispatcher = new Dispatcher(sellers, orderService);
+        dispatcher = new Dispatcher(sellerService, orderService);
     });
 
     it('should send the same order to each seller', function() {
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
-        sellers.add(alice);
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
-        sellers.add(bob);
+        spyOn(sellerService, 'allSellers').andReturn([alice, bob]);
         var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
         spyOn(orderService, 'createOrder').andReturn(order);
         spyOn(orderService, 'sendOrder');
