@@ -102,13 +102,12 @@ describe('Countries', function() {
               return (arr||[]).length;
             };
 
-        var occurences = _.groupBy(samples);
+        var occurrences = _.groupBy(samples);
 
-        expect(lengthOf(occurences['FR'])).toBeGreaterThan(20);
-        expect(lengthOf(occurences['UK'])).toBeGreaterThan(20);
-        expect(lengthOf(occurences['LT'])).toBeLessThan(10);
-        expect(lengthOf(occurences['NL'])).toBeLessThan(10);
-
+        expect(lengthOf(occurrences['FR'])).toBeGreaterThan(20);
+        expect(lengthOf(occurrences['UK'])).toBeGreaterThan(20);
+        expect(lengthOf(occurrences['LT'])).toBeLessThan(10);
+        expect(lengthOf(occurrences['NL'])).toBeLessThan(10);
     });
 });
 
