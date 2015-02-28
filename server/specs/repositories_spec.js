@@ -15,7 +15,7 @@ describe('Sellers', function(){
         sellers = new Sellers();
     });
 
-    it('should return all sellers sorted by cash in decresing order', function() {
+    it('should return all sellers sorted by cash in decreasing order', function() {
         sellers.add(bob);
         var alice = {name: 'alice', hostname: 'hostname', port: '3001', path: '/path', cash: 10.0};
         sellers.add(alice);
