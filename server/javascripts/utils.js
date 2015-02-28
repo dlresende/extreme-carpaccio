@@ -12,19 +12,12 @@ Utils.prototype = {
             return JSON.parse(string);
         }
         catch (exception) {
-            console.error(exception);
-            return {};
+            throw {message: 'The object ' + string + ' is not a valid json object.'};
         }
     },
 
     fixPrecision: function(number, precision) {
-        try {
-            return parseFloat(number.toFixed(precision));
-        }
-        catch (exception) {
-            console.error(exception);
-            return 0.00;
-        }
+        return parseFloat(number.toFixed(precision));
     }
 };
 
