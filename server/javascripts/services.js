@@ -27,7 +27,7 @@ SellerService.prototype = {
             cash: 0.0
         };
         this.sellers.add(seller);
-        console.log('New seller registered: ' + utils.stringify(seller))
+        console.info('New seller registered: ' + utils.stringify(seller))
     },
 
     all: function() {
@@ -69,11 +69,16 @@ SellerService.prototype = {
         };
         var request = this.http.request(options);
         request.on('error', function(err) {
-            console.log(err);
+            console.error(err);
         });
         request.write(messageStringified);
         request.end();
-        console.log(message.type + ": " + message.content);
+
+        if(message.type === 'ERROR') {
+            console.error(message.content);
+        } else {
+            console.info(message.content);
+        }
     }
 };
 
@@ -84,7 +89,7 @@ var OrderService = function(_http) {
 OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater) {
         var orderStringified = utils.stringify(order);
-        console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
+        console.info('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
 
         var options = {
             hostname: seller.hostname,
@@ -98,7 +103,7 @@ OrderService.prototype = {
         };
         var request = this.http.request(options, cashUpdater);
         request.on('error', function(err) {
-            console.log(err);
+            console.error(err);
         });
         request.write(orderStringified);
         request.end();
@@ -166,7 +171,7 @@ Dispatcher.prototype = {
             return function(response) {
                 if(response.statusCode === 200) {
                     response.on('error', function(err) {
-                        console.log(err);
+                        console.error(err);
                     });
                     response.on('data', function (sellerResponse) {
                         try {
@@ -188,7 +193,7 @@ Dispatcher.prototype = {
 
     startBuying: function(intervalInMillis, round) {
         var iteration = round || 1;
-        console.log('Purchasing round ' + iteration);
+        console.info('Purchasing round ' + iteration);
 
         var self = this;
         self.sendOrderToSellers();

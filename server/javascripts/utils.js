@@ -12,7 +12,7 @@ Utils.prototype = {
             return JSON.parse(string);
         }
         catch (exception) {
-            console.log(exception);
+            console.error(exception);
             return {};
         }
     },
@@ -22,7 +22,7 @@ Utils.prototype = {
             return parseFloat(number.toFixed(precision));
         }
         catch (exception) {
-            console.log(exception);
+            console.error(exception);
             return 0.00;
         }
     }
