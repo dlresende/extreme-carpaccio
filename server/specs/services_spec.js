@@ -20,7 +20,7 @@ describe('Seller Service', function() {
     var sellers, sellerService, bob;
 
     beforeEach(function() {
-        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path/', cash: 0};
+        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path/', cash: 0, online: false};
         sellers = new Sellers();
         sellerService = new SellerService(sellers);
     });

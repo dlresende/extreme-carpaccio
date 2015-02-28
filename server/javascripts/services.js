@@ -22,7 +22,8 @@ SellerService.prototype = {
             hostname: parsedUrl.hostname,
             port: parsedUrl.port,
             path: parsedUrl.path,
-            cash: 0.0
+            cash: 0.0,
+            online: false
         };
         this.sellers.add(seller);
         console.info('New seller registered: ' + utils.stringify(seller))
@@ -50,6 +51,14 @@ SellerService.prototype = {
         catch (exception) {
             this.notify(seller, {'type': 'ERROR', 'content': exception.message});
         }
+    },
+
+    setOffline: function(seller) {
+        this.sellers.setOffline(seller.name);
+    },
+
+    setOnline: function(seller) {
+        this.sellers.setOnline(seller.name);
     },
 
     notify: function(seller, message) {
@@ -133,10 +142,15 @@ Dispatcher.prototype = {
         function cashUpdater(seller) {
             return function(response) {
                 if(response.statusCode === 200) {
+                    sellerService.setOnline(seller);
+
                     response.on('error', function(err) {
                         console.error(err);
                     });
+
                     response.on('data', function (sellerResponse) {
+                        console.info(seller.name + ' replied "' + sellerResponse + '"');
+
                         try {
                             var actualBill = utils.jsonify(sellerResponse);
                             orderService.validateBill(actualBill);
@@ -151,6 +165,7 @@ Dispatcher.prototype = {
 
         function logError(seller) {
             return function() {
+                sellerService.setOffline(seller);
                 console.error('Could not reach seller ' + utils.stringify(seller));
             }
         }
@@ -162,7 +177,7 @@ Dispatcher.prototype = {
 
     startBuying: function(intervalInMillis, round) {
         var iteration = round || 1;
-        console.info('Purchasing round ' + iteration);
+        console.info('>>> Purchasing round ' + iteration);
 
         var self = this;
         self.sendOrderToSellers();

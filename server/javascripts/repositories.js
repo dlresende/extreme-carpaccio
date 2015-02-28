@@ -32,6 +32,14 @@ Sellers.prototype = {
 
     updateCash: function(sellerName, profit) {
         this.get(sellerName).cash += parseFloat(profit);
+    },
+
+    setOffline: function(sellerName) {
+        this.get(sellerName).online = false;
+    },
+
+    setOnline: function(sellerName) {
+        this.get(sellerName).online = true;
     }
 };
 

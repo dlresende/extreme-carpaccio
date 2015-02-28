@@ -16,7 +16,7 @@ Utils.prototype = {
             return JSON.parse(string);
         }
         catch (exception) {
-            throw {message: 'The object "' + string + '" is not a valid json object.'};
+            throw {message: 'The object "' + string + '" is not a valid json object'};
         }
     },
 
