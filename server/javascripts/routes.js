@@ -8,7 +8,7 @@ module.exports = function (sellerService) {
         response.send('sellers', sellerService.allSellers() );
     });
 
-    router.post('/sellers', function(request, response) {
+    router.post('/seller', function(request, response) {
         var sellerName = request.body.name,
             sellerUrl = request.body.url;
         if(_.isEmpty(sellerName) || _.isEmpty(sellerUrl)) {

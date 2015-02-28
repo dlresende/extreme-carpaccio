@@ -11,8 +11,7 @@ var SellerForm = React.createClass({
 
 		this.refs.name.getDOMNode().value= "";
 		this.refs.url.getDOMNode().value= "";
-		return;
-	},	
+	},
 	render: function(){
 		return (
 			<div className="jumbotron">
@@ -82,7 +81,7 @@ var SellerView = React.createClass({
 var Seller = React.createClass({
 	loadSellersFromServer: function(){
 		$.ajax({
-			url:this.props.url,
+			url:"/sellers",
 			datatype:'json',
 			success:function(data){
 				this.setState({data: data});
@@ -93,16 +92,15 @@ var Seller = React.createClass({
 		});
 	},
 	handleSellerSubmit: function(seller) {
-		var sellers = this.state.data;
-		var newSeller = sellers.concat([seller]);
-		this.setState({data: newSeller});
+		var currentSellers = this.state.data;
+		var sellers = currentSellers.concat([seller]);
 		$.ajax({
 			url: this.props.url,
 			datatype: 'json',
 			type: 'POST',
 			data: seller,
-			success: function(data){
-				this.setState({data:data});
+			success: function(){
+				this.setState({data:sellers});
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.error(this.props.url, status, err.toString());
@@ -127,6 +125,6 @@ var Seller = React.createClass({
 });
 
 React.render(
-	<Seller url="/sellers" pollInterval="5000" />,
+	<Seller url="/seller" pollInterval="5000" />,
 	document.getElementById('seller')
 );
