@@ -24,7 +24,7 @@ Utils.prototype = {
         return parseFloat(number.toFixed(precision));
     },
 
-    post: function(hostname, port, path, body, callback) {
+    post: function(hostname, port, path, body, onSuccess, onError) {
         var bodyStringified = this.stringify(body);
         var options = {
             hostname: hostname,
@@ -36,10 +36,8 @@ Utils.prototype = {
                 'Content-Length' : bodyStringified.length
             }
         };
-        var request = this.http.request(options, callback);
-        request.on('error', function(err) {
-            console.error(err);
-        });
+        var request = this.http.request(options, onSuccess);
+        request.on('error', onError || function() {});
         request.write(bodyStringified);
         request.end();
     }

@@ -77,10 +77,11 @@ describe('Order Service', function() {
             state: "CA"
         };
         var cashUpdater = function() {};
+        var onError = function() {};
 
-        orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater);
+        orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater, onError);
 
-        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test', order, cashUpdater);
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test', order, cashUpdater, onError);
     });
 
     it('should create an order with N item prices', function() {
@@ -154,7 +155,7 @@ describe('Dispatcher', function() {
         dispatcher.sendOrderToSellers();
 
         expect(orderService.createOrder).toHaveBeenCalled();
-        expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function));
-        expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function));
+        expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
+        expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
     });
 });

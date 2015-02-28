@@ -38,9 +38,8 @@ SellerService.prototype = {
             var totalActualBill = utils.fixPrecision(actualBill.total, 2);
 
             if(actualBill && totalExpectedBill === totalActualBill) {
-                var message = 'Hey, ' + seller.name + ' earned ' + totalExpectedBill;
                 this.sellers.updateCash(seller.name, totalExpectedBill);
-                this.notify(seller, {'type': 'INFO', 'content': message});
+                this.notify(seller, {'type': 'INFO', 'content': 'Hey, ' + seller.name + ' earned ' + totalExpectedBill});
             }
 
             else {
@@ -68,9 +67,9 @@ var OrderService = function() {
 };
 
 OrderService.prototype = {
-    sendOrder: function(seller, order, cashUpdater) {
+    sendOrder: function(seller, order, cashUpdater, logError) {
         console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
-        utils.post(seller.hostname, seller.port, seller.path, order, cashUpdater);
+        utils.post(seller.hostname, seller.port, seller.path, order, cashUpdater, logError);
     },
 
     createOrder: function(numberOfItems) {
@@ -119,14 +118,14 @@ OrderService.prototype = {
 };
 
 var Dispatcher = function(_sellerService, _orderService) {
-    this.SellerService = _sellerService || exports.SellerService;
-    this.OrderService = _orderService || exports.OrderService;
+    this.sellerService = _sellerService ;
+    this.orderService = _orderService;
 };
 
 Dispatcher.prototype = {
     sendOrderToSellers: function() {
-        var orderService = this.OrderService;
-        var sellerService = this.SellerService;
+        var orderService = this.orderService;
+        var sellerService = this.sellerService;
 
         var order = orderService.createOrder();
         var expectedBill = orderService.bill(order);
@@ -150,8 +149,14 @@ Dispatcher.prototype = {
             }
         }
 
+        function logError(seller) {
+            return function() {
+                console.error('Could not reach seller ' + utils.stringify(seller));
+            }
+        }
+
         _.forEach(sellerService.allSellers(), function(seller) {
-            orderService.sendOrder(seller, order, cashUpdater(seller));
+            orderService.sendOrder(seller, order, cashUpdater(seller), logError(seller));
         });
     },
 
