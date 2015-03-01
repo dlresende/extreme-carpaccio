@@ -1,3 +1,5 @@
+var FormattedNumber = ReactIntl.FormattedNumber;
+
 var SellerForm = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
@@ -41,7 +43,12 @@ var SellerView = React.createClass({
 			return (
 				<tr className={ seller.online ? "success" : "danger"}>
                   <td>{seller.name}</td>
-                  <td>{seller.cash}</td>
+                  <td>
+					  <FormattedNumber
+						  value={seller.cash}
+						  style="currency"
+						  currency="EUR" />
+				  </td>
                 </tr>
 			);
 		});
