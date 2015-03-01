@@ -20,13 +20,13 @@ describe('Seller Service', function() {
     var sellers, sellerService, bob;
 
     beforeEach(function() {
-        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path/', cash: 0, online: false};
+        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0, online: false};
         sellers = new Sellers();
         sellerService = new SellerService(sellers);
     });
 
     it('should register new seller', function() {
-        sellerService.register('http://localhost:3000/path/', 'bob');
+        sellerService.register('http://localhost:3000/path', 'bob');
 
         expect(sellerService.allSellers()).toContain(bob);
     });
@@ -81,7 +81,7 @@ describe('Order Service', function() {
 
         orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater, onError);
 
-        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test', order, cashUpdater, onError);
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test/order', order, cashUpdater, onError);
     });
 
     it('should create an order with N item prices', function() {

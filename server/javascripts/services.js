@@ -62,7 +62,7 @@ SellerService.prototype = {
     },
 
     notify: function(seller, message) {
-        utils.post(seller.hostname, seller.port, seller.path + 'feedback', message);
+        utils.post(seller.hostname, seller.port, seller.path + '/feedback', message);
 
         if(message.type === 'ERROR') {
             console.error('Notifying ' + seller.name + ': ' + message.content);
@@ -78,7 +78,7 @@ var OrderService = function() {
 OrderService.prototype = {
     sendOrder: function(seller, order, cashUpdater, logError) {
         console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
-        utils.post(seller.hostname, seller.port, seller.path, order, cashUpdater, logError);
+        utils.post(seller.hostname, seller.port, seller.path + '/order', order, cashUpdater, logError);
     },
 
     createOrder: function(numberOfItems) {

@@ -29,7 +29,7 @@ Utils.prototype = {
         var options = {
             hostname: hostname,
             port: port,
-            path: path,
+            path: (path || '').replace("//", "/"),
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
