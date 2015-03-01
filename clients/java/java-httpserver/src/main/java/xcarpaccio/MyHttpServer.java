@@ -30,9 +30,9 @@ public class MyHttpServer
 
     void start() throws IOException {
         server = HttpServer.create(new InetSocketAddress(port), 0);
-        server.createContext("/", new ConsoleHttpHandler());
         server.createContext("/ping", new PingHttpHandler());
         server.createContext("/feedback", new FeedbackHttpHandler());
+        server.createContext("/", new ConsoleHttpHandler());
         server.start();
 
         logger.log("Server running on port " + port + "...");
@@ -90,11 +90,11 @@ public class MyHttpServer
     }
 
     private class ConsoleHttpHandler extends AbstractHttpHandler {
-
-
         @Override
         public String respond(HttpExchange httpExchange) {
-            logger.log(stringify(httpExchange.getRequestBody()));
+            String method = httpExchange.getRequestMethod();
+            String uri = httpExchange.getRequestURI().getPath();
+            logger.log(method + " " + uri + " " + stringify(httpExchange.getRequestBody()));
             return NO_CONTENT;
         }
     }
