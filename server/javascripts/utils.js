@@ -1,6 +1,10 @@
 'use strict';
 
-var Utils = function() {};
+var http = require('http');
+
+var Utils = function(_http) {
+    this.http = _http || http;
+};
 
 Utils.prototype = {
     stringify: function(object) {
@@ -12,19 +16,30 @@ Utils.prototype = {
             return JSON.parse(string);
         }
         catch (exception) {
-            console.log(exception);
-            return {};
+            throw {message: 'The object "' + string + '" is not a valid json object'};
         }
     },
 
     fixPrecision: function(number, precision) {
-        try {
-            return parseFloat(number.toFixed(precision));
-        }
-        catch (exception) {
-            console.log(exception);
-            return 0.00;
-        }
+        return parseFloat(number.toFixed(precision));
+    },
+
+    post: function(hostname, port, path, body, onSuccess, onError) {
+        var bodyStringified = this.stringify(body);
+        var options = {
+            hostname: hostname,
+            port: port,
+            path: (path || '').replace("//", "/"),
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length' : bodyStringified.length
+            }
+        };
+        var request = this.http.request(options, onSuccess);
+        request.on('error', onError || function() {});
+        request.write(bodyStringified);
+        request.end();
     }
 };
 

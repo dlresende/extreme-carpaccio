@@ -1,4 +1,4 @@
-﻿namespace katazon.client
+﻿namespace NancyApplication1
 {
     using System;
     using Nancy.Hosting.Self;
@@ -8,7 +8,7 @@
         static void Main(string[] args)
         {
             var uri =
-                new Uri("http://localhost:8080");
+                new Uri("http://localhost:3579");
 
             using (var host = new NancyHost(uri))
             {

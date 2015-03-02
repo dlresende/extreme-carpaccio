@@ -1,6 +1,5 @@
 'use strict';
 
-var httpDefault = require('http');
 var _ = require('lodash');
 var url = require("url");
 
@@ -23,55 +22,63 @@ SellerService.prototype = {
             hostname: parsedUrl.hostname,
             port: parsedUrl.port,
             path: parsedUrl.path,
-            cash: 0.0
+            cash: 0.0,
+            online: false
         };
         this.sellers.add(seller);
-        console.log('New seller registered: ' + utils.stringify(seller))
+        console.info('New seller registered: ' + utils.stringify(seller))
     },
 
-    all: function() {
+    allSellers: function() {
         return this.sellers.all();
     },
 
-    updateCash: function(sellerName, expectedBill, actualBill) {
-        var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
-        var totalActualBill = utils.fixPrecision(actualBill.total, 2);
-        if(actualBill && totalExpectedBill === totalActualBill) {
-            console.log('Hey, ' + sellerName + ' earned ' + totalExpectedBill);
-            this.sellers.updateCash(sellerName, totalExpectedBill);
-        }
+    updateCash: function(seller, expectedBill, actualBill) {
+        try {
+            var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
+            var totalActualBill = utils.fixPrecision(actualBill.total, 2);
 
-        else {
-            console.log('Goddamn, ' + sellerName + ' replied ' + actualBill.total + ' but right answer was ' + expectedBill.total);
+            if(actualBill && totalExpectedBill === totalActualBill) {
+                this.sellers.updateCash(seller.name, totalExpectedBill);
+                this.notify(seller, {'type': 'INFO', 'content': 'Hey, ' + seller.name + ' earned ' + totalExpectedBill});
+            }
+
+            else {
+                var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill;
+                this.notify(seller, {'type': 'ERROR', 'content': message});
+            }
+        }
+        catch (exception) {
+            this.notify(seller, {'type': 'ERROR', 'content': exception.message});
+        }
+    },
+
+    setOffline: function(seller) {
+        this.sellers.setOffline(seller.name);
+    },
+
+    setOnline: function(seller) {
+        this.sellers.setOnline(seller.name);
+    },
+
+    notify: function(seller, message) {
+        utils.post(seller.hostname, seller.port, seller.path + '/feedback', message);
+
+        if(message.type === 'ERROR') {
+            console.error('Notifying ' + seller.name + ': ' + message.content);
+        } else {
+            console.info('Notifying ' + seller.name + ': ' + message.content);
         }
     }
 };
 
-var OrderService = function(_http) {
-    this.http = _http || httpDefault;
+var OrderService = function() {
 };
 
 OrderService.prototype = {
-    sendOrder: function(seller, order, cashUpdater) {
-        var orderStringified = utils.stringify(order);
-        console.log('Sending order: ' + orderStringified + ' to seller: ' + utils.stringify(seller));
-
-        var options = {
-            hostname: seller.hostname,
-            port: seller.port,
-            path: seller.path,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length' : orderStringified.length
-            }
-        };
-        var request = this.http.request(options, cashUpdater);
-        request.on('error', function(err) {
-            console.log(err);
-        });
-        request.write(orderStringified);
-        request.end();
+    sendOrder: function(seller, order, cashUpdater, logError) {
+        console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
+        utils.post(seller.hostname, seller.port, seller.path + '/order', order, cashUpdater, logError);
     },
 
     createOrder: function(numberOfItems) {
@@ -106,44 +113,71 @@ OrderService.prototype = {
         sum = sum * tax * (1 - reduction);
 
         return { total: sum };
+    },
+
+    validateBill: function(bill) {
+        if(!_.has(bill, 'total')) {
+            throw {message: 'The field \"total\" in the response is missing.'};
+        }
+
+        if(!_.isNumber(bill.total)) {
+            throw {message: '\"Total\" is not a number.'};
+        }
     }
 };
 
 var Dispatcher = function(_sellerService, _orderService) {
-    this.Sellers = _sellerService || exports.SellerService;
-    this.OrderService = _orderService || exports.OrderService;
+    this.sellerService = _sellerService ;
+    this.orderService = _orderService;
 };
 
 Dispatcher.prototype = {
     sendOrderToSellers: function() {
-        var orderService = this.OrderService;
-        var sellerService = this.Sellers;
+        var orderService = this.orderService;
+        var sellerService = this.sellerService;
 
         var order = orderService.createOrder();
-        var bill = orderService.bill(order);
+        var expectedBill = orderService.bill(order);
 
         function cashUpdater(seller) {
             return function(response) {
                 if(response.statusCode === 200) {
+                    sellerService.setOnline(seller);
+
                     response.on('error', function(err) {
-                        // Handle error
-                        console.log(err);
+                        console.error(err);
                     });
+
                     response.on('data', function (sellerResponse) {
-                        sellerService.updateCash(seller.name, bill, utils.jsonify(sellerResponse));
+                        console.info(seller.name + ' replied "' + sellerResponse + '"');
+
+                        try {
+                            var actualBill = utils.jsonify(sellerResponse);
+                            orderService.validateBill(actualBill);
+                            sellerService.updateCash(seller, expectedBill, actualBill);
+                        } catch(exception) {
+                            sellerService.notify(seller, {'type': 'ERROR', 'content': exception.message});
+                        }
                     });
                 }
             }
         }
 
-        _.forEach(sellerService.all(), function(seller) {
-            orderService.sendOrder(seller, order, cashUpdater(seller));
+        function logError(seller) {
+            return function() {
+                sellerService.setOffline(seller);
+                console.error('Could not reach seller ' + utils.stringify(seller));
+            }
+        }
+
+        _.forEach(sellerService.allSellers(), function(seller) {
+            orderService.sendOrder(seller, order, cashUpdater(seller), logError(seller));
         });
     },
 
     startBuying: function(intervalInMillis, round) {
         var iteration = round || 1;
-        console.log('Purchasing round ' + iteration);
+        console.info('>>> Purchasing round ' + iteration);
 
         var self = this;
         self.sendOrderToSellers();

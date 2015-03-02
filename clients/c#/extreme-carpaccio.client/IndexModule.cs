@@ -1,8 +1,9 @@
-﻿namespace katazon.client
+﻿using Nancy.Extensions;
+
+namespace katazon.client
 {
     using Nancy;
     using System;
-    using System.Collections.Generic;
     using Nancy.ModelBinding;
 
     public class IndexModule : NancyModule
@@ -11,16 +12,22 @@
         {
             Post["/"] = _ =>
             {
-                var param = this.Bind<Order>();
-                return Response.AsJson(new { total = 0 });
+                Console.WriteLine("{0}", this.Request.Body.ToString());
+                return "";
+            };
+
+            Post["/feedback"] = _ =>
+            {
+                var feedback = this.Bind<Feedback>();
+                HandleFeedback(feedback);
+                return "";
             };
         }
-    }
 
-    public class Order
-    {
-        public List<decimal> prices { get; set; }
-        public List<int> quantities { get; set; }
-        public string country { get; set; }
+        private void HandleFeedback(Feedback feedback)
+        {
+            Console.Write("Type: {0}: ", feedback.type);
+            Console.WriteLine(feedback.content);
+        }        
     }
 }

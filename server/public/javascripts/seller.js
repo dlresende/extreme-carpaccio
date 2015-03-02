@@ -1,3 +1,5 @@
+var FormattedNumber = ReactIntl.FormattedNumber;
+
 var SellerForm = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
@@ -11,7 +13,10 @@ var SellerForm = React.createClass({
 
 		this.refs.name.getDOMNode().value= "";
 		this.refs.url.getDOMNode().value= "";
+<<<<<<< HEAD:server/public/seller.js
 		return;
+=======
+>>>>>>> 46436a9aefae3bcf26f21735bc9c7d5cd3eef0a9:server/public/javascripts/seller.js
 	},
 	render: function(){
 		return (
@@ -38,10 +43,22 @@ var SellerView = React.createClass({
 	render: function(){
 		var sellerNodes = this.props.data.map(function(seller){
 			return (
+<<<<<<< HEAD:server/public/seller.js
 				<tr>
           <td>{seller.name}</td>
           <td>{seller.cash}</td>
         </tr>
+=======
+				<tr className={ seller.online ? "success" : "danger"}>
+                  <td>{seller.name}</td>
+                  <td>
+					  <FormattedNumber
+						  value={seller.cash}
+						  style="currency"
+						  currency="EUR" />
+				  </td>
+                </tr>
+>>>>>>> 46436a9aefae3bcf26f21735bc9c7d5cd3eef0a9:server/public/javascripts/seller.js
 			);
 		});
 		return (
@@ -80,7 +97,7 @@ var SellerView = React.createClass({
 var Seller = React.createClass({
 	loadSellersFromServer: function(){
 		$.ajax({
-			url:this.props.url,
+			url:"/sellers",
 			datatype:'json',
 			success:function(data){
 				this.setState({data: data});
@@ -91,16 +108,15 @@ var Seller = React.createClass({
 		});
 	},
 	handleSellerSubmit: function(seller) {
-		var sellers = this.state.data;
-		var newSeller = sellers.concat([seller]);
-		this.setState({data: newSeller});
+		var currentSellers = this.state.data;
+		var sellers = currentSellers.concat([seller]);
 		$.ajax({
 			url: this.props.url,
 			datatype: 'json',
 			type: 'POST',
 			data: seller,
-			success: function(data){
-				this.setState({data:data});
+			success: function(){
+				this.setState({data:sellers});
 			}.bind(this),
 			error: function(xhr, status, err){
 				console.error(this.props.url, status, err.toString());
@@ -125,6 +141,6 @@ var Seller = React.createClass({
 });
 
 React.render(
-	<Seller url="/sellers" pollInterval="5000" />,
+	<Seller url="/seller" pollInterval="5000" />,
 	document.getElementById('seller')
 );

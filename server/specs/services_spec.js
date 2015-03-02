@@ -4,6 +4,7 @@ var _ = require('lodash');
 var services = require('../javascripts/services');
 var repositories = require('../javascripts/repositories');
 var utils = require('../javascripts/utils');
+var http = require('http');
 
 var Dispatcher = services.Dispatcher;
 var OrderService = services.OrderService;
@@ -11,11 +12,15 @@ var SellerService = services.SellerService;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
 
+(function disableLogs() {
+    console.info = console.error = function() {};
+})();
+
 describe('Seller Service', function() {
-    var sellers;
-    var sellerService;
+    var sellers, sellerService, bob;
 
     beforeEach(function() {
+        bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0, online: false};
         sellers = new Sellers();
         sellerService = new SellerService(sellers);
     });
@@ -23,70 +28,60 @@ describe('Seller Service', function() {
     it('should register new seller', function() {
         sellerService.register('http://localhost:3000/path', 'bob');
 
-        expect(sellerService.all()).toContain({name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0});
+        expect(sellerService.allSellers()).toContain(bob);
     });
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.add(bob);
 
-        sellerService.updateCash('bob', {total: 100}, {total: 100});
+        sellerService.updateCash(bob, {total: 100}, {total: 100});
 
-        expect(sellerService.all()).toContain({name: 'bob', cash: 100})
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100})
     });
 
-    it('should float comparaison be based on rounded number', function() {
+    it('should compare seller\'s response with expected one using precision 2', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.add(bob);
 
-        sellerService.updateCash('bob', {total: 100.12345}, {total: 100.12});
+        sellerService.updateCash(bob, {total: 100.12345}, {total: 100.12});
 
-        expect(sellerService.all()).toContain({name: 'bob', cash: 100.12})
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100.12})
+    });
+
+    it('should send notification to seller', function() {
+        spyOn(utils, 'post');
+        var message = {type: 'info', content: 'test'};
+
+        sellerService.notify(bob, message);
+
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/path/feedback', message);
     });
 });
 
 describe('Order Service', function() {
 
-    var http = require('http');
     var orderService;
     var countries;
 
     beforeEach(function(){
-        orderService = new OrderService(http);
+        orderService = new OrderService();
         countries = new Countries();
     });
 
     it('should send order to seller', function() {
-        var fakeRequest = {
-            write: function() {},
-            on: function() {},
-            end: function() {}
-        };
-        spyOn(http, 'request').andReturn(fakeRequest);
-        spyOn(fakeRequest, 'write');
-        spyOn(fakeRequest, 'end');
+        spyOn(utils, 'post');
         var order = {
             quantity: [1, 2, 3],
             prices: [12.1, 10, 11],
             state: "CA"
         };
         var cashUpdater = function() {};
+        var onError = function() {};
 
-        orderService.sendOrder({hostname: 'localhost', port: 3000, path: '/test'}, order, cashUpdater);
+        orderService.sendOrder({hostname: 'localhost', port: '3000', path: '/test'}, order, cashUpdater, onError);
 
-        var orderStringyfied = utils.stringify(order);
-        expect(http.request).toHaveBeenCalledWith({
-            hostname : 'localhost',
-            port : 3000,
-            path : '/test',
-            method : 'POST',
-            headers : {
-                'Content-Type' : 'application/json',
-                'Content-Length' : orderStringyfied.length
-            }
-        }, cashUpdater);
-        expect(fakeRequest.write).toHaveBeenCalledWith(orderStringyfied);
-        expect(fakeRequest.end).toHaveBeenCalled();
+        expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test/order', order, cashUpdater, onError);
     });
 
     it('should create an order with N item prices', function() {
@@ -129,24 +124,30 @@ describe('Order Service', function() {
         expect(bill).toEqual({total: 1746});
     });
 
+    it('should not validate bill when total field is missing', function() {
+        expect(function(){orderService.validateBill({})}).toThrow('The field \"total\" in the response is missing.');
+    });
+
+    it('should not validate bill when total is not a number', function() {
+        expect(function(){orderService.validateBill({total: 'NaN'})}).toThrow('\"Total\" is not a number.');
+    });
 });
 
 describe('Dispatcher', function() {
     var dispatcher;
-    var sellers;
     var orderService;
+    var sellerService;
 
     beforeEach(function(){
-        sellers = new Sellers();
+        sellerService = new SellerService();
         orderService = new OrderService();
-        dispatcher = new Dispatcher(sellers, orderService);
+        dispatcher = new Dispatcher(sellerService, orderService);
     });
 
     it('should send the same order to each seller', function() {
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
-        sellers.add(alice);
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
-        sellers.add(bob);
+        spyOn(sellerService, 'allSellers').andReturn([alice, bob]);
         var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
         spyOn(orderService, 'createOrder').andReturn(order);
         spyOn(orderService, 'sendOrder');
@@ -154,7 +155,7 @@ describe('Dispatcher', function() {
         dispatcher.sendOrderToSellers();
 
         expect(orderService.createOrder).toHaveBeenCalled();
-        expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function));
-        expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function));
+        expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
+        expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
     });
 });
