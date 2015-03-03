@@ -13,10 +13,6 @@ var SellerForm = React.createClass({
 
 		this.refs.name.getDOMNode().value= "";
 		this.refs.url.getDOMNode().value= "";
-<<<<<<< HEAD:server/public/seller.js
-		return;
-=======
->>>>>>> 46436a9aefae3bcf26f21735bc9c7d5cd3eef0a9:server/public/javascripts/seller.js
 	},
 	render: function(){
 		return (
@@ -43,12 +39,6 @@ var SellerView = React.createClass({
 	render: function(){
 		var sellerNodes = this.props.data.map(function(seller){
 			return (
-<<<<<<< HEAD:server/public/seller.js
-				<tr>
-          <td>{seller.name}</td>
-          <td>{seller.cash}</td>
-        </tr>
-=======
 				<tr className={ seller.online ? "success" : "danger"}>
                   <td>{seller.name}</td>
                   <td>
@@ -58,7 +48,6 @@ var SellerView = React.createClass({
 						  currency="EUR" />
 				  </td>
                 </tr>
->>>>>>> 46436a9aefae3bcf26f21735bc9c7d5cd3eef0a9:server/public/javascripts/seller.js
 			);
 		});
 		return (
