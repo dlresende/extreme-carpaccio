@@ -40,14 +40,14 @@ var SellerView = React.createClass({
 		var sellerNodes = this.props.data.map(function(seller){
 			return (
 				<tr className={ seller.online ? "success" : "danger"}>
-                  <td>{seller.name}</td>
-                  <td>
+          <td>{seller.name}</td>
+	        <td>
 					  <FormattedNumber
 						  value={seller.cash}
 						  style="currency"
 						  currency="EUR" />
 				  </td>
-                </tr>
+        </tr>
 			);
 		});
 		return (

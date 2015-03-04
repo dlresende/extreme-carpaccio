@@ -1,6 +1,8 @@
-﻿using Nancy.Extensions;
+﻿
+using System.IO;
+using System.Text;
 
-namespace katazon.client
+namespace xCarpaccio.client
 {
     using Nancy;
     using System;
@@ -10,9 +12,11 @@ namespace katazon.client
     {
         public IndexModule()
         {
-            Post["/"] = _ =>
+            Post["/order"] = _ =>
             {
-                Console.WriteLine("{0}", this.Request.Body.ToString());
+                var request = RequestAsString();
+
+                Console.WriteLine("{0}", request);
                 return "";
             };
 
@@ -22,6 +26,16 @@ namespace katazon.client
                 HandleFeedback(feedback);
                 return "";
             };
+        }
+
+        private string RequestAsString()
+        {
+            string request;
+            using (var reader = new StreamReader(Request.Body, Encoding.UTF8))
+            {
+                request = reader.ReadToEnd();
+            }
+            return request;
         }
 
         private void HandleFeedback(Feedback feedback)
