@@ -1,9 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
-MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "katazon.client", "katazon.client\katazon.client.csproj", "{35460AA4-B94A-4B64-9418-7243EC3D2F01}"
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "extreme-carpaccio.client", "extreme-carpaccio.client\extreme-carpaccio.client.csproj", "{35460AA4-B94A-4B64-9418-7243EC3D2F01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

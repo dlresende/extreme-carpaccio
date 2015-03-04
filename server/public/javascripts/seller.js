@@ -3,11 +3,11 @@ var FormattedNumber = ReactIntl.FormattedNumber;
 var SellerForm = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
-		var name = this.refs.name.getDOMNode().value.trim();		
-		var url = this.refs.url.getDOMNode().value.trim();	
+		var name = this.refs.name.getDOMNode().value.trim();
+		var url = this.refs.url.getDOMNode().value.trim();
 		if(!name || !url){
 			return;
-		}	
+		}
 
 		this.props.onSellerSubmit({name:name, url:url});
 
@@ -17,21 +17,19 @@ var SellerForm = React.createClass({
 	render: function(){
 		return (
 			<div className="jumbotron">
-				<div className="container">
-	        		<h1>Hello, Seller!</h1>
-					<form className="navbar-form" onSubmit={this.handleSubmit}>
-			            <p className="form-group">Add seller name</p>
-			            <div className="form-group">
-			              <input type="text" placeholder="your name" className="form-control" ref="name" />
-			            </div>
-			              <p className="form-group">Add seller url</p>
-			            <div className="form-group">
-			              <input type="text" placeholder="http://192.168.1.1:3000" className="form-control" ref="url" />
-			            </div>
-			            <button type="submit" className="btn btn-success">Register</button>
-		          	</form>
-		         </div>
-	         </div>
+      		<h1>Hello, Seller!</h1>
+					<form className="form-inline" onSubmit={this.handleSubmit}>
+	            <div className="form-group">
+								<label class="control-label">Name </label>
+	              <input type="text" placeholder="your name" className="form-control" ref="name" />
+	            </div>
+	            <div className="form-group">
+								<label class="control-label">Add seller url</label>
+	              <input type="text" placeholder="http://192.168.1.1:3000" className="form-control" ref="url" />
+	            </div>
+	            <button type="submit" className="btn btn-success">Register</button>
+          	</form>
+       </div>
 		);
 	}
 });
@@ -42,14 +40,14 @@ var SellerView = React.createClass({
 		var sellerNodes = this.props.data.map(function(seller){
 			return (
 				<tr className={ seller.online ? "success" : "danger"}>
-                  <td>{seller.name}</td>
-                  <td>
+          <td>{seller.name}</td>
+	        <td>
 					  <FormattedNumber
 						  value={seller.cash}
 						  style="currency"
 						  currency="EUR" />
 				  </td>
-                </tr>
+        </tr>
 			);
 		});
 		return (

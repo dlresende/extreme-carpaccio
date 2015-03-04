@@ -1,4 +1,4 @@
-﻿namespace katazon.client
+﻿namespace xCarpaccio.client
 {
     using Nancy;
 

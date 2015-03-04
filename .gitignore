@@ -11,6 +11,12 @@ lib-cov
 *.gz
 *.orig
 
+[Dd]ebug/
+[Oo]bj/
+[Bb]in
+[Rr]elease
+*.suo
+
 pids
 logs
 results

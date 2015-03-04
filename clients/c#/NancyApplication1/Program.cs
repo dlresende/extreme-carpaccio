@@ -1,4 +1,4 @@
-﻿namespace katazon.client
+﻿namespace NancyApplication1
 {
     using System;
     using Nancy.Hosting.Self;
