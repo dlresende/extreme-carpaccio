@@ -19,6 +19,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes(sellerService));
 
-dispatcher.startBuying(5000);
+dispatcher.startBuying(1);
 
 module.exports = app;

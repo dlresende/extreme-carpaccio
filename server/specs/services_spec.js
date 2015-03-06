@@ -9,6 +9,7 @@ var http = require('http');
 var Dispatcher = services.Dispatcher;
 var OrderService = services.OrderService;
 var SellerService = services.SellerService;
+var Reduction = services.Reduction;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
 
@@ -60,7 +61,6 @@ describe('Seller Service', function() {
 });
 
 describe('Order Service', function() {
-
     var orderService;
     var countries;
 
@@ -84,44 +84,51 @@ describe('Order Service', function() {
         expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/test/order', order, cashUpdater, onError);
     });
 
-    it('should create an order with N item prices', function() {
-        var numberOfItems = 5;
+    it('should create an order with maximum 10 items', function() {
+        var order = orderService.createOrder(Reduction.STANDARD);
 
-        var order = orderService.createOrder(numberOfItems);
-
-        expect(order.prices.length).toBe(numberOfItems);
+        expect(order.prices.length).toBeGreaterThan(0);
+        expect(order.prices.length).not.toBeGreaterThan(10);
         expect(_.every(order.prices, Number)).toBeTruthy();
-    });
-
-    it('should create an order with N item quantities', function() {
-        var numberOfItems = 5;
-
-        var order = orderService.createOrder(numberOfItems);
-
-        expect(order.quantities.length).toBe(numberOfItems);
-        expect(_.every(order.quantities, Number)).toBeTruthy();
+        expect(order.quantities.length).toBeGreaterThan(0);
+        expect(order.quantities.length).not.toBeGreaterThan(10);
+        expect(_.every(order.quantities, Number)).toBeTruthy()
     });
 
     it('should create orders with countries of Europe', function() {
-        var order = orderService.createOrder();
+        var order = orderService.createOrder(Reduction.STANDARD);
 
         expect(countries.fromEurope).toContain(order.country);
     });
 
-    it('should calculate the sum of the order', function() {
+    it('should create orders using specific reduction type', function() {
+        expect(orderService.createOrder(Reduction.STANDARD).reduction).toContain(Reduction.STANDARD.name);
+        expect(orderService.createOrder(Reduction.PAY_THE_PRICE).reduction).toContain(Reduction.PAY_THE_PRICE.name);
+        expect(orderService.createOrder(Reduction.HALF_PRICE).reduction).toContain(Reduction.HALF_PRICE.name);
+    });
+
+    it('should calculate the sum of the order using PAY_THE_PRICE reduction', function() {
         var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
 
-        var bill = orderService.bill(order);
+        var bill = orderService.bill(order, Reduction.PAY_THE_PRICE);
 
         expect(bill).toEqual({total: (100 + 2 * 50) * 1.2});
     });
 
-    it('should calculate the sum of the order with reduction', function() {
+    it('should calculate the sum of the order using STANDARD reduction', function() {
         var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
 
-        var bill = orderService.bill(order);
+        var bill = orderService.bill(order, Reduction.STANDARD);
 
         expect(bill).toEqual({total: 1746});
+    });
+
+    it('should calculate the sum of the order using HALF_PRICE reduction', function() {
+        var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
+
+        var bill = orderService.bill(order, Reduction.HALF_PRICE);
+
+        expect(bill).toEqual({total: 900});
     });
 
     it('should not validate bill when total field is missing', function() {
@@ -144,7 +151,7 @@ describe('Dispatcher', function() {
         dispatcher = new Dispatcher(sellerService, orderService);
     });
 
-    it('should send the same order to each seller', function() {
+    it('should send the same order to each seller using reduction', function() {
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
         spyOn(sellerService, 'allSellers').andReturn([alice, bob]);
@@ -152,9 +159,9 @@ describe('Dispatcher', function() {
         spyOn(orderService, 'createOrder').andReturn(order);
         spyOn(orderService, 'sendOrder');
 
-        dispatcher.sendOrderToSellers();
+        dispatcher.sendOrderToSellers(Reduction.STANDARD);
 
-        expect(orderService.createOrder).toHaveBeenCalled();
+        expect(orderService.createOrder).toHaveBeenCalledWith(Reduction.STANDARD);
         expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
         expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
     });
