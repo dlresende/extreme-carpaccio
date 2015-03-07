@@ -5,80 +5,81 @@ var SellerForm = React.createClass({
 		e.preventDefault();
 		var name = this.refs.name.getDOMNode().value.trim();
 		var url = this.refs.url.getDOMNode().value.trim();
-		if(!name || !url){
+
+		if(!name || !url) {
 			return;
 		}
 
 		this.props.onSellerSubmit({name:name, url:url});
 
-		this.refs.name.getDOMNode().value= "";
-		this.refs.url.getDOMNode().value= "";
+		this.refs.name.getDOMNode().value= '';
+		this.refs.url.getDOMNode().value= '';
 	},
+
 	render: function(){
 		return (
-			<div className="jumbotron">
-      		<h1>Hello, Seller!</h1>
-					<form className="form-inline" onSubmit={this.handleSubmit}>
-	            <div className="form-group">
-								<label class="control-label">Name </label>
-	              <input type="text" placeholder="your name" className="form-control" ref="name" />
-	            </div>
-	            <div className="form-group">
-								<label class="control-label">Add seller url</label>
-	              <input type="text" placeholder="http://192.168.1.1:3000" className="form-control" ref="url" />
-	            </div>
-	            <button type="submit" className="btn btn-success">Register</button>
-          	</form>
-       </div>
+			<div className='jumbotron'>
+				<h1>Hello, Seller!</h1>
+				<form className='form-inline' onSubmit={this.handleSubmit}>
+					<div className='form-group'>
+						<label className='control-label'>Name</label>
+						<input type='text' placeholder='your name' className='form-control' ref='name' />
+					</div>
+					<div className='form-group'>
+						<label className='control-label'>URL</label>
+						<input type='text' placeholder='http://192.168.1.1:3000' className='form-control' ref='url' />
+					</div>
+					<button type='submit' className='btn btn-success'>Register</button>
+				</form>
+			</div>
 		);
 	}
 });
 
 var SellerView = React.createClass({
-
 	render: function(){
-		var sellerNodes = this.props.data.map(function(seller){
+		var sellerNodes = this.props.data.map(function(seller) {
 			return (
-				<tr className={ seller.online ? "success" : "danger"}>
-          <td>{seller.name}</td>
-	        <td>
-					  <FormattedNumber
-						  value={seller.cash}
-						  style="currency"
-						  currency="EUR" />
-				  </td>
-        </tr>
+				<tr className={seller.online ? 'success' : 'danger'}>
+					<td>{seller.name}</td>
+					<td>
+						<FormattedNumber
+							value={seller.cash}
+							style='currency'
+							currency='EUR' />
+					</td>
+				</tr>
 			);
 		});
 		return (
-			<div className="container">
-		        <div className="row">
-		          	<div className="col-md-6">
-		            	<h2>Sellers ranking</h2>
-		            	<div className="table-responsive">
-				            <table className="table table-striped">
-				              <thead>
-				                <tr>
-				                  <th>Name</th>
-				                  <th>Cash</th>
-				                </tr>
-				              </thead>
-				              <tbody>
-				                {sellerNodes}
-				              </tbody>
-				            </table>
-				          </div>
-		        	</div>
-		         	<div className="col-md-6">
-		            	<h2>Sellers evolution</h2>
-		            	<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-		        	</div>
-		        </div>
-		        <hr/>
-		        <footer>
-			      <p>&copy; Diego &amp; Radwane </p>
-			    </footer>
-		    </div>
+			<div className='container'>
+				<div className='row'>
+					<div className='col-md-6'>
+						<h2>Ranking</h2>
+						<div className='table-responsive'>
+							<table className='table table-striped'>
+								<thead>
+								<tr>
+									<th>Name</th>
+									<th>Cash</th>
+								</tr>
+								</thead>
+								<tbody>
+								{sellerNodes}
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div className='col-md-6'>
+						<h2>Sellers evolution</h2>
+						<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+					</div>
+				</div>
+				<hr/>
+				<footer>
+					<p>&copy; Diego &amp; Radwane </p>
+				</footer>
+			</div>
 		);
 	}
 });
@@ -86,9 +87,9 @@ var SellerView = React.createClass({
 var Seller = React.createClass({
 	loadSellersFromServer: function(){
 		$.ajax({
-			url:"/sellers",
-			datatype:'json',
-			success:function(data){
+			url: '/sellers',
+			dataType: 'json',
+			success: function(data) {
 				this.setState({data: data});
 			}.bind(this),
 			error: function(xhr, status, err){
@@ -96,14 +97,16 @@ var Seller = React.createClass({
 			}.bind(this)
 		});
 	},
-	handleSellerSubmit: function(seller) {
+
+	handleSellerSubmit: function(newSeller) {
 		var currentSellers = this.state.data;
-		var sellers = currentSellers.concat([seller]);
+		var sellers = currentSellers.concat([newSeller]);
+
 		$.ajax({
 			url: this.props.url,
-			datatype: 'json',
+			dataType: 'json',
 			type: 'POST',
-			data: seller,
+			data: newSeller,
 			success: function(){
 				this.setState({data:sellers});
 			}.bind(this),
@@ -112,16 +115,19 @@ var Seller = React.createClass({
 			}.bind(this)
 		});
 	},
+
 	getInitialState: function(){
 		return {data: []};
 	},
+
 	componentDidMount: function(){
 		this.loadSellersFromServer();
 		setInterval(this.loadSellersFromServer, this.props.pollInterval);
 	},
+
 	render: function(){
 		return (
-			<div className="container">
+			<div className='container'>
 				<SellerForm onSellerSubmit={this.handleSellerSubmit} />
 				<SellerView data={this.state.data} />
 			</div>
@@ -130,6 +136,6 @@ var Seller = React.createClass({
 });
 
 React.render(
-	<Seller url="/seller" pollInterval="5000" />,
+	<Seller url='/seller' pollInterval='5000' />,
 	document.getElementById('seller')
 );
