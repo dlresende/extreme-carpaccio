@@ -88,7 +88,7 @@ var Seller = React.createClass({
 	loadSellersFromServer: function(){
 		$.ajax({
 			url: '/sellers',
-			dataType: 'json',
+			datatype: 'json',
 			success: function(data) {
 				this.setState({data: data});
 			}.bind(this),
@@ -104,7 +104,7 @@ var Seller = React.createClass({
 
 		$.ajax({
 			url: this.props.url,
-			dataType: 'json',
+			datatype: 'json',
 			type: 'POST',
 			data: newSeller,
 			success: function(){
