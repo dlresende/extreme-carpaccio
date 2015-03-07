@@ -42,7 +42,9 @@ SellerService.prototype = {
             }
 
             else {
-                var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill;
+                var loss = utils.fixPrecision(totalExpectedBill * .1, 2);
+                this.sellers.updateCash(seller.name, -loss);
+                var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill + '. ' + loss + ' will be charged.';
                 this.notify(seller, {'type': 'ERROR', 'content': message});
             }
         }
