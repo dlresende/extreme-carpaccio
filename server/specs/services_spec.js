@@ -67,6 +67,22 @@ describe('Seller Service', function() {
 
         expect(utils.post).toHaveBeenCalledWith('localhost', '3000', '/path/feedback', message);
     });
+
+    it('should get seller\'s cash history reduced in chunks of N iterations', function() {
+        sellers.cashHistory = {'bob': [0, 0, 10, 10, 10]};
+
+        var cashHistory = sellerService.getCashHistory(5);
+
+        expect(cashHistory).toEqual({history: {'bob': [10]}, lastIteration: 5});
+    });
+
+    it('should get seller\'s cash history reduced in chunks of N iterations and add remaining iterations when last chunk is not completed', function() {
+        sellers.cashHistory = {'bob': [0, 0, 10, 10, 10, 10, 10]};
+
+        var cashHistory = sellerService.getCashHistory(3);
+
+        expect(cashHistory).toEqual({history: {'bob': [10, 10, 10]}, lastIteration: 7});
+    });
 });
 
 describe('Order Service', function() {
@@ -163,6 +179,7 @@ describe('Dispatcher', function() {
     it('should send the same order to each seller using reduction', function() {
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
+        spyOn(sellerService, 'addCash');
         spyOn(sellerService, 'allSellers').andReturn([alice, bob]);
         var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
         spyOn(orderService, 'createOrder').andReturn(order);

@@ -10,6 +10,11 @@ module.exports = function (sellerService) {
         response.status(OK).send(sellerService.allSellers());
     });
 
+    router.get('/sellers/history', function(request, response) {
+        var chunk = request.query.chunk || 10;
+        response.status(OK).send(sellerService.getCashHistory(chunk));
+    });
+
     router.post('/seller', function(request, response) {
         var sellerName = request.body.name,
             sellerUrl = request.body.url;

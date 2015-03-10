@@ -13,6 +13,38 @@ var SellerService = function(_sellers) {
     this.sellers = _sellers || sellers;
 };
 SellerService.prototype = {
+    addCash: function(seller, amount, currentIteration) {
+        this.sellers.updateCash(seller.name, amount, currentIteration);
+    },
+    deductCash: function(seller, amount, currentIteration) {
+        this.sellers.updateCash(seller.name, -amount, currentIteration);
+    },
+    getCashHistory: function(chunk) {
+        var cashHistory = this.sellers.cashHistory;
+        var cashHistoryReduced = {};
+        var lastIteration;
+
+        var seller;
+        for(seller in cashHistory) {
+            cashHistoryReduced[seller] = [];
+
+            var i = 0;
+            for(; i < cashHistory[seller].length; i++) {
+                if((i + 1) % chunk === 0) {
+                    cashHistoryReduced[seller].push(cashHistory[seller][i]);
+                }
+            }
+
+            if(i % chunk !== 0) {
+                cashHistoryReduced[seller].push(cashHistory[seller][i - 1]);
+            }
+
+            lastIteration = i;
+        }
+
+        return {history: cashHistoryReduced, lastIteration: lastIteration};
+    },
+
     register: function (sellerUrl, name) {
         var parsedUrl = url.parse(sellerUrl);
         var seller = {
@@ -31,19 +63,19 @@ SellerService.prototype = {
         return this.sellers.all();
     },
 
-    updateCash: function(seller, expectedBill, actualBill) {
+    updateCash: function(seller, expectedBill, actualBill, currentIteration) {
         try {
             var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
             var totalActualBill = utils.fixPrecision(actualBill.total, 2);
 
             if(actualBill && totalExpectedBill === totalActualBill) {
-                this.sellers.updateCash(seller.name, totalExpectedBill);
+                this.addCash(seller, totalExpectedBill, currentIteration);
                 this.notify(seller, {'type': 'INFO', 'content': 'Hey, ' + seller.name + ' earned ' + totalExpectedBill});
             }
 
             else {
                 var loss = utils.fixPrecision(totalExpectedBill * .1, 2);
-                this.sellers.updateCash(seller.name, -loss);
+                this.deductCash(seller, loss, currentIteration);
                 var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill + '. ' + loss + ' will be charged.';
                 this.notify(seller, {'type': 'ERROR', 'content': message});
             }
@@ -190,7 +222,7 @@ var Dispatcher = function(_sellerService, _orderService) {
     this.orderService = _orderService;
 };
 Dispatcher.prototype = (function() {
-    function updateSellersCash(self, seller, expectedBill) {
+    function updateSellersCash(self, seller, expectedBill, currentIteration) {
         return function(response) {
             if(response.statusCode === 200) {
                 self.sellerService.setOnline(seller);
@@ -205,7 +237,7 @@ Dispatcher.prototype = (function() {
                     try {
                         var actualBill = utils.jsonify(sellerResponse);
                         self.orderService.validateBill(actualBill);
-                        self.sellerService.updateCash(seller, expectedBill, actualBill);
+                        self.sellerService.updateCash(seller, expectedBill, actualBill, currentIteration);
                     } catch(exception) {
                         self.sellerService.notify(seller, {'type': 'ERROR', 'content': exception.message});
                     }
@@ -249,13 +281,14 @@ Dispatcher.prototype = (function() {
     }
 
     return {
-        sendOrderToSellers: function(reduction) {
+        sendOrderToSellers: function(reduction, currentIteration) {
             var self = this;
             var order = self.orderService.createOrder(reduction);
             var expectedBill = self.orderService.bill(order, reduction);
 
             _.forEach(self.sellerService.allSellers(), function(seller) {
-                self.orderService.sendOrder(seller, order, updateSellersCash(self, seller, expectedBill), logError(self, seller));
+                self.sellerService.addCash(seller, 0, currentIteration);
+                self.orderService.sendOrder(seller, order, updateSellersCash(self, seller, expectedBill, currentIteration), logError(self, seller));
             });
         },
 
@@ -263,7 +296,7 @@ Dispatcher.prototype = (function() {
             console.info('>>> Shopping iteration ' + iteration);
 
             var period = guessReductionPeriod(iteration);
-            this.sendOrderToSellers(period.reduction);
+            this.sendOrderToSellers(period.reduction, iteration);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }
     }

@@ -4,6 +4,7 @@ var _ = require('lodash');
 
 var Sellers = function() {
     var sellersMap = {};
+    this.cashHistory = {};
 
     this.all = function() {
         var sellers = _.map(sellersMap, function (seller) {
@@ -14,6 +15,7 @@ var Sellers = function() {
 
     this.add = function(seller) {
         sellersMap[seller.name] = seller;
+        this.cashHistory[seller.name] = [];
     };
 
     this.get = function(sellerName) {
@@ -21,27 +23,66 @@ var Sellers = function() {
     }
 };
 
-Sellers.prototype = {
-    count: function() {
-        return this.all().length;
-    },
+Sellers.prototype = (function(){
+    function getLastRecordedCashAmount(currentSellersCashHistory, lastRecordedIteration) {
+        var lastRecordedValue = currentSellersCashHistory[lastRecordedIteration - 1];
 
-    isEmpty: function() {
-        return this.count() === 0;
-    },
+        if (lastRecordedValue === undefined) {
+            lastRecordedValue = 0;
+        }
 
-    updateCash: function(sellerName, profit) {
-        this.get(sellerName).cash += parseFloat(profit);
-    },
-
-    setOffline: function(sellerName) {
-        this.get(sellerName).online = false;
-    },
-
-    setOnline: function(sellerName) {
-        this.get(sellerName).online = true;
+        return lastRecordedValue;
     }
-};
+
+    function enlargeHistory(newSize, oldHistory) {
+        var newHistory = new Array(newSize);
+        newHistory.push.apply(newHistory, oldHistory);
+        return newHistory;
+    }
+
+    function fillMissingIterations(currentIteration, currentSellersCashHistory) {
+        var lastRecordedIteration = currentSellersCashHistory.length;
+
+        if (lastRecordedIteration >= currentIteration) {
+            return currentSellersCashHistory;
+        }
+
+        var newSellersCashHistory = enlargeHistory(currentIteration, currentSellersCashHistory);
+        var lastRecordedValue = getLastRecordedCashAmount(currentSellersCashHistory, lastRecordedIteration);
+        return _.fill(newSellersCashHistory, lastRecordedValue, lastRecordedIteration, currentIteration)
+    }
+
+    function updateCashHistory(self, seller, currentIteration) {
+        var currentSellersCashHistory = self.cashHistory[seller.name];
+        var newSellersCashHistory = fillMissingIterations(currentIteration, currentSellersCashHistory);
+        newSellersCashHistory[currentIteration] = seller.cash;
+        self.cashHistory[seller.name] = newSellersCashHistory;
+    }
+
+    return {
+        count: function() {
+            return this.all().length;
+        },
+
+        isEmpty: function() {
+            return this.count() === 0;
+        },
+
+        updateCash: function(sellerName, amount, currentIteration) {
+            var seller = this.get(sellerName);
+            seller.cash += parseFloat(amount);
+            updateCashHistory(this, seller, currentIteration);
+        },
+
+        setOffline: function(sellerName) {
+            this.get(sellerName).online = false;
+        },
+
+        setOnline: function(sellerName) {
+            this.get(sellerName).online = true;
+        }
+    }
+})();
 
 var Countries = function() {};
 

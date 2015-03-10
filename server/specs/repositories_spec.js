@@ -56,6 +56,23 @@ describe('Sellers', function(){
 
         expect(sellers.get('bob').cash).toBe(100);
     });
+
+    it('should track cash evolution on cash update by iteration', function() {
+        sellers.add(bob);
+
+        sellers.updateCash('bob', 100, 0);
+
+        expect(sellers.cashHistory).toEqual({'bob': [100]});
+    });
+
+    it('should track cash evolution on cash update by iteration and fill missing iterations with last value', function() {
+        sellers.add(bob);
+
+        sellers.updateCash('bob', 100, 3);
+        sellers.updateCash('bob', 100, 4);
+
+        expect(sellers.cashHistory).toEqual({'bob': [0, 0, 0, 100, 200]});
+    });
 });
 
 describe('Countries', function() {
