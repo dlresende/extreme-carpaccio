@@ -9,7 +9,7 @@ You will need [Racket](http://racket-lang.org/)  installed.
 1. Lauch DrRacket
 2. Load file ```carpaccio.rkt ```
 3. Run it with ```Ctrl-R```
-4. Check test are ok with message ```All test run```
+4. Check tests are ok with message ```all test run```
 
 You can start your TDD loops.
 
