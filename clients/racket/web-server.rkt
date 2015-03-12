@@ -3,14 +3,10 @@
 (require web-server/servlet
          web-server/servlet-env
          json)
- 
-;; ===================================================================
 
-(define (total details country reduction)
-  1.0)
+(require "carpaccio.rkt")  
 
-
-;; ===================================================================
+(provide main)
 
 (define (json-from-post-data req)
   (let ([data (request-post-data/raw req)])
@@ -31,19 +27,21 @@
   (define details 
     (for/list ([q quantities]
                [p prices])
-      (list q p)))
+      (cons q p)))
   (define reduction (hash-ref command 'reduction))
   (define country (hash-ref command 'country))
-  (define resp (total details country reduction))
+  (define resp (carpaccio/total details country reduction))
 
   (printf " Received=~s\n" details)
   (printf "Reduction=~s\n" reduction)
   (printf "  Country=~s\n" country)
   (printf "  Reply-->~s\n" resp)
+  (flush-output)
   (response/jsonp (hasheq 'total resp)))
  
-(serve/servlet my-app
-               #:port 8080
-               #:servlet-path "/order"
-               #:command-line? #t)
+(define (main . xs)
+  (serve/servlet my-app
+                 #:port 8080
+                 #:servlet-path "/order"
+                 #:command-line? #t))
 
