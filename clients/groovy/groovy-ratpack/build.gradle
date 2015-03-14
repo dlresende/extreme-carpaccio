@@ -1,0 +1,30 @@
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath "io.ratpack:ratpack-gradle:0.9.14"
+	}
+}
+
+apply plugin: "io.ratpack.ratpack-groovy"
+apply plugin: "eclipse"
+
+repositories {
+	jcenter()
+	maven { url "http://clinker.netty.io/nexus/content/repositories/snapshots" }
+	maven { url "http://oss.jfrog.org/artifactory/repo" }
+}
+
+dependencies {
+	runtime "org.slf4j:slf4j-simple:1.7.5"
+	
+	// Spock for testing
+	testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+	
+	// optional dependencies for using Spock
+	testCompile "org.hamcrest:hamcrest-core:1.3" // only necessary if Hamcrest matchers are used
+	testRuntime "cglib:cglib-nodep:3.1" // allows mocking of classes (in addition to interfaces)
+	testRuntime "org.objenesis:objenesis:2.1" // allows mocking of classes without default constructor (together with CGLIB)
+	
+}
