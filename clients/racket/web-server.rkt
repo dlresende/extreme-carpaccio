@@ -4,6 +4,8 @@
          web-server/servlet-env
          json)
 
+;; Your main aglorithm is here.
+;; Code it using TDD cycles ;-)
 (require "carpaccio.rkt")  
 
 (provide main)
@@ -19,7 +21,32 @@
      (write-json o op))
    #:mime-type #"application/json"))
   
-(define (my-app req)
+(define (start req)
+  (carpaccio-dispatch req))
+
+;; Dispatches accepted paths
+(define-values (carpaccio-dispatch req-url)
+  (dispatch-rules
+   (("ping") handle-get-pong)
+   (("order") #:method "post" handle-post-order)
+   (("feedback") #:method "post" handle-post-feedback)))
+
+;; GET /pong
+(define (handle-get-pong req)
+  (response/xexpr 
+   '(html (body (p "Pong")))))
+
+;; POST /feedback
+(define (handle-post-feedback req)
+  (define message (json-from-post-data req))
+  (printf "\n**** Feedback=~s ~s\n\n"
+          (hash-ref message 'type) 
+          (hash-ref message 'content))
+  (flush-output)
+  (response/xexpr '(html (body "thanx for feedback"))))
+
+;; POST /order
+(define (handle-post-order req)
   (define command (json-from-post-data req))
   
   (define prices (hash-ref command 'prices))
@@ -38,10 +65,13 @@
   (printf "  Reply-->~s\n" resp)
   (flush-output)
   (response/jsonp (hasheq 'total resp)))
- 
-(define (main . xs)
-  (serve/servlet my-app
-                 #:port 8080
-                 #:servlet-path "/order"
-                 #:command-line? #t))
 
+;; Run it from command line: 
+;; $ racket -tm web-server.rkt
+(define (main . xs)
+  (serve/servlet start
+                 #:port 8080            ; web server port
+                 #:listen-ip #f         ; Listen whatever the ip or hostname 
+                 #:servlet-path ""
+                 #:servlet-regexp #rx"" ; regex used to decide if this url should be handled
+                 #:command-line? #t))
