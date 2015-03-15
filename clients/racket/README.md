@@ -18,3 +18,8 @@ You can start your TDD loops.
 To start a web server for the application, run:
 
     $ racket -tm web-server.rkt
+	
+You can save the output in a log file with the ```tee``` command:
+
+    $ racket -tm web-server.rkt | tee -a log.txt
+
