@@ -10,7 +10,8 @@
     {
         "prices": [65.6,27.26,32.68],
         "quantities": [6,8,10],
-        "country": "IE"
+        "country": "IE",
+        "reduction":"STANDARD"
     }
     ```
 
