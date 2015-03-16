@@ -2,8 +2,9 @@
 [extreme startup](https://github.com/rchatley/extreme_startup) + [elephant carpaccio](https://docs.google.com/document/d/1TCuuu-8Mm14oxsOnlk8DqfZAA1cvtYu9WGv67Yj_sSk/pub)
 
 ## Technical Instructions
-1. Go to the sellers view and register yourself (URL example: http://192.168.1.12:8080/)
-2. The server will start sending orders like this:
+1. Go to the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients) and chose your client or create your own one
+2. Go to the sellers view and register yourself (URL example: http://192.168.1.12:8080/)
+3. The server will start sending orders like this:
 
     ```
     POST /order HTTP/1.1
@@ -15,9 +16,9 @@
     }
     ```
 
-3. You should calculate the total and answer with an object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
-4. Your score will be shown in the dashboard
-5. The server will send you feedback like this:
+4. You should calculate the total and answer with an object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
+5. Your score will be shown in the dashboard
+6. The server will send you feedback like this:
 
     ```
     POST /feedback HTTP/1.1
@@ -80,6 +81,7 @@ Following the STANDARD reductions applied for the most part of the orders:
 For the order `{"prices":[4.1,8.03,86.83,65.62,44.82],"quantities":[10,3,5,4,5],"country":"AT","reduction":"STANDARD"}`, for example, the response should be `{"total":1166.62}`.
 
 Note that:
+
 1. reductions are applied *after* the taxes;
 2. another reduction types can appear during the game. You need to stay tuned in the server's feedback to figure out how to calculate it.
 
