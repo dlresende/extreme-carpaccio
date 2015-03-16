@@ -83,48 +83,46 @@ describe('Countries', function() {
     });
 
     it('should get the corresponding tax for a given country', function() {
-        expect(countries.tax('BG')).toBe(1.1);
-        expect(countries.tax('CZ')).toBe(1.11);
-        expect(countries.tax('DK')).toBe(1.12);
-        expect(countries.tax('DE')).toBe(1.13);
-        expect(countries.tax('EE')).toBe(1.14);
-        expect(countries.tax('IE')).toBe(1.15);
-        expect(countries.tax('EL')).toBe(1.16);
-        expect(countries.tax('ES')).toBe(1.17);
-        expect(countries.tax('FR')).toBe(1.18);
-        expect(countries.tax('HR')).toBe(1.19);
-        expect(countries.tax('IT')).toBe(1.2);
-        expect(countries.tax('CY')).toBe(1.1);
-        expect(countries.tax('LV')).toBe(1.11);
-        expect(countries.tax('LT')).toBe(1.12);
-        expect(countries.tax('LU')).toBe(1.13);
-        expect(countries.tax('HU')).toBe(1.14);
-        expect(countries.tax('MT')).toBe(1.15);
-        expect(countries.tax('NL')).toBe(1.16);
-        expect(countries.tax('AT')).toBe(1.17);
-        expect(countries.tax('PL')).toBe(1.18);
-        expect(countries.tax('PT')).toBe(1.19);
+        expect(countries.tax('DE')).toBe(1.2);
+        expect(countries.tax('UK')).toBe(1.21);
+        expect(countries.tax('FR')).toBe(1.2);
+        expect(countries.tax('IT')).toBe(1.25);
+        expect(countries.tax('ES')).toBe(1.19);
+        expect(countries.tax('PL')).toBe(1.21);
         expect(countries.tax('RO')).toBe(1.2);
-        expect(countries.tax('SI')).toBe(1.1);
-        expect(countries.tax('SK')).toBe(1.11);
-        expect(countries.tax('FI')).toBe(1.12);
-        expect(countries.tax('SE')).toBe(1.13);
-        expect(countries.tax('UK')).toBe(1.14);
+        expect(countries.tax('NL')).toBe(1.2);
+        expect(countries.tax('BE')).toBe(1.24);
+        expect(countries.tax('EL')).toBe(1.2);
+        expect(countries.tax('CZ')).toBe(1.19);
+        expect(countries.tax('PT')).toBe(1.23);
+        expect(countries.tax('HU')).toBe(1.27);
+        expect(countries.tax('SE')).toBe(1.23);
+        expect(countries.tax('AT')).toBe(1.22);
+        expect(countries.tax('BG')).toBe(1.21);
+        expect(countries.tax('DK')).toBe(1.21);
+        expect(countries.tax('FI')).toBe(1.17);
+        expect(countries.tax('SK')).toBe(1.18);
+        expect(countries.tax('IE')).toBe(1.21);
+        expect(countries.tax('HR')).toBe(1.23);
+        expect(countries.tax('LT')).toBe(1.23);
+        expect(countries.tax('SI')).toBe(1.24);
+        expect(countries.tax('LV')).toBe(1.2);
+        expect(countries.tax('EE')).toBe(1.22);
+        expect(countries.tax('CY')).toBe(1.21);
+        expect(countries.tax('LU')).toBe(1.25);
+        expect(countries.tax('MT')).toBe(1.2);
     });
 
     it('should return random country according to its frequency', function() {
-        var sampleSize = 200,
-            samples = _.times(sampleSize, countries.randomOne),
-            lengthOf = function(arr) {
-              return (arr||[]).length;
-            };
+        var mostImportantPopulation = 200000,
+            samples = _.times(mostImportantPopulation * 10, countries.randomOne);
 
         var occurrences = _.groupBy(samples);
 
-        expect(lengthOf(occurrences['FR'])).toBeGreaterThan(20);
-        expect(lengthOf(occurrences['UK'])).toBeGreaterThan(20);
-        expect(lengthOf(occurrences['LT'])).toBeLessThan(10);
-        expect(lengthOf(occurrences['NL'])).toBeLessThan(10);
+        expect(_.size(occurrences['FR'])).toBeGreaterThan(151381);
+        expect(_.size(occurrences['UK'])).toBeGreaterThan(152741);
+        expect(_.size(occurrences['LT'])).toBeLessThan(6844 * 10);
+        expect(_.size(occurrences['NL'])).toBeLessThan(39842 * 10);
     });
 });
 

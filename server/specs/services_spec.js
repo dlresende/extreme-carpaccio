@@ -133,27 +133,27 @@ describe('Order Service', function() {
     });
 
     it('should calculate the sum of the order using PAY_THE_PRICE reduction', function() {
-        var order = {prices: [100, 50], quantities: [1, 2], country: 'IT'};
+        var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.PAY_THE_PRICE);
 
-        expect(bill).toEqual({total: (100 + 2 * 50) * 1.2});
+        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT')});
     });
 
     it('should calculate the sum of the order using STANDARD reduction', function() {
-        var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
+        var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.STANDARD);
 
-        expect(bill).toEqual({total: 1746});
+        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT') * (1 - 0.03)});
     });
 
     it('should calculate the sum of the order using HALF_PRICE reduction', function() {
-        var order = {prices: [100, 10], quantities: [10, 50], country: 'IT'};
+        var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.HALF_PRICE);
 
-        expect(bill).toEqual({total: 900});
+        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT') / 2});
     });
 
     it('should not validate bill when total field is missing', function() {
