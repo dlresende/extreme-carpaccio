@@ -4,10 +4,10 @@
             [extremecarpaccio.core :refer :all]))
 
 (deftest test-routes
-  (testing "main route"
-    (let [response (my-app (mock/request :get "/"))]
+  (testing "ping route"
+    (let [response (my-app (mock/request :get "/ping"))]
       (is (= (:status response) 200))
-      (is (= (:body response) "I'm alive!"))))
+      (is (= (:body response) "pong"))))
 
   (testing "not-found route"
     (let [response (my-app (mock/request :get "/invalid"))]

@@ -1,20 +1,25 @@
 (ns extremecarpaccio.core
-  (:require [compojure.core :refer [defroutes GET]]
+  (:require [compojure.core :refer [routes GET POST]]
             [compojure.route :refer [not-found]]
-            [compojure.handler :refer [site]]
-            [ring.adapter.jetty :refer [run-jetty]]
-            [clojure.pprint :refer [pprint]]))
 
-(defn pong [req]
-  (pprint req)
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body "pong"})
+            [ring.middleware.format :refer [wrap-restful-format]]
+            [ring.util.response :refer [response]]))
 
-(defroutes my-app
-           (GET "/" [] "I'm alive!")
-           (GET "/ping" [] pong)
-           (not-found "No page"))
+(defn handle-feedback [req]
+  (let [body (:body-params req)]
+    (println (:type body) ":" (:content body))
+    (response nil)))
 
-(defonce server (run-jetty #'my-app {:port 8080 :join? false}))
+(defn cannot-handle [req]
+  (println "Cannot handle " req)
+  (response nil))
+
+(def my-app
+  (-> (routes
+        (POST "/feedback" [] handle-feedback)
+        (GET "/ping" [] "pong")
+        (GET "/" [] "I'm alive!")
+        (not-found cannot-handle))
+      (wrap-restful-format :formats [:json-kw])))
+
 
