@@ -1,7 +1,6 @@
 package main
 
 import akka.actor.ActorSystem
-import play.api.libs.json._
 import spray.routing.SimpleRoutingApp
 
 case class Order(prices: Seq[Float], quantities: Seq[Int], country: String)
@@ -12,25 +11,16 @@ object Server extends App with SimpleRoutingApp {
 
   type ProcessOrder = Order => Option[Float]
 
+  // TODO Modify the server configuration if necessary
   val address = "localhost"
   val port: Int = 9000
 
   val orderRoute = "order"
   val feedbackRoute = "feedback"
 
-  def applyTax(country: String, price: Float): Option[Float] = Country.fromName(country) match {
-    case Some(c) => Some(price + price * c.tax)
-    case _ => None
-  }
-
   lazy val process: ProcessOrder = {
-    order =>
-      val total: Float = order.prices.zip(order.quantities).map(tuple => tuple._1 * tuple._2).sum
-
-      for (withTax <- applyTax(order.country, total);
-           withDiscount <- DiscountManager discount withTax
-      ) yield withDiscount
-
+    // TODO To implement
+    order => Some(0.0f)
   }
 
   startServer(interface = address, port = port) {
@@ -45,9 +35,9 @@ object Server extends App with SimpleRoutingApp {
 
               println("Request received : " + order)
 
-              val json = Json.parse(order)
+              // TODO To implement
+              val total = 0
 
-              val total = process(Order((json \ "prices").as[Seq[Float]], (json \ "quantities").as[Seq[Int]], (json \ "country").as[String])).getOrElse(0f)
               s"""{
                  |"total": $total
                   }""".stripMargin
@@ -60,9 +50,7 @@ object Server extends App with SimpleRoutingApp {
           entity(as[String]) {
             feedback =>
               complete {
-
                 println("Feedback received : " + feedback)
-
                 ""
               }
           }
