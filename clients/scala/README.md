@@ -6,4 +6,4 @@ You will need SBT
 
 ## Running in "production"
 
-``sbt run```
+```sbt run```
