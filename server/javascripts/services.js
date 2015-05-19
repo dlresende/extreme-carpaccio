@@ -263,12 +263,12 @@ Dispatcher.prototype = (function() {
     }
 
     function guessReductionPeriod(iteration) {
-        if(iterationHasFrequency(iteration, 200, 10)) {
-            return new Period(Reduction.PAY_THE_PRICE,  8000);
+        if(iterationHasFrequency(iteration, 600, 60)) { // after 30 min, during 10 min
+            return new Period(Reduction.PAY_THE_PRICE,  10000);
         }
 
-        if(iterationHasFrequency(iteration, 100, 30)) {
-            return new Period(Reduction.HALF_PRICE,  500);
+        if(iterationHasFrequency(iteration, 300, 300)) { // after 25 min, during 5 min
+            return new Period(Reduction.HALF_PRICE,  1000);
         }
 
         return new Period(Reduction.STANDARD, 5000);
