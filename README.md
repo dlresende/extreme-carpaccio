@@ -3,8 +3,8 @@
 
 ## Technical Instructions
 1. Go to the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients) and chose your client or create your own one
-2. Go to the sellers view and register yourself (URL example: http://192.168.1.12:8080/)
-3. The server will start sending orders like this:
+2. Go to the sellers view in the central server and register yourself with the IP address and port of your local client (URL example: http://192.168.1.12:8080/)
+3. The central server will start sending orders to your local client like this:
 
     ```
     POST /order HTTP/1.1
@@ -16,9 +16,9 @@
     }
     ```
 
-4. You should calculate the total and answer with an object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
+4. You should calculate the amount of the received orders and answer with an object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
 5. Your score will be shown in the dashboard
-6. The server will send you feedback like this:
+6. The server will send you feedback like this (so check if your local client already handles POST /feedback and, if not, implement it, otherwise you will not be able to figure out what is going on with your responses):
 
     ```
     POST /feedback HTTP/1.1
@@ -83,7 +83,9 @@ For the order `{"prices":[4.1,8.03,86.83,65.62,44.82],"quantities":[10,3,5,4,5],
 Note that:
 
 1. reductions are applied *after* the taxes;
-2. another reduction types can appear during the game. You need to stay tuned in the server's feedback to figure out how to calculate it.
+2. *another reduction types can appear during the game*. You need to stay tuned in the server's feedback to figure out how to calculate it.
 
 ### Penalties and Cash
-Note that if you answer something that does not match the expected bill, you will be charged with 10% of the amount of the right bill. If your answer is correct, you earn the total of the bill.
+Note that if you answer something that does not match the expected bill, you will be charged with 10% of the amount of the right bill. If your answer is correct, you earn the total of the bill. If your answer does not match the expected object bill or is empty, no penalties are applied.
+
+Have fun :)
