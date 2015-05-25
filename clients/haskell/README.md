@@ -11,16 +11,20 @@ Sinatra clone).
 
 ## Build
 
-To build and unit-test the application:
+To build the application:
 
     $ cabal install
     $ cabal sandbox init
     $ cabal build
-    $ cabal test
 
 Launch it:
 
     $ .cabal-sandbox/bin/carpaccio
+
+To run unit-tests:
+
+    $ cabal install --only-dependencies --enable-tests
+    $ cabal test
 
 ## Test Driven Development
 
