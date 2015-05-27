@@ -1,0 +1,29 @@
+name:                carpaccio
+version:             0.0.1
+synopsis:            A haskell client for extreme-carpaccio
+homepage:            https://github.com/dlresende/extreme-carpaccio
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable carpaccio
+  main-is:             Main.hs
+  hs-source-dirs:      src
+  build-depends:       base ==4.7.*
+                     , wai
+                     , warp
+                     , http-types
+                     , resourcet
+                     , scotty
+                     , aeson
+                     , text
+                     , bytestring
+                     , blaze-html
+                     , transformers
+                     , mtl
+
+test-suite spec
+  main-is:             Spec.hs
+  hs-source-dirs:      test src
+  type:                exitcode-stdio-1.0
+  build-depends:       base  == 4.*
+                     , hspec >= 1.3
