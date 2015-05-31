@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes(sellerService));
+app.use('/', routes(sellerService, dispatcher));
 
 dispatcher.startBuying(1);
 

@@ -150,7 +150,7 @@ Countries.prototype = (function() {
     };
 })();
 
-exports = module.exports;
+var exports = module.exports;
 
 exports.Sellers = Sellers;
 exports.Countries = Countries;

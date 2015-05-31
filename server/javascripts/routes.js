@@ -1,7 +1,7 @@
 var express = require('express'),
     _ = require('lodash');
 
-module.exports = function (sellerService) {
+module.exports = function (sellerService, dispatcher) {
     var router = express.Router();
     var OK = 200;
     var BAD_REQUEST = 400;
@@ -24,6 +24,19 @@ module.exports = function (sellerService) {
         } else {
           sellerService.register(sellerUrl, sellerName);
           response.status(OK).end();
+        }
+    });
+
+    router.post('/reduction', function(request, response) {
+        var reduction = request.body.reduction;
+
+        if(_.isEmpty(reduction)) {
+            response.status(BAD_REQUEST).send({message:'missing reduction type: STANDARD, HALF PRICE, PAY THE PRICE'});
+        } else if(reduction !== "STANDARD" && reduction !== "PAY THE PRICE" && reduction !== "HALF PRICE") {
+            response.status(BAD_REQUEST).send({message:'unknown reduction type: STANDARD, HALF PRICE, PAY THE PRICE'});
+        } else{
+            dispatcher.updateReductionStrategy(reduction);
+            response.status(OK).end();
         }
     });
 

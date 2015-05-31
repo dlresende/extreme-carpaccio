@@ -220,6 +220,7 @@ var Reduction = (function(){
 var Dispatcher = function(_sellerService, _orderService) {
     this.sellerService = _sellerService ;
     this.orderService = _orderService;
+    this.reductionStrategy = 'STANDARD';
 };
 Dispatcher.prototype = (function() {
     function updateSellersCash(self, seller, expectedBill, currentIteration) {
@@ -258,16 +259,12 @@ Dispatcher.prototype = (function() {
         this.shoppingIntervalInMillis = shoppingIntervalInMillis;
     };
 
-    function iterationHasFrequency(iteration, frequency, duration) {
-        return iteration >= frequency && iteration % frequency < duration;
-    }
-
-    function guessReductionPeriod(iteration) {
-        if(iterationHasFrequency(iteration, 600, 60)) { // after 30 min, during 10 min
+    function getReductionPeriodFor(reductionStrategy) {
+        if(reductionStrategy === 'PAY THE PRICE') {
             return new Period(Reduction.PAY_THE_PRICE,  10000);
         }
 
-        if(iterationHasFrequency(iteration, 300, 300)) { // after 25 min, during 5 min
+        if(reductionStrategy === 'HALF PRICE') {
             return new Period(Reduction.HALF_PRICE,  1000);
         }
 
@@ -281,6 +278,10 @@ Dispatcher.prototype = (function() {
     }
 
     return {
+        updateReductionStrategy: function(newReductionStrategy) {
+            this.reductionStrategy = newReductionStrategy;
+        },
+
         sendOrderToSellers: function(reduction, currentIteration) {
             var self = this;
             var order = self.orderService.createOrder(reduction);
@@ -288,21 +289,23 @@ Dispatcher.prototype = (function() {
 
             _.forEach(self.sellerService.allSellers(), function(seller) {
                 self.sellerService.addCash(seller, 0, currentIteration);
-                self.orderService.sendOrder(seller, order, updateSellersCash(self, seller, expectedBill, currentIteration), logError(self, seller));
+                var cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
+                var errorCallback = logError(self, seller);
+                self.orderService.sendOrder(seller, order, cashUpdater, errorCallback);
             });
         },
 
         startBuying: function(iteration) {
             console.info('>>> Shopping iteration ' + iteration);
 
-            var period = guessReductionPeriod(iteration);
+            var period = getReductionPeriodFor(this.reductionStrategy);
             this.sendOrderToSellers(period.reduction, iteration);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }
     }
 })();
 
-exports = module.exports;
+var exports = module.exports;
 
 exports.OrderService = OrderService;
 exports.Dispatcher = Dispatcher;
