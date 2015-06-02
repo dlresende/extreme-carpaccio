@@ -6,8 +6,6 @@
     <artifactId>extreme-carpaccio-spark</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <packaging>jar</packaging>
-
     <name>extreme-carpaccio-spark</name>
 
     <properties>
