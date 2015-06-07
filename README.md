@@ -2,8 +2,8 @@
 [extreme startup](https://github.com/rchatley/extreme_startup) + [elephant carpaccio](https://docs.google.com/document/d/1TCuuu-8Mm14oxsOnlk8DqfZAA1cvtYu9WGv67Yj_sSk/pub)
 
 ## Technical Instructions
-1. Go to the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients) and chose your client or create your own one
-2. Go to the sellers view in the central server and register yourself with the IP address and port of your local client (URL example: http://192.168.1.12:8080/)
+1. To be able to play, you will need to start an http server in your local machine. Many servers are already available in the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients), you only need to clone this repository and pick will. Otherwise, you can create your own http server.
+2. The organiser will start a central server which will send requests to each participant's server. Since the organiser communicates the URL for the server dashboard, go there and register your local server with your local IP address and the port under your http server is listening on (URL example: http://<you IP address>:<port of your http server>/)
 3. The central server will start sending orders to your local client like this:
 
     ```
@@ -16,9 +16,9 @@
     }
     ```
 
-4. You should calculate the amount of the received orders and answer with an object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
+4. Your job is to calculate the amount of the received orders and answer with a JSON object bill, i.e.: `{ "total": 1000.0 }` (the server checks responses using two decimal digits of precision, so, i. e., 10.1234 and 10.12 are equal).
 5. Your score will be shown in the dashboard
-6. The server will send you feedback like this (so check if your local client already handles POST /feedback and, if not, implement it, otherwise you will not be able to figure out what is going on with your responses):
+6. The server will send you feedback based on what you have responded. So check if your local http server already handles POST /feedback and, *if not, implement it, otherwise you will not be able to figure out what is going on with your responses*. Here is an example of a feedback the central server can send to you:
 
     ```
     POST /feedback HTTP/1.1
