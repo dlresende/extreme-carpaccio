@@ -13,11 +13,20 @@ describe('Default server', function () {
     serverInstance.close();
   });
   
-  it('should respond with hello world', function(done) {
-    request('http://' + conf.host + ':' + conf.port+ '/hello', function(error, response, body){
-      expect(response.statusCode).toBe(200);
-      expect(body).toBe('Hello World\n');
+  it('should handle feedback', function(done) {
+    var feedback = request('http://' + conf.host + ':' + conf.port + '/feedback', function (error, response) {
+      expect(response.statusCode).toBe(204);
       done();
     });
+    feedback.write('{type: "INFO", content: "this is my precious feedback"}');
+  });
+  
+  it('should handle order', function(done) {
+    var order = request('http://' + conf.host + ':' + conf.port + '/order', function (error, response, body) {
+      expect(response.statusCode).toBe(200);
+      expect(body).toBe('{total:0}');
+      done();
+    });
+    order.write('{prices: [], quantities: [], country: "DE", reduction: "STANDARD"}');
   });
 });

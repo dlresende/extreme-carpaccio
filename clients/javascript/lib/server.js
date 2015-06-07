@@ -56,13 +56,13 @@ var loadBodyAndProcess = function (req, res, applyLogic) {
 
      console.log('Incoming request [%s][%s] with %j', method, parsedURL.pathname, params);
 
-     if(method==='POST' && parsedURL.pathname === '/') {
+     if(method==='POST' && parsedURL.pathname === '/order') {
        loadBodyAndProcess(req, res, applyLogic);
+       res.end();
+       return;
      }
-     else {
-       res.writeHead(200, {'Content-Type': 'text/plain'});
-       res.end('Hello World\n');
-     }
+     res.statusCode = 204;
+     res.end();
    });
 
    server.listen(conf.port, conf.host, function() {
