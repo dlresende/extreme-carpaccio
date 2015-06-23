@@ -17,7 +17,7 @@ public class WebConfiguration implements Configuration {
                     logger.log(message.type + ": " + message.content);
                     return new Payload(204);
                 }).
-                post("/", (context) -> {
+                anyPost(context -> {
                     String method = context.method();
                     String uri = context.uri();
                     String body = context.extract(String.class);
