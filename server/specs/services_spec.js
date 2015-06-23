@@ -41,13 +41,13 @@ describe('Seller Service', function() {
         expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100})
     });
 
-    it('should deduct 10% of the bill amount from seller\'s cash when the seller\'s bill does not correspond with the expected one', function() {
+    it('should deduct 50% of the bill amount from seller\'s cash when the seller\'s bill does not correspond with the expected one', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.add(bob);
 
         sellerService.updateCash(bob, {total: 100}, {total: 50});
 
-        expect(sellerService.allSellers()).toContain({name: 'bob', cash: -10})
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: -50})
     });
 
     it('should compare seller\'s response with expected one using precision 2', function() {

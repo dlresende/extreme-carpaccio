@@ -74,7 +74,7 @@ SellerService.prototype = {
             }
 
             else {
-                var loss = utils.fixPrecision(totalExpectedBill * .1, 2);
+                var loss = utils.fixPrecision(totalExpectedBill * .5, 2);
                 this.deductCash(seller, loss, currentIteration);
                 var message = 'Goddamn, ' + seller.name + ' replied ' + totalActualBill + ' but right answer was ' +  totalExpectedBill + '. ' + loss + ' will be charged.';
                 this.notify(seller, {'type': 'ERROR', 'content': message});

@@ -86,6 +86,6 @@ Note that:
 2. *another reduction types can appear during the game*. You need to stay tuned in the server's feedback to figure out how to calculate it.
 
 ### Penalties and Cash
-Note that if you answer something that does not match the expected bill, you will be charged with 10% of the amount of the right bill. If your answer is correct, you earn the total of the bill. If your answer does not match the expected object bill or is empty, no penalties are applied.
+Note that if you answer something that does not match the expected bill, you will be charged with 50% of the amount of the right bill. If your answer is correct, you earn the total of the bill. If your answer does not match the expected object bill or is empty, no penalties are applied.
 
 Have fun :)
