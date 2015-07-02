@@ -6,11 +6,12 @@ integration test in python
 import unittest
 import urllib2
 import urllib
-import thread
 import time
 import json
-from client import app
 from multiprocessing import Process
+
+from client import app
+
 
 class ServerHandlerTest(unittest.TestCase):
     server = Process(target=app.run)
@@ -31,20 +32,26 @@ class ServerHandlerTest(unittest.TestCase):
                 found = True
         self.assertTrue(found)
 
-    def test_should_call_get(self):
+    def test_should_return_hello_on_any_get(self):
         response = urllib2.urlopen("http://localhost:5000/")
         self.assertContent('hello world', response)
 
-    def test_should_call_post_ping(self):
+    def test_should_respond_to_posted_pings(self):
         data = urllib.urlencode({'q': 'Ping'})
         response = urllib2.urlopen("http://localhost:5000/ping", data)
         self.assertContent('pong', response)
 
-    def test_should_call_post_order(self):
+    def test_should_give_price_quote_on_received_order(self):
         req = urllib2.Request('http://localhost:5000/order')
         req.add_header('Content-Type', 'application/json')
         response = urllib2.urlopen(req, json.dumps({'q': 'Path'}))
-        self.assertEqual(json.loads(response.read()), {u'total' : 1000})
+        self.assertEqual(json.loads(response.read()), {'total' : 1000})
+
+    def test_should_capture_server_feedback_and_send_it_back(self):
+        req = urllib2.Request('http://localhost:5000/feedback')
+        req.add_header('Content-Type', 'application/json')
+        response = urllib2.urlopen(req, json.dumps({'What does the fox do': 'Something'}))
+        self.assertEqual(json.loads(response.read()), {'What does the fox do': 'Something'})
 
     @unittest.expectedFailure
     def test_should_call_post_unknown(self):
