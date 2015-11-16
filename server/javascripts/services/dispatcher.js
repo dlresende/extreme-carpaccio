@@ -1,4 +1,6 @@
 var _ = require('lodash');
+var Reduction = require('./reduction')
+var utils = require('../utils')
 
 var Dispatcher = function(_sellerService, _orderService) {
     this.sellerService = _sellerService ;
