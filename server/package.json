@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
-    "test": "./node_modules/jasmine-node/bin/jasmine-node ."
+    "start": "node bin/www",
+    "test": "jasmine-node ."
   },
   "dependencies": {
     "body-parser": "~1.10.2",
