@@ -53,7 +53,7 @@ service.register = function (sellerUrl, name) {
     online: false,
     url: new UrlAssembler(sellerUrl)
   };
-  this.sellers.add(seller);
+  this.sellers.save(seller);
   console.info('New seller registered: ' + utils.stringify(seller))
 }
 

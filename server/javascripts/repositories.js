@@ -13,9 +13,16 @@ var Sellers = function() {
         return _.sortBy(sellers, function(seller) {return -seller.cash});
     };
 
-    this.add = function(seller) {
-        sellersMap[seller.name] = seller;
-        this.cashHistory[seller.name] = [];
+    this.save = function(seller) {
+        var previousCash;
+        if(sellersMap[seller.name] === undefined) {
+            sellersMap[seller.name] = seller;
+            this.cashHistory[seller.name] = [];
+        } else {
+            previousCash = sellersMap[seller.name].cash;
+            sellersMap[seller.name] = seller;
+            sellersMap[seller.name].cash = previousCash;
+        }
     };
 
     this.get = function(sellerName) {

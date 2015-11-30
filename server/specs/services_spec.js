@@ -41,7 +41,7 @@ describe('Seller Service', function() {
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100}, {total: 100});
 
@@ -50,7 +50,7 @@ describe('Seller Service', function() {
 
     it('should deduct 50% of the bill amount from seller\'s cash when the seller\'s bill does not correspond with the expected one', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100}, {total: 50});
 
@@ -59,7 +59,7 @@ describe('Seller Service', function() {
 
     it('should compare seller\'s response with expected one using precision 2', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100.12345}, {total: 100.12});
 
