@@ -4,7 +4,9 @@ var _ = require('lodash');
 
 var Sellers = function() {
     var sellersMap = {};
-    this.cashHistory = {};
+    var cashHistory = {};
+
+    this.cashHistory = cashHistory;
 
     this.all = function() {
         var sellers = _.map(sellersMap, function (seller) {
@@ -14,19 +16,25 @@ var Sellers = function() {
     };
 
     this.save = function(seller) {
-        var previousCash;
         if(sellersMap[seller.name] === undefined) {
-            sellersMap[seller.name] = seller;
-            this.cashHistory[seller.name] = [];
+            add(seller);
         } else {
-            previousCash = sellersMap[seller.name].cash;
-            sellersMap[seller.name] = seller;
-            sellersMap[seller.name].cash = previousCash;
+            update(seller);
         }
     };
 
     this.get = function(sellerName) {
         return sellersMap[sellerName];
+    };
+
+    function add(seller) {
+        sellersMap[seller.name] = seller;
+        cashHistory[seller.name] = [];
+    }
+    function update(seller) {
+        var previousCash = sellersMap[seller.name].cash;
+        sellersMap[seller.name] = seller;
+        sellersMap[seller.name].cash = previousCash;
     }
 };
 
