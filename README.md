@@ -31,8 +31,20 @@ Ready for the challenge? Read the problem description, define your slicing strat
         "content": "The field \"total\" in the response is missing."
     }
     ```
-    
+
+## Game rules
+
+If your answer match the expected bill, then congratulations: you earned the amount of the bill!
+
+If you answer a total that does not match the expected bill, you will be charged with 50% of the amount of the right bill.
+
+Your answer will be ignored if one of these conditions are met:
+- your server is unreachable
+- you responded with an HTTP code different than 200
+- your answer does not match the expected JSON structure
+
 ## Functional Instructions
+
 To calculate the bill, you need to consider the tax of the country from which the order came from and the reduction.
 
 ### Taxes
@@ -88,9 +100,6 @@ Note that:
 
 1. reductions are applied *after* the taxes;
 2. *another reduction types can appear during the game*. You need to stay tuned in the server's feedback to figure out how to calculate it.
-
-### Penalties and Cash
-Note that if you answer something that does not match the expected bill, you will be charged with 50% of the amount of the right bill. If your answer is correct, you earn the total of the bill. If your answer does not match the expected object bill or is empty, no penalties are applied.
 
 Have fun :)
 
