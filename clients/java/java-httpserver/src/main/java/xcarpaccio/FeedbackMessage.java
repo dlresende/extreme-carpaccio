@@ -4,17 +4,17 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
-public class Message {
+public class FeedbackMessage {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     private String type;
     private String content;
 
     // Required by Jackson
-    private Message() {
+    private FeedbackMessage() {
     }
 
-    public Message(String type, String content) {
+    public FeedbackMessage(String type, String content) {
         this.type = type;
         this.content = content;
     }
@@ -44,7 +44,7 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Message message = (Message) o;
+        FeedbackMessage message = (FeedbackMessage) o;
 
         if (type != null ? !type.equals(message.type) : message.type != null) return false;
         return !(content != null ? !content.equals(message.content) : message.content != null);
