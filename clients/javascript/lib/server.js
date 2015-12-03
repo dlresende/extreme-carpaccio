@@ -11,7 +11,8 @@ var http = require('http'),
  */
 var writeJson = function (res, content) {
   res.writeHead(200, {'Content-Type': 'application/json'});
-  res.end(JSON.stringify(content, null, "  "), "utf-8");
+  res.write(JSON.stringify(content, null, "  "), "utf-8");
+  res.end();
 }
 
 /**
