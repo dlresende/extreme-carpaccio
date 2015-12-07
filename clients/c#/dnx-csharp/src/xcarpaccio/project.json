@@ -4,8 +4,8 @@
   "version":"0.0.1",
   "description":"my c# version of the extreme-carpaccio",
   "dependencies":{
-    "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8",
-    "Microsoft.AspNet.Owin": "1.0.0-beta8",
+    "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Owin": "1.0.0-rc1-final",
     "Nancy": "1.3.0"
   },
   "frameworks":{
