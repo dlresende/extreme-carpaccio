@@ -83,8 +83,13 @@ service.updateCash = function (seller, expectedBill, actualBill, currentIteratio
   }
 }
 
-service.setOffline = function (seller) {
+service.setOffline = function (seller, offlinePenalty, currentIteration) {
   this.sellers.setOffline(seller.name);
+
+  if(offlinePenalty !== 0) {
+    console.info('Seller ' + seller.name + ' is offline: a penalty of ' + offlinePenalty + ' is applied');
+    this.deductCash(seller, offlinePenalty, currentIteration);
+  }
 }
 
 service.setOnline = function (seller) {

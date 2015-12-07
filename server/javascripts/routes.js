@@ -40,5 +40,16 @@ module.exports = function (sellerService, dispatcher) {
     }
   });
 
+  router.post('/offlinePenalty', function(request, response) {
+    var penalty = request.body.penalty;
+
+    if (! _.isNumber(penalty)) {
+      response.status(BAD_REQUEST).send({message:'penalty is missing or is not a number'});
+    } else {
+      dispatcher.updateOfflinePenalty(penalty);
+      response.status(OK).end();
+    }
+  });
+
   return router;
 };
