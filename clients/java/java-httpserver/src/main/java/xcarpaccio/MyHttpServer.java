@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.util.Arrays;
 
 import static xcarpaccio.MyHttpServer.HttpResponse.ok;
+import static xcarpaccio.MyHttpServer.HttpResponse.error;
 import static xcarpaccio.StringUtils.stringify;
 
 public class MyHttpServer
@@ -91,21 +92,28 @@ public class MyHttpServer
 
     private class OrderHttpHandler extends AbstractHttpHandler {
         @Override
-        public HttpResponse doHandle(HttpExchange request) throws IOException {
-            String method = request.getRequestMethod();
-            String uri = request.getRequestURI().getPath();
-            String requestBody = stringify(request.getRequestBody());
-            Order incomingOrder = objectMapper.readValue(requestBody, Order.class);
-            logger.log(method + " " + uri + " " + incomingOrder.toString());
+        public HttpResponse doHandle(HttpExchange request) {
 
-            double total = 42; // TODO compute me correctly or you'll get a penalty
+            try {
+                String method = request.getRequestMethod();
+                String uri = request.getRequestURI().getPath();
+                String requestBody = stringify(request.getRequestBody());
+                logger.log(method + " " + uri + " " + requestBody);
+                Order incomingOrder = objectMapper.readValue(requestBody, Order.class);
+                logger.log("Unserialized order: " + incomingOrder);
 
-            Result result = new Result(total);
+//              double total = 42; // TODO compute me correctly or you'll get a penalty
+//              Result result = new Result(total);
+//              return ok(objectMapper.writeValueAsString(result)); // Use this to respond to an order with a total
 
-            return ok(objectMapper.writeValueAsString(result)); // Use this to respond to an order with a total
-//            return ok(""); // Use this if you don't want to respond to an order, without penalty
+                return ok(""); // Use this if you don't want to respond to an order, without penalty
+            } catch (IOException e) {
+                logger.log(e);
+                return error();
+            }
         }
     }
+
 
     public static class HttpResponse {
         private static final byte[] NO_CONTENT = new byte[]{};
@@ -124,6 +132,10 @@ public class MyHttpServer
 
         public static HttpResponse ok(byte[] body) {
             return new HttpResponse(200, body);
+        }
+
+        public static HttpResponse error() {
+            return new HttpResponse(500, NO_CONTENT);
         }
 
         public static HttpResponse ok(String body) {

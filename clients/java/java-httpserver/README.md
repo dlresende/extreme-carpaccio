@@ -8,8 +8,8 @@ A Java client to with a simple com.sun.net.httpserver.HttpServer implementation.
 - `mvn clean install`
 
 ## Code
-The game server will post orders on /order endpoint.
-OrderHttpHandler inner class inside MyHttpServer.java will handle this.
+The game server will post orders on `/order` endpoint.
+`OrderHttpHandler` inner class inside `MyHttpServer.java` file will handle this so this is where to start coding.
 
 ## Run
 You don't need any application server. No Tomcat, no WAR to deploy. The server is embedded.
