@@ -17,13 +17,22 @@ public class WebConfiguration implements Configuration {
                     logger.log(message.type + ": " + message.content);
                     return new Payload(204);
                 }).
-                anyPost(context -> {
+                post("/order", (context -> {
                     String method = context.method();
                     String uri = context.uri();
                     String body = context.extract(String.class);
                     logger.log(method + " " + uri + " " + body);
-                    return new Payload(204);
-                })
+                    Order order = context.extract(Order.class);
+                    logger.log("Unserialized order: " + order);
+
+                    // Use the following line to choose not to handle an order
+                    return new Payload("application/json", "", 200);
+
+                    // Use the following lines to return a total:
+//                    double total = 42.0;
+//                    Answer answer = new Answer(total);
+//                    return new Payload("application/json", answer, 200);
+                }))
         ;
     }
 }

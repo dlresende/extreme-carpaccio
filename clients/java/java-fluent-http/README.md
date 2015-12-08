@@ -15,3 +15,5 @@ You don't need any application server. No Tomcat, no WAR to deploy. The server i
 The server listens on port 9000: [http://localhost:9000/ping](http://localhost:9000/ping)
 
 You can also launch the server with your IDE. You just have to launch `MyFluentHttpServer` class. It has a `main` method.
+
+The API is implemented in `WebConfiguration` class.
