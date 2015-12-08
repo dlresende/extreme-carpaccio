@@ -4,6 +4,6 @@ exports.order = function order(req, res, next) {
 }
 
 exports.feedback = function feedback(req, res, next) {
-  // FIXME ignored for now
+  console.info("FEEDBACK:", req.body.type, req.body.content);
   next();
 }
