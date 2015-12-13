@@ -43,6 +43,7 @@ describe('Utils', function() {
             method : 'POST',
             headers : {
                 'Content-Type' : 'application/json',
+                'Accept' : 'application/json',
                 'Content-Length' : bodyStringified.length
             }
         }, callback);
