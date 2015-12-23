@@ -1,5 +1,9 @@
 # Extreme Carpaccio
-[extreme startup](https://github.com/rchatley/extreme_startup) + [elephant carpaccio](https://docs.google.com/document/d/1TCuuu-8Mm14oxsOnlk8DqfZAA1cvtYu9WGv67Yj_sSk/pub)
+This exercise merges two well known exercises: [Extreme Startup](https://github.com/rchatley/extreme_startup) and [Elephant Carpaccio](https://docs.google.com/document/d/1TCuuu-8Mm14oxsOnlk8DqfZAA1cvtYu9WGv67Yj_sSk/pub).
+
+À la Extreme Startup, someones computer plays the central server role and start sending HTTP requests to participant computers. Each request is in fact a purchasing order and participants should calculate the order's total amount and answer the server. For every good response the participant earn points and increase his score. For bad responses, penalties are applied and the participant lose some points. Therefore, as a participant, you need to try to slice the problem and go to production with a small part of the problem solved as soon as possible in order to start collecting points. If you don't slice and try to go to production once the whole problem is solved, you risk to take to much time and other participants will start scoring before you. Slice the problem, try to go live as soon as possible and start collecting feedbacks, this is the Elephant Carpaccio part.
+
+Ready for the challenge? Read the problem description, define your slicing strategy and start coding!
 
 ## Technical Instructions
 1. To be able to play, you will need to start an http server in your local machine. Many servers are already available in the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients), you only need to clone this repository and pick will. Otherwise, you can create your own http server.
