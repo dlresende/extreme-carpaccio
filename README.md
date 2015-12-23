@@ -93,3 +93,6 @@ Note that:
 Note that if you answer something that does not match the expected bill, you will be charged with 50% of the amount of the right bill. If your answer is correct, you earn the total of the bill. If your answer does not match the expected object bill or is empty, no penalties are applied.
 
 Have fun :)
+
+## People running Extreme Carpaccio Sessions
+- People are talking about Extreme Carpaccio on [Twitter](https://twitter.com/search?q=%22extreme%20carpaccio%22&src=typd)
