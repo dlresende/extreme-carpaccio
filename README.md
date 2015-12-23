@@ -7,7 +7,7 @@ Ready for the challenge? Read the problem description, define your slicing strat
 
 ## Technical Instructions
 1. To be able to play, you will need to start an http server in your local machine. Many servers are already available in the [clients directory](https://github.com/dlresende/extreme-carpaccio/tree/master/clients), you only need to clone this repository and pick will. Otherwise, you can create your own http server.
-2. The facilitator will start a central server which will send requests to each participant's server. Since the facilitator communicates the URL for the server dashboard, go there and register your local server with your local IP address and the port under your http server is listening on (URL example: http://<you IP address>:<port of your http server>/)
+2. The facilitator will start a central server which will send requests to each participant's server. Since the facilitator communicates the URL for the server dashboard, go there and register your local server with your local IP address and the port under your http server is listening on (URL example: http://\<you IP address\>:\<port for your local http server\>/)
 3. The central server will start sending orders to your local client like this:
 
     ```
