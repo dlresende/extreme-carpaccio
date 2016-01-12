@@ -94,5 +94,5 @@ Note that if you answer something that does not match the expected bill, you wil
 
 Have fun :)
 
-## People running Extreme Carpaccio Sessions
-- People are talking about Extreme Carpaccio on [Twitter](https://twitter.com/search?q=%22extreme%20carpaccio%22&src=typd)
+## People running Extreme Carpaccio
+- People are talking about Extreme Carpaccio on [Twitter](https://twitter.com/search?vertical=default&q=%22extreme%20carpaccio%22%20OR%20%22Xtreme%20carpaccio%22%20OR%20%23ExtremeCarpaccio&src=typd)
