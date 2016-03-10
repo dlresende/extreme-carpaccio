@@ -4,6 +4,8 @@ import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.RestAssured.when;
 import static com.jayway.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+
 import org.junit.Test;
 import com.jayway.restassured.RestAssured;
 
@@ -39,14 +41,15 @@ public class MyFluentHttpServerTest {
     }
 
     @Test public void
-    should_post_a_string() {
+    should_post_an_order() {
         given().
                 contentType(JSON).
-                body("Hello you!").
+                body("{\"prices\":[31.01],\"quantities\":[8],\"names\":[\"Tea\"],\"country\":\"IT\",\"reduction\":\"STANDARD\"}").
         when().
-                post("/").
+                post("/order").
         then().
-                statusCode(204)
+                statusCode(200).
+                body(equalTo(""))
         ;
     }
 }

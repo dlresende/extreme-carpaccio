@@ -31,7 +31,7 @@ public abstract class AbstractHttpServerTest
         connection.setDoInput(true);
         connection.setInstanceFollowRedirects(false);
         connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("charset", UTF_8);
         connection.setRequestProperty("Content-Length", Integer.toString(body.length()));
         connection.setUseCaches(false);

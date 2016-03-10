@@ -16,7 +16,7 @@ namespace XCarpaccio
           Post["/order"] = p =>
           {
               WriteLine($"[{DateTime.Now}]");
-              return new {Total=0.0};
+              return new {Ignored=true};
           };
 
           Post["/feedback"] = p =>

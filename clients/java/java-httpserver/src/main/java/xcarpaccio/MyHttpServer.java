@@ -11,7 +11,8 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 
-import static xcarpaccio.MyHttpServer.Response.ok;
+import static xcarpaccio.MyHttpServer.HttpResponse.ok;
+import static xcarpaccio.MyHttpServer.HttpResponse.error;
 import static xcarpaccio.StringUtils.stringify;
 
 public class MyHttpServer
@@ -30,7 +31,7 @@ public class MyHttpServer
         server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/ping", new PingHttpHandler());
         server.createContext("/feedback", new FeedbackHttpHandler());
-        server.createContext("/", new ConsoleHttpHandler());
+        server.createContext("/order", new OrderHttpHandler());
         server.start();
 
         logger.log("Server running on port " + port + "...");
@@ -49,15 +50,16 @@ public class MyHttpServer
     }
 
     private abstract class AbstractHttpHandler implements HttpHandler {
+        protected final ObjectMapper objectMapper = new ObjectMapper();
         @Override
         public void handle(HttpExchange httpExchange) throws IOException {
-            Response response = doHandle(httpExchange);
+            HttpResponse response = doHandle(httpExchange);
             respond(httpExchange, response);
         }
 
-        public abstract Response doHandle(HttpExchange request);
+        public abstract HttpResponse doHandle(HttpExchange request) throws IOException;
 
-        private void respond(HttpExchange httpExchange, Response response) throws IOException {
+        private void respond(HttpExchange httpExchange, HttpResponse response) throws IOException {
             httpExchange.sendResponseHeaders(response.getStatusCode(), response.getBody().length);
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBody());
@@ -67,20 +69,18 @@ public class MyHttpServer
 
     private class PingHttpHandler extends AbstractHttpHandler {
         @Override
-        public Response doHandle(HttpExchange request) {
+        public HttpResponse doHandle(HttpExchange request) {
             return ok("pong");
         }
     }
 
     private class FeedbackHttpHandler extends AbstractHttpHandler {
-        protected final ObjectMapper objectMapper = new ObjectMapper();
-
         @Override
-        public Response doHandle(HttpExchange request) {
+        public HttpResponse doHandle(HttpExchange request) {
             InputStream body = request.getRequestBody();
 
             try {
-                Message message = objectMapper.readValue(body, Message.class);
+                FeedbackMessage message = objectMapper.readValue(body, FeedbackMessage.class);
                 logger.log(message.getType() + ": " + message.getContent());
             } catch (IOException exception) {
                 logger.error(exception.getMessage());
@@ -90,36 +90,55 @@ public class MyHttpServer
         }
     }
 
-    private class ConsoleHttpHandler extends AbstractHttpHandler {
+    private class OrderHttpHandler extends AbstractHttpHandler {
         @Override
-        public Response doHandle(HttpExchange request) {
-            String method = request.getRequestMethod();
-            String uri = request.getRequestURI().getPath();
-            logger.log(method + " " + uri + " " + stringify(request.getRequestBody()));
-            return ok();
+        public HttpResponse doHandle(HttpExchange request) {
+
+            try {
+                String method = request.getRequestMethod();
+                String uri = request.getRequestURI().getPath();
+                String requestBody = stringify(request.getRequestBody());
+                logger.log(method + " " + uri + " " + requestBody);
+                Order incomingOrder = objectMapper.readValue(requestBody, Order.class);
+                logger.log("Unserialized order: " + incomingOrder);
+
+//              double total = 42; // TODO compute me correctly or you'll get a penalty
+//              Result result = new Result(total);
+//              return ok(objectMapper.writeValueAsString(result)); // Use this to respond to an order with a total
+
+                return ok(""); // Use this if you don't want to respond to an order, without penalty
+            } catch (IOException e) {
+                logger.log(e);
+                return error();
+            }
         }
     }
 
-    public static class Response {
+
+    public static class HttpResponse {
         private static final byte[] NO_CONTENT = new byte[]{};
 
         private final int statusCode;
         private final byte[] body;
 
-        private Response(int statusCode, byte[] body) {
+        private HttpResponse(int statusCode, byte[] body) {
             this.statusCode = statusCode;
             this.body = body;
         }
 
-        public static Response ok() {
+        public static HttpResponse ok() {
             return ok(NO_CONTENT);
         }
 
-        public static Response ok(byte[] body) {
-            return new Response(200, body);
+        public static HttpResponse ok(byte[] body) {
+            return new HttpResponse(200, body);
         }
 
-        public static Response ok(String body) {
+        public static HttpResponse error() {
+            return new HttpResponse(500, NO_CONTENT);
+        }
+
+        public static HttpResponse ok(String body) {
             return ok(body != null ? body.getBytes() : NO_CONTENT);
         }
 
@@ -136,7 +155,7 @@ public class MyHttpServer
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Response response = (Response) o;
+            HttpResponse response = (HttpResponse) o;
 
             return statusCode == response.statusCode && Arrays.equals(body, response.body);
         }

@@ -2,6 +2,7 @@ package xcarpaccio;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,8 +36,24 @@ public class MyHttpServerTest extends AbstractHttpServerTest
 
     @Test
     public void should_print_received_message_via_post() throws Exception {
-        post(LOCALHOST + "/feedback", new Message("info", "test").json());
+        post(LOCALHOST + "/feedback", new FeedbackMessage("info", "test").json());
 
         then(logger).should().log("info: test");
+    }
+
+    @Test
+    @Ignore
+    public void should_deserialize_JSON_order_and_render_total() throws Exception {
+        String body = post(LOCALHOST + "/order", "{\"prices\":[3.5],\"quantities\":[2],\"country\":\"ES\",\"reduction\":\"STANDARD\"}");
+
+        assertThat(body).isEqualTo("{\"total\":7.0}");
+    }
+
+    @Test
+    @Ignore
+    public void should_reject_an_order() throws Exception {
+        String body = post(LOCALHOST + "/order", "{\"prices\":[3.5],\"quantities\":[2],\"country\":\"ES\",\"reduction\":\"STANDARD\"}");
+
+        assertThat(body).isEqualTo("");
     }
 }

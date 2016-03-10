@@ -17,14 +17,14 @@ namespace xCarpaccio.client
                 var request = RequestAsString();
 
                 Console.WriteLine("{0}", request);
-                return "";
+                return new {};
             };
 
             Post["/feedback"] = _ =>
             {
                 var feedback = this.Bind<Feedback>();
                 HandleFeedback(feedback);
-                return "";
+                return Negotiate.WithStatusCode(HttpStatusCode.OK);
             };
         }
 
