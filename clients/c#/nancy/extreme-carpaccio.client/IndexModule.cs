@@ -1,5 +1,6 @@
 ﻿
 using System.IO;
+using System.Net;
 using System.Text;
 
 namespace xCarpaccio.client
@@ -15,7 +16,18 @@ namespace xCarpaccio.client
             Post["/order"] = _ =>
             {
                 var order = this.Bind<Order>();
-                return HandlerOrder(order);
+               var bill = HandlerOrder(order);
+                if (bill == null)
+                {
+                    return new {};
+                 
+                }
+                else
+                {
+                    return bill;
+
+                }
+               
             };
 
             Post["/feedback"] = _ =>
@@ -47,7 +59,7 @@ namespace xCarpaccio.client
         private Bill HandlerOrder(Order order)
         {
             // TODO HERE
-            return new Bill();
+            return null;
         }        
     }
 }
