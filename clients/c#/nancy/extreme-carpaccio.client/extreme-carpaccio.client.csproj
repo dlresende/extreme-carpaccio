@@ -56,11 +56,12 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Feedback.cs" />
     <Compile Include="IndexModule.cs" />
+    <Compile Include="Bill.cs" />
+    <Compile Include="Order.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

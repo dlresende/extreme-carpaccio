@@ -1,4 +1,7 @@
-﻿namespace xCarpaccio.client
+﻿using System.Globalization;
+using System.Threading;
+
+namespace xCarpaccio.client
 {
     using System;
     using Nancy.Hosting.Self;
