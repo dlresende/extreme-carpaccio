@@ -14,15 +14,14 @@ namespace xCarpaccio.client
         {
             Post["/order"] = _ =>
             {
-                var request = RequestAsString();
-
-                Console.WriteLine("{0}", request);
-                return new {};
+                var order = this.Bind<Order>();
+                return HandlerOrder(order);
             };
 
             Post["/feedback"] = _ =>
             {
                 var feedback = this.Bind<Feedback>();
+       
                 HandleFeedback(feedback);
                 return Negotiate.WithStatusCode(HttpStatusCode.OK);
             };
@@ -42,6 +41,13 @@ namespace xCarpaccio.client
         {
             Console.Write("Type: {0}: ", feedback.type);
             Console.WriteLine(feedback.content);
+        }
+
+
+        private Bill HandlerOrder(Order order)
+        {
+            // TODO HERE
+            return new Bill();
         }        
     }
 }
