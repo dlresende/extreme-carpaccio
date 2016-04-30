@@ -1,5 +1,6 @@
 ﻿
 using System.IO;
+using System.Net;
 using System.Text;
 
 namespace xCarpaccio.client
@@ -14,15 +15,25 @@ namespace xCarpaccio.client
         {
             Post["/order"] = _ =>
             {
-                var request = RequestAsString();
+                var order = this.Bind<Order>();
+               var bill = HandlerOrder(order);
+                if (bill == null)
+                {
+                    return new {};
+                 
+                }
+                else
+                {
+                    return bill;
 
-                Console.WriteLine("{0}", request);
-                return new {};
+                }
+               
             };
 
             Post["/feedback"] = _ =>
             {
                 var feedback = this.Bind<Feedback>();
+       
                 HandleFeedback(feedback);
                 return Negotiate.WithStatusCode(HttpStatusCode.OK);
             };
@@ -42,6 +53,13 @@ namespace xCarpaccio.client
         {
             Console.Write("Type: {0}: ", feedback.type);
             Console.WriteLine(feedback.content);
+        }
+
+
+        private Bill HandlerOrder(Order order)
+        {
+            // TODO HERE. Return null if you do not what to return a total
+            return null;
         }        
     }
 }

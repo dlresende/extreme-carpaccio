@@ -16,7 +16,7 @@ lib-cov
 [Bb]in
 [Rr]elease
 *.suo
-
+**/packages/*
 pids
 logs
 results
