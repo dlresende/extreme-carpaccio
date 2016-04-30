@@ -16,11 +16,11 @@ describe('Sellers', function(){
     });
 
     it('should return all sellers sorted by cash in decreasing order', function() {
-        sellers.add(bob);
+        sellers.save(bob);
         var alice = {name: 'alice', hostname: 'hostname', port: '3001', path: '/path', cash: 10.0};
-        sellers.add(alice);
+        sellers.save(alice);
         var carol = {name: 'carol', hostname: 'hostname', port: '3002', path: '/path', cash: 5.0};
-        sellers.add(carol);
+        sellers.save(carol);
 
         expect(sellers.all()[0]).toEqual(alice);
         expect(sellers.all()[1]).toEqual(carol);
@@ -28,15 +28,30 @@ describe('Sellers', function(){
     });
 
     it('should add sellers', function() {
-        sellers.add(bob);
+        sellers.save(bob);
 
         expect(sellers.all()).toContain(bob);
+    });
+
+    it('should update sellers data and preserve cash & cash history', function() {
+        var newBob, updatedBob;
+        sellers.save(bob);
+        sellers.updateCash(bob.name, 42, 1);
+
+        newBob = {name: bob.name, hostname: 'new hostname'};
+        sellers.save(newBob);
+
+        expect(sellers.all().length).toBe(1);
+        updatedBob = sellers.get(bob.name);
+        expect(updatedBob.hostname).toEqual('new hostname');
+        expect(updatedBob.cash).toBe(42);
+        expect(sellers.cashHistory).toEqual({'bob': [0, 42]});
     });
 
     it('should count sellers', function() {
         expect(sellers.count()).toBe(0);
 
-        sellers.add(bob);
+        sellers.save(bob);
 
         expect(sellers.count()).toBe(1);
     });
@@ -44,13 +59,13 @@ describe('Sellers', function(){
     it('should say when there are sellers or not', function() {
         expect(sellers.isEmpty()).toBeTruthy();
 
-        sellers.add(bob);
+        sellers.save(bob);
 
         expect(sellers.isEmpty()).toBeFalsy();
     });
 
     it('should update seller\'s cash', function() {
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellers.updateCash('bob', 100);
 
@@ -58,7 +73,7 @@ describe('Sellers', function(){
     });
 
     it('should track cash evolution on cash update by iteration', function() {
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellers.updateCash('bob', 100, 0);
 
@@ -66,7 +81,7 @@ describe('Sellers', function(){
     });
 
     it('should track cash evolution on cash update by iteration and fill missing iterations with last value', function() {
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellers.updateCash('bob', 100, 3);
         sellers.updateCash('bob', 100, 4);

@@ -12,6 +12,7 @@ var SellerService = services.SellerService;
 var Reduction = services.Reduction;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
+var UrlAssembler = require('url-assembler');
 
 (function disableLogs() {
     console.info = console.error = function() {};
@@ -28,13 +29,19 @@ describe('Seller Service', function() {
 
     it('should register new seller', function() {
         sellerService.register('http://localhost:3000/path', 'bob');
-
-        expect(sellerService.allSellers()).toContain(bob);
+        var sellers = sellerService.allSellers();
+        expect(sellers.length).toBe(1);
+        var actual = sellers.shift()
+        expect(actual.name).toBe('bob');
+        expect(actual.cash).toBe(0);
+        expect(actual.online).toBe(false);
+        expect(actual.url instanceof UrlAssembler).toBeTruthy();
+        expect(actual.url.toString()).toBe('http://localhost:3000/path')
     });
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100}, {total: 100});
 
@@ -43,7 +50,7 @@ describe('Seller Service', function() {
 
     it('should deduct 50% of the bill amount from seller\'s cash when the seller\'s bill does not correspond with the expected one', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100}, {total: 50});
 
@@ -52,7 +59,7 @@ describe('Seller Service', function() {
 
     it('should compare seller\'s response with expected one using precision 2', function() {
         var bob = {name: 'bob', cash: 0};
-        sellers.add(bob);
+        sellers.save(bob);
 
         sellerService.updateCash(bob, {total: 100.12345}, {total: 100.12});
 
