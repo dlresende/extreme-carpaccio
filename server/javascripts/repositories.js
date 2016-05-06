@@ -101,10 +101,14 @@ Sellers.prototype = (function(){
 
 var Countries = function() {};
 
+
+
 Countries.prototype = (function() {
-    var Country = function(name, tax) {
+    var Country = function(name, taxRule) {
         this.name = name;
-        this.tax = tax;
+        this.taxRule = taxRule;
+        var self = this;
+        this.applyTax = function(sum) { return self.taxRule.apply(self, [sum]); }
     };
 
     var europeanCountries = {
@@ -148,7 +152,8 @@ Countries.prototype = (function() {
     _.shuffle(countryDistributionByWeight);
 
     var countryMap = _.reduce(europeanCountries, function(map, infos, country) {
-        map[country] = new Country(country, infos[0]);
+	    var tax = infos[0];
+        map[country] = new Country(country, function(price) { return price*tax; });
         return map;
     }, {});
 
@@ -159,9 +164,13 @@ Countries.prototype = (function() {
             return _.sample(countryDistributionByWeight);
         },
 
-        tax: function(countryName) {
-            return countryMap[countryName].tax;
-        }
+    	taxRule: function(countryName) {
+            return countryMap[countryName];
+        },
+
+	    updateTax: function(country, taxRule) {
+            countryMap[country].taxRule = taxRule;
+	    }
     };
 })();
 

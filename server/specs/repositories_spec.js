@@ -98,34 +98,44 @@ describe('Countries', function() {
     });
 
     it('should get the corresponding tax for a given country', function() {
-        expect(countries.tax('DE')).toBe(1.2);
-        expect(countries.tax('UK')).toBe(1.21);
-        expect(countries.tax('FR')).toBe(1.2);
-        expect(countries.tax('IT')).toBe(1.25);
-        expect(countries.tax('ES')).toBe(1.19);
-        expect(countries.tax('PL')).toBe(1.21);
-        expect(countries.tax('RO')).toBe(1.2);
-        expect(countries.tax('NL')).toBe(1.2);
-        expect(countries.tax('BE')).toBe(1.24);
-        expect(countries.tax('EL')).toBe(1.2);
-        expect(countries.tax('CZ')).toBe(1.19);
-        expect(countries.tax('PT')).toBe(1.23);
-        expect(countries.tax('HU')).toBe(1.27);
-        expect(countries.tax('SE')).toBe(1.23);
-        expect(countries.tax('AT')).toBe(1.22);
-        expect(countries.tax('BG')).toBe(1.21);
-        expect(countries.tax('DK')).toBe(1.21);
-        expect(countries.tax('FI')).toBe(1.17);
-        expect(countries.tax('SK')).toBe(1.18);
-        expect(countries.tax('IE')).toBe(1.21);
-        expect(countries.tax('HR')).toBe(1.23);
-        expect(countries.tax('LT')).toBe(1.23);
-        expect(countries.tax('SI')).toBe(1.24);
-        expect(countries.tax('LV')).toBe(1.2);
-        expect(countries.tax('EE')).toBe(1.22);
-        expect(countries.tax('CY')).toBe(1.21);
-        expect(countries.tax('LU')).toBe(1.25);
-        expect(countries.tax('MT')).toBe(1.2);
+        expect(countries.taxRule('DE').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('UK').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('FR').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('IT').applyTax(1)).toBe(1.25);
+        expect(countries.taxRule('ES').applyTax(1)).toBe(1.19);
+        expect(countries.taxRule('PL').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('RO').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('NL').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('BE').applyTax(1)).toBe(1.24);
+        expect(countries.taxRule('EL').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('CZ').applyTax(1)).toBe(1.19);
+        expect(countries.taxRule('PT').applyTax(1)).toBe(1.23);
+        expect(countries.taxRule('HU').applyTax(1)).toBe(1.27);
+        expect(countries.taxRule('SE').applyTax(1)).toBe(1.23);
+        expect(countries.taxRule('AT').applyTax(1)).toBe(1.22);
+        expect(countries.taxRule('BG').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('DK').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('FI').applyTax(1)).toBe(1.17);
+        expect(countries.taxRule('SK').applyTax(1)).toBe(1.18);
+        expect(countries.taxRule('IE').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('HR').applyTax(1)).toBe(1.23);
+        expect(countries.taxRule('LT').applyTax(1)).toBe(1.23);
+        expect(countries.taxRule('SI').applyTax(1)).toBe(1.24);
+        expect(countries.taxRule('LV').applyTax(1)).toBe(1.2);
+        expect(countries.taxRule('EE').applyTax(1)).toBe(1.22);
+        expect(countries.taxRule('CY').applyTax(1)).toBe(1.21);
+        expect(countries.taxRule('LU').applyTax(1)).toBe(1.25);
+        expect(countries.taxRule('MT').applyTax(1)).toBe(1.2);
+    });
+
+    it('should get the updated tax for a given country', function() {
+    	var newTaxRule = function(total) { if(total > 100) return total * 1.2; else return total * 1.2 + 100; };
+	    countries.updateTax('FR', newTaxRule);
+
+    	var newTax = countries.taxRule('FR');
+
+	    expect(newTax.applyTax(100)).toBe(100 * 1.2 + 100);
+	    expect(newTax.applyTax(150)).toBe(150 * 1.2);
     });
 
     it('should return random country according to its frequency', function() {

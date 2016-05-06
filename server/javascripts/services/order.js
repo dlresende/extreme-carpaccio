@@ -12,7 +12,7 @@ var service = OrderService.prototype;
 service.sendOrder = function (seller, order, cashUpdater, logError) {
   console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
   utils.post(seller.hostname, seller.port, seller.path + '/order', order, cashUpdater, logError);
-}
+};
 
 service.createOrder = function (reduction) {
   var items = _.random(1, 10);
@@ -31,19 +31,20 @@ service.createOrder = function (reduction) {
     country: countries.randomOne(),
     reduction: reduction.name
   };
-}
+};
 
 service.bill = function (order, reduction) {
   var prices = order.prices;
   var quantities = order.quantities;
   var sum = quantities
     .map(function(q, i) {return q * prices[i]})
-    .reduce(function(sum, current) {return sum + current}, 0)
+    .reduce(function(sum, current) {return sum + current}, 0);
 
-  var tax = countries.tax(order.country);
-  sum = reduction.apply(sum * tax);
+  var taxRule = countries.taxRule(order.country);
+  sum = taxRule.applyTax(sum);
+  sum = reduction.apply(sum);
   return { total: sum };
-}
+};
 
 service.validateBill = function (bill) {
   if(!_.has(bill, 'total')) {

@@ -155,7 +155,7 @@ describe('Order Service', function() {
 
         var bill = orderService.bill(order, Reduction.PAY_THE_PRICE);
 
-        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT')});
+        expect(bill).toEqual({total:  countries.taxRule('IT').applyTax(1000 + 2 * 50)});
     });
 
     it('should calculate the sum of the order using STANDARD reduction', function() {
@@ -163,7 +163,7 @@ describe('Order Service', function() {
 
         var bill = orderService.bill(order, Reduction.STANDARD);
 
-        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT') * (1 - 0.03)});
+        expect(bill).toEqual({total: countries.taxRule('IT').applyTax(1000 + 2 * 50) * (1 - 0.03)});
     });
 
     it('should calculate the sum of the order using HALF_PRICE reduction', function() {
@@ -171,7 +171,7 @@ describe('Order Service', function() {
 
         var bill = orderService.bill(order, Reduction.HALF_PRICE);
 
-        expect(bill).toEqual({total: (1000 + 2 * 50) * countries.tax('IT') / 2});
+        expect(bill).toEqual({total: countries.taxRule('IT').applyTax(1000 + 2 * 50) / 2});
     });
 
     it('should not validate bill when total field is missing', function() {
