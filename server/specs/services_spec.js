@@ -57,6 +57,17 @@ describe('Seller Service', function() {
         expect(sellerService.allSellers()).toContain({name: 'bob', cash: -50})
     });
 
+    it('should deduct a penalty when a seller is offline', function(){
+        var bob = {name: 'bob', cash: 200, online: true};
+        var offlinePenalty = 100;
+        sellers.save(bob);
+
+        sellerService.setOffline(bob, offlinePenalty);
+
+        expect(bob.online).toBe(false);
+        expect(bob.cash).toBe(100);
+    });
+
     it('should compare seller\'s response with expected one using precision 2', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.save(bob);

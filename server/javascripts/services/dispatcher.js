@@ -6,6 +6,7 @@ var Dispatcher = function(_sellerService, _orderService) {
     this.sellerService = _sellerService ;
     this.orderService = _orderService;
     this.reductionStrategy = 'STANDARD';
+    this.offlinePenalty = 0;
 };
 Dispatcher.prototype = (function() {
     function updateSellersCash(self, seller, expectedBill, currentIteration) {
@@ -32,10 +33,10 @@ Dispatcher.prototype = (function() {
         }
     }
 
-    function logError(self, seller) {
+    function putSellerOffline(self, seller, currentIteration) {
         return function() {
-            self.sellerService.setOffline(seller);
             console.error('Could not reach seller ' + utils.stringify(seller));
+            self.sellerService.setOffline(seller, self.offlinePenalty, currentIteration);
         }
     }
 
@@ -63,6 +64,10 @@ Dispatcher.prototype = (function() {
     }
 
     return {
+        updateOfflinePenalty: function(penalty) {
+            this.offlinePenalty = penalty;
+        },
+
         updateReductionStrategy: function(newReductionStrategy) {
             this.reductionStrategy = newReductionStrategy;
         },
@@ -75,7 +80,7 @@ Dispatcher.prototype = (function() {
             _.forEach(self.sellerService.allSellers(), function(seller) {
                 self.sellerService.addCash(seller, 0, currentIteration);
                 var cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
-                var errorCallback = logError(self, seller);
+                var errorCallback = putSellerOffline(self, seller, currentIteration);
                 self.orderService.sendOrder(seller, order, cashUpdater, errorCallback);
             });
         },
