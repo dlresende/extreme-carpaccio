@@ -1,11 +1,11 @@
-var _ = require('lodash');
-var Reduction = require('./reduction')
-var utils = require('../utils')
+var _ = require('lodash'),
+    Reduction = require('./reduction'),
+    utils = require('../utils');
 
-var Dispatcher = function(_sellerService, _orderService) {
+var Dispatcher = function(_sellerService, _orderService, _configuration) {
     this.sellerService = _sellerService ;
     this.orderService = _orderService;
-    this.reductionStrategy = 'STANDARD';
+    this.configuration = _configuration;
     this.offlinePenalty = 0;
 };
 Dispatcher.prototype = (function() {
@@ -54,6 +54,10 @@ Dispatcher.prototype = (function() {
             return new Period(Reduction.HALF_PRICE,  1000);
         }
 
+        if(reductionStrategy !== 'STANDARD') {
+            console.warn('Unknown reduction strategy %s. Using STANDARD.', reductionStrategy);
+        }
+
         return new Period(Reduction.STANDARD, 5000);
     }
 
@@ -66,10 +70,6 @@ Dispatcher.prototype = (function() {
     return {
         updateOfflinePenalty: function(penalty) {
             this.offlinePenalty = penalty;
-        },
-
-        updateReductionStrategy: function(newReductionStrategy) {
-            this.reductionStrategy = newReductionStrategy;
         },
 
         sendOrderToSellers: function(reduction, currentIteration) {
@@ -86,9 +86,10 @@ Dispatcher.prototype = (function() {
         },
 
         startBuying: function(iteration) {
-            console.info('>>> Shopping iteration ' + iteration);
+            console.info('>>> Shopping iteration %s', iteration);
 
-            var period = getReductionPeriodFor(this.reductionStrategy);
+            var configuration = this.configuration.all();
+            var period = getReductionPeriodFor(configuration.reduction);
             this.sendOrderToSellers(period.reduction, iteration);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }

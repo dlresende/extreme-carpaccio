@@ -13,6 +13,7 @@ var Reduction = services.Reduction;
 var Countries = repositories.Countries;
 var Sellers = repositories.Sellers;
 var UrlAssembler = require('url-assembler');
+var Configuration = require('../javascripts/config').Configuration;
 
 (function disableLogs() {
     console.info = console.error = function() {};
@@ -31,12 +32,12 @@ describe('Seller Service', function() {
         sellerService.register('http://localhost:3000/path', 'bob');
         var sellers = sellerService.allSellers();
         expect(sellers.length).toBe(1);
-        var actual = sellers.shift()
+        var actual = sellers.shift();
         expect(actual.name).toBe('bob');
         expect(actual.cash).toBe(0);
         expect(actual.online).toBe(false);
         expect(actual.url instanceof UrlAssembler).toBeTruthy();
-        expect(actual.url.toString()).toBe('http://localhost:3000/path')
+        expect(actual.url.toString()).toBe('http://localhost:3000/path');
     });
 
     it('should compute seller\'s cash based on the order\'s amount', function() {
@@ -184,14 +185,22 @@ describe('Order Service', function() {
 });
 
 describe('Dispatcher', function() {
-    var dispatcher;
-    var orderService;
-    var sellerService;
+    var dispatcher, orderService, sellerService, configuration;
 
     beforeEach(function(){
         sellerService = new SellerService();
         orderService = new OrderService();
-        dispatcher = new Dispatcher(sellerService, orderService);
+        configuration = new Configuration();
+        dispatcher = new Dispatcher(sellerService, orderService, configuration);
+    });
+
+    it('should load configuration for reductions', function() {
+        spyOn(configuration, 'all').andReturn({reduction: 'HALF PRICE'});
+        spyOn(dispatcher, 'sendOrderToSellers').andCallFake(function(){});
+
+        dispatcher.startBuying(1);
+
+        expect(dispatcher.sendOrderToSellers).toHaveBeenCalledWith(Reduction.HALF_PRICE, 1);
     });
 
     it('should send the same order to each seller using reduction', function() {

@@ -27,19 +27,6 @@ module.exports = function (sellerService, dispatcher) {
     }
   });
 
-  router.post('/reduction', function(request, response) {
-    var reduction = request.body.reduction;
-
-    if (_.isEmpty(reduction)) {
-      response.status(BAD_REQUEST).send({message:'missing reduction type: STANDARD, HALF PRICE, PAY THE PRICE'});
-    } else if (reduction !== "STANDARD" && reduction !== "PAY THE PRICE" && reduction !== "HALF PRICE") {
-      response.status(BAD_REQUEST).send({message:'unknown reduction type: STANDARD, HALF PRICE, PAY THE PRICE'});
-    } else {
-      dispatcher.updateReductionStrategy(reduction);
-      response.status(OK).end();
-    }
-  });
-
   router.post('/offlinePenalty', function(request, response) {
     var penalty = request.body.penalty;
 

@@ -101,8 +101,6 @@ Sellers.prototype = (function(){
 
 var Countries = function() {};
 
-
-
 Countries.prototype = (function() {
     var Country = function(name, taxRule) {
         this.name = name;
