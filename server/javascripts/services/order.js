@@ -37,8 +37,8 @@ service.bill = function (order, reduction) {
   var prices = order.prices;
   var quantities = order.quantities;
   var sum = quantities
-    .map((q, i) => q * prices[i])
-    .reduce((sum, current) => sum + current, 0)
+    .map(function(q, i) {return q * prices[i]})
+    .reduce(function(sum, current) {return sum + current}, 0)
 
   var tax = countries.tax(order.country);
   sum = reduction.apply(sum * tax);
