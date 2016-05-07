@@ -101,6 +101,18 @@ describe('Seller Service', function() {
 
         expect(cashHistory).toEqual({history: {'bob': [10, 10, 10]}, lastIteration: 7});
     });
+
+    it('should authorized unknown seller', function() {
+        expect(sellerService.isAuthorized('carmen', 'mccallum')).toEqual(true);
+    });
+
+    it('should authorized seller if the same username and password are provided', function() {
+        var travis = {name: 'travis', password:'pacman'};
+        sellers.save(travis);
+
+        expect(sellerService.isAuthorized('travis', 'pacman')).toEqual(true);
+        expect(sellerService.isAuthorized('travis', 'vlad')).toEqual(false);
+    });
 });
 
 describe('Order Service', function() {

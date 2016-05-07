@@ -17,13 +17,16 @@ module.exports = function (sellerService, dispatcher) {
 
   router.post('/seller', function(request, response) {
     var sellerName = request.body.name,
-    sellerUrl = request.body.url;
+        sellerUrl = request.body.url,
+        sellerPwd = request.body.password;
 
-    if (_.isEmpty(sellerName) || _.isEmpty(sellerUrl)) {
-      response.status(BAD_REQUEST).send({message:'missing name or url'});
-    } else {
-      sellerService.register(sellerUrl, sellerName);
+    if (_.isEmpty(sellerName) || _.isEmpty(sellerUrl) || _.isEmpty(sellerPwd)) {
+      response.status(BAD_REQUEST).send({message:'missing name, password or url'});
+    } else if(sellerService.isAuthorized(sellerName, sellerPwd)) {
+      sellerService.register(sellerUrl, sellerName, sellerPwd);
       response.status(OK).end();
+    } else {
+      response.status(UNAUTHORIZED).send({message:'invalid name or password'});
     }
   });
 

@@ -2,20 +2,21 @@ var url = require('url');
 var utils = require('../utils');
 var UrlAssembler = require('url-assembler');
 
-module.exports = SellerService;
-
 function SellerService (_sellers) {
   this.sellers = _sellers;
 }
+module.exports = SellerService;
 
 var service = SellerService.prototype;
 
 service.addCash = function (seller, amount, currentIteration) {
   this.sellers.updateCash(seller.name, amount, currentIteration);
-}
+};
+
 service.deductCash = function (seller, amount, currentIteration) {
   this.sellers.updateCash(seller.name, -amount, currentIteration);
-}
+};
+
 service.getCashHistory = function (chunk) {
   var cashHistory = this.sellers.cashHistory;
   var cashHistoryReduced = {};
@@ -40,12 +41,23 @@ service.getCashHistory = function (chunk) {
   }
 
   return {history: cashHistoryReduced, lastIteration: lastIteration};
-}
+};
 
-service.register = function (sellerUrl, name) {
+service.isAuthorized = function (name, password) {
+  var seller = this.sellers.get(name);
+  if(seller) {
+    var samePwd = (seller.password === password);
+    console.info('Attempt to re-register %s, same password %j', name, samePwd);
+    return samePwd;
+  }
+  return true;
+};
+
+service.register = function (sellerUrl, name, password) {
   var parsedUrl = url.parse(sellerUrl);
   var seller = {
     name: name,
+    password: password,
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
     path: parsedUrl.path,
@@ -55,11 +67,11 @@ service.register = function (sellerUrl, name) {
   };
   this.sellers.save(seller);
   console.info('New seller registered: ' + utils.stringify(seller))
-}
+};
 
 service.allSellers = function () {
   return this.sellers.all();
-}
+};
 
 service.updateCash = function (seller, expectedBill, actualBill, currentIteration) {
   try {
@@ -81,7 +93,7 @@ service.updateCash = function (seller, expectedBill, actualBill, currentIteratio
   catch (exception) {
     this.notify(seller, {'type': 'ERROR', 'content': exception.message});
   }
-}
+};
 
 service.setOffline = function (seller, offlinePenalty, currentIteration) {
   this.sellers.setOffline(seller.name);
@@ -90,11 +102,11 @@ service.setOffline = function (seller, offlinePenalty, currentIteration) {
     console.info('Seller ' + seller.name + ' is offline: a penalty of ' + offlinePenalty + ' is applied');
     this.deductCash(seller, offlinePenalty, currentIteration);
   }
-}
+};
 
 service.setOnline = function (seller) {
   this.sellers.setOnline(seller.name);
-}
+};
 
 service.notify = function (seller, message) {
   utils.post(seller.hostname, seller.port, seller.path + '/feedback', message);
@@ -104,4 +116,4 @@ service.notify = function (seller, message) {
   } else {
     console.info('Notifying ' + seller.name + ': ' + message.content);
   }
-}
+};
