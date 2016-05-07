@@ -5,6 +5,7 @@ module.exports = function (sellerService, dispatcher) {
   var router = express.Router();
   var OK = 200;
   var BAD_REQUEST = 400;
+  var UNAUTHORIZED = 401;
 
   router.get('/sellers', function(request, response) {
     response.status(OK).send(sellerService.allSellers());
