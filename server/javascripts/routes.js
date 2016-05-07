@@ -8,7 +8,15 @@ module.exports = function (sellerService, dispatcher) {
   var UNAUTHORIZED = 401;
 
   router.get('/sellers', function(request, response) {
-    response.status(OK).send(sellerService.allSellers());
+    // seller view is returned, to prevent any confidential information leaks
+    var sellerViews = _.map(sellerService.allSellers(), function(seller) {
+      return {
+        cash: seller.cash,
+        name: seller.name,
+        online: seller.online
+      };
+    });
+    response.status(OK).send(sellerViews);
   });
 
   router.get('/sellers/history', function(request, response) {
