@@ -11,9 +11,11 @@
     "debug": "~2.1.1",
     "express": "~4.11.1",
     "lodash": "^3.2.0",
-    "url-assembler": "^1.2.4"
+    "url-assembler": "^1.2.4",
+    "colors": "~1.1.2"
   },
   "devDependencies": {
-    "jasmine-node": "^1.14.5"
+    "jasmine-node": "^1.14.5",
+    "supertest": "^1.2.0"
   }
 }

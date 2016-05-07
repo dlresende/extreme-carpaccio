@@ -1,6 +1,7 @@
-var _ = require('lodash');
-var Reduction = require('./reduction')
-var utils = require('../utils')
+var _ = require('lodash'),
+    Reduction = require('./reduction'),
+    utils = require('../utils'),
+    colors = require('colors');
 
 var Dispatcher = function(_sellerService, _orderService) {
     this.sellerService = _sellerService ;
@@ -86,7 +87,7 @@ Dispatcher.prototype = (function() {
         },
 
         startBuying: function(iteration) {
-            console.info('>>> Shopping iteration ' + iteration);
+            console.info(colors.green('>>> Shopping iteration ' + iteration));
 
             var period = getReductionPeriodFor(this.reductionStrategy);
             this.sendOrderToSellers(period.reduction, iteration);
