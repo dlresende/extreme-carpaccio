@@ -7,6 +7,7 @@ var utils = require('../javascripts/utils');
 var http = require('http');
 
 var Dispatcher = services.Dispatcher;
+var BadRequest = services.BadRequest;
 var OrderService = services.OrderService;
 var SellerService = services.SellerService;
 var Reduction = services.Reduction;
@@ -230,6 +231,87 @@ describe('Dispatcher', function() {
         expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
         expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
     });
+});
+
+describe('BadRequest', function(){
+    var badRequest, sellerService, sellers;
+
+    beforeEach(function(){
+        sellers = new Sellers();
+        sellerService = new SellerService(sellers);
+        badRequest = new BadRequest();
+    });
+
+    it('should suggest bad request periodically', function() {
+        badRequest.sendBadRequest = true;
+        badRequest.sendBadRequestPeriod = 3;
+
+        expect(badRequest.shouldSendBadRequest(1)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(2)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(3)).toEqual(true);
+        expect(badRequest.shouldSendBadRequest(4)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(6)).toEqual(true);
+        expect(badRequest.shouldSendBadRequest(7)).toEqual(false);
+    });
+
+    it('should not suggest bad request if not activated', function() {
+        badRequest.sendBadRequest = false;
+        badRequest.sendBadRequestPeriod = 3;
+
+        expect(badRequest.shouldSendBadRequest(1)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(2)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(3)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(4)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(6)).toEqual(false);
+        expect(badRequest.shouldSendBadRequest(7)).toEqual(false);
+    });
+
+    it('should randomly corrupt order', function() {
+        var order =  {
+            "prices":[64.73,29.48,73.49,58.88,46.61,65.4,16.23],
+            "quantities":[8,3,10,6,5,9,5],
+            "country":"FR",
+            "reduction":"STANDARD"
+        };
+
+        var corrupted1 = badRequest.corruptOrder(order);
+        var corrupted2 = badRequest.corruptOrder(order);
+
+        expect(corrupted1).not.toEqual(order);
+        expect(corrupted2).not.toEqual(order);
+        expect(corrupted1).not.toEqual(corrupted2);
+    });
+
+    it('should deduct cash if response status is not "bad request"', function() {
+        var self = {sellerService: sellerService},
+            seller = {name: "alice", cash: 200},
+            expectedBill={total:47},
+            currentIteration = 17;
+        spyOn(sellerService, 'deductCash');
+        spyOn(sellerService, 'notify');
+
+        var fun = badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
+
+        fun({statusCode: 200});
+
+        expect(sellerService.deductCash).toHaveBeenCalledWith(seller, 23.5, currentIteration);
+    });
+    
+    it('should add cash if response status is "bad request"', function() {
+        var self = {sellerService: sellerService},
+            seller = {name: "alice", cash: 200},
+            expectedBill={total:47},
+            currentIteration = 17;
+        spyOn(sellerService, 'addCash');
+        spyOn(sellerService, 'notify');
+
+        var fun = badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
+
+        fun({statusCode: 400});
+
+        expect(sellerService.addCash).toHaveBeenCalledWith(seller, 47, currentIteration);
+    });
+
 });
 
 describe('Standard Reduction', function() {

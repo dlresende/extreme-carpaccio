@@ -7,5 +7,6 @@ var utils = require('../utils');
 exports.SellerService = require('./seller');
 exports.OrderService = require('./order');
 exports.Reduction = require('./reduction');
-exports.Dispatcher = require('./dispatcher');
+exports.Dispatcher = require('./dispatcher').Dispatcher;
+exports.BadRequest = require('./dispatcher').BadRequest;
 

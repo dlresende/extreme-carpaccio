@@ -3,12 +3,20 @@ var _ = require('lodash'),
     utils = require('../utils'),
     colors = require('colors');
 
+var BadRequest = function () {
+    this.sendBadRequest = true;
+    this.sendBadRequestPeriod = 3;
+    this.modes = [0,1,2,3,4,5,6,7,8,9,10];
+};
+
 var Dispatcher = function(_sellerService, _orderService, _configuration) {
     this.sellerService = _sellerService ;
     this.orderService = _orderService;
     this.configuration = _configuration;
     this.offlinePenalty = 0;
+    this.badRequest = new BadRequest();
 };
+
 Dispatcher.prototype = (function() {
     function updateSellersCash(self, seller, expectedBill, currentIteration) {
         return function(response) {
@@ -20,7 +28,7 @@ Dispatcher.prototype = (function() {
                 });
 
                 response.on('data', function (sellerResponse) {
-                    console.info(seller.name + ' replied "' + sellerResponse + '"');
+                    console.info(colors.grey(seller.name + ' replied "' + sellerResponse + '"'));
 
                     try {
                         var actualBill = utils.jsonify(sellerResponse);
@@ -81,28 +89,121 @@ Dispatcher.prototype = (function() {
     }
 
     return {
-        sendOrderToSellers: function(reduction, currentIteration) {
-            var self = this;
-            var order = self.orderService.createOrder(reduction);
-            var expectedBill = self.orderService.bill(order, reduction);
+        sendOrderToSellers: function(reduction, currentIteration, badRequest) {
+            var self = this,
+                order = self.orderService.createOrder(reduction),
+                expectedBill = self.orderService.bill(order, reduction);
+
+            if(badRequest) {
+                order = self.badRequest.corruptOrder(order);
+            }
 
             _.forEach(self.sellerService.allSellers(), function(seller) {
                 self.sellerService.addCash(seller, 0, currentIteration);
-                var cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
+                var cashUpdater;
+                if(badRequest) {
+                    cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
+                }
+                else {
+                    cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
+                }
+
                 var errorCallback = putSellerOffline(self, seller, currentIteration);
                 self.orderService.sendOrder(seller, order, cashUpdater, errorCallback);
             });
         },
 
         startBuying: function(iteration) {
-            console.info(colors.green('>>> Shopping iteration ' + iteration));
+            var reductionStrategy = getConfiguration(this).reduction,
+                period = getReductionPeriodFor(reductionStrategy),
+                badRequest = this.badRequest.shouldSendBadRequest(iteration),
+                message = '>>> Shopping iteration ' + iteration;
 
-            var reductionStrategy = getConfiguration(this).reduction;
-            var period = getReductionPeriodFor(reductionStrategy);
+            if(badRequest) {
+                message = message + ' (bad request)';
+            }
+            console.info(colors.green(message));
+            
             this.sendOrderToSellers(period.reduction, iteration);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }
     }
 })();
 
-module.exports = Dispatcher;
+BadRequest.prototype = (function () {
+
+    return {
+        shouldSendBadRequest: function (iteration) {
+            return this.sendBadRequest && (iteration % this.sendBadRequestPeriod == 0);
+        },
+
+        corruptOrder: function (order) {
+            var mode = _.sample(this.modes),
+                copy = _.clone(order);
+
+            console.info(colors.blue('corrupt mode ' + mode));
+
+            switch (mode) {
+                case 0:
+                    return {};
+                case 1:
+                    return _.map(_.range(1200), function (i) {
+                        return i % 2 == 0;
+                    });
+                case 2:
+                    copy.quantities = {error: 'datacenter unreachable'};
+                    return copy;
+                case 3:
+                    copy.quantities = copy.quantities.slice(1);
+                    return copy;
+                case 4:
+                    copy.prices = copy.prices.slice(1);
+                    return copy;
+                case 5:
+                    copy.country = 'Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch';
+                    return copy;
+                case 6:
+                    delete copy.country;
+                    return copy;
+                case 7:
+                    delete copy.prices;
+                    return copy;
+                case 8:
+                    delete copy.quantities;
+                    return copy;
+                case 9:
+                    delete copy.reduction;
+                    return copy;
+                case 10:
+                    return null;
+
+            }
+            return {};
+        },
+
+        updateSellersCash: function (self, seller, expectedBill, currentIteration) {
+            return function (response) {
+                var amount = expectedBill.total,
+                    sellerService = self.sellerService,
+                    message;
+
+                if (response.statusCode !== 400) {
+                    var loss = amount * .5;
+                    message = 'Hey ' + seller.name + ' lose ' + loss + ' because he does not know how to handle correctly a bad request';
+                    sellerService.deductCash(seller, loss, currentIteration);
+                    sellerService.notify(seller, {'type': 'ERROR', 'content': message});
+                }
+                else {
+                    message = 'Hey, ' + seller.name + ' earned ' + amount;
+                    sellerService.addCash(seller, amount, currentIteration);
+                    sellerService.notify(seller, {'type': 'INFO', 'content': message});
+                }
+            }
+        }
+    }
+})();
+
+module.exports = {
+    Dispatcher: Dispatcher,
+    BadRequest: BadRequest
+};
