@@ -36,7 +36,7 @@ Dispatcher.prototype = (function() {
 
     function putSellerOffline(self, seller, currentIteration) {
         return function() {
-            console.error('Could not reach seller ' + utils.stringify(seller));
+            console.error(colors.red('Could not reach seller ' + utils.stringify(seller)));
             self.sellerService.setOffline(seller, self.offlinePenalty, currentIteration);
         }
     }
@@ -56,7 +56,7 @@ Dispatcher.prototype = (function() {
         }
 
         if(reductionStrategy !== 'STANDARD') {
-            console.warn('Unknown reduction strategy %s. Using STANDARD.', reductionStrategy);
+            console.warn(colors.yellow('Unknown reduction strategy ' + reductionStrategy + '. Using STANDARD.'));
         }
 
         return new Period(Reduction.STANDARD, 5000);
@@ -87,7 +87,7 @@ Dispatcher.prototype = (function() {
         },
 
         startBuying: function(iteration) {
-            console.info(colors.green('>>> Shopping iteration %s', iteration));
+            console.info(colors.green('>>> Shopping iteration ' + iteration));
 
             var configuration = this.configuration.all();
             var period = getReductionPeriodFor(configuration.reduction);
