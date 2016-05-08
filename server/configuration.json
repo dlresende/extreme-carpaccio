@@ -1,3 +1,4 @@
 {
-  "reduction": "STANDARD"
+  "reduction": "STANDARD",
+  "offlinePenalty": 0
 }

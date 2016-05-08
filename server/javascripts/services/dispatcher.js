@@ -37,7 +37,14 @@ Dispatcher.prototype = (function() {
     function putSellerOffline(self, seller, currentIteration) {
         return function() {
             console.error(colors.red('Could not reach seller ' + utils.stringify(seller)));
-            self.sellerService.setOffline(seller, self.offlinePenalty, currentIteration);
+            var offlinePenalty = getConfiguration(self).offlinePenalty;
+
+            if (! _.isNumber(offlinePenalty)) {
+                console.warn(colors.yellow('Offline penalty is missing or is not a number. Using 0.'));
+                offlinePenalty = 0;
+            }
+
+            self.sellerService.setOffline(seller, offlinePenalty, currentIteration);
         }
     }
 
@@ -68,11 +75,12 @@ Dispatcher.prototype = (function() {
         }, intervalInMillis);
     }
 
-    return {
-        updateOfflinePenalty: function(penalty) {
-            this.offlinePenalty = penalty;
-        },
 
+    function getConfiguration(self) {
+        return self.configuration.all();
+    }
+
+    return {
         sendOrderToSellers: function(reduction, currentIteration) {
             var self = this;
             var order = self.orderService.createOrder(reduction);
@@ -89,8 +97,8 @@ Dispatcher.prototype = (function() {
         startBuying: function(iteration) {
             console.info(colors.green('>>> Shopping iteration ' + iteration));
 
-            var configuration = this.configuration.all();
-            var period = getReductionPeriodFor(configuration.reduction);
+            var reductionStrategy = getConfiguration(this).reduction;
+            var period = getReductionPeriodFor(reductionStrategy);
             this.sendOrderToSellers(period.reduction, iteration);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }

@@ -99,7 +99,7 @@ service.setOffline = function (seller, offlinePenalty, currentIteration) {
   this.sellers.setOffline(seller.name);
 
   if(offlinePenalty !== 0) {
-    console.info('Seller ' + seller.name + ' is offline: a penalty of ' + offlinePenalty + ' is applied');
+    console.info('Seller ' + seller.name + ' is offline: a penalty of ' + offlinePenalty + ' is applied.');
     this.deductCash(seller, offlinePenalty, currentIteration);
   }
 };
