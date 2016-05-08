@@ -3,10 +3,8 @@ var _ = require('lodash'),
     utils = require('../utils'),
     colors = require('colors');
 
-var BadRequest = function () {
-    this.sendBadRequest = true;
-    this.sendBadRequestPeriod = 3;
-    this.modes = [0,1,2,3,4,5,6,7,8,9,10];
+var BadRequest = function (_configuration) {
+    this.configuration = _configuration;
 };
 
 var Dispatcher = function(_sellerService, _orderService, _configuration) {
@@ -14,7 +12,7 @@ var Dispatcher = function(_sellerService, _orderService, _configuration) {
     this.orderService = _orderService;
     this.configuration = _configuration;
     this.offlinePenalty = 0;
-    this.badRequest = new BadRequest();
+    this.badRequest = new BadRequest(_configuration);
 };
 
 Dispatcher.prototype = (function() {
@@ -102,10 +100,10 @@ Dispatcher.prototype = (function() {
                 self.sellerService.addCash(seller, 0, currentIteration);
                 var cashUpdater;
                 if(badRequest) {
-                    cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
+                    cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
                 }
                 else {
-                    cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
+                    cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
                 }
 
                 var errorCallback = putSellerOffline(self, seller, currentIteration);
@@ -124,7 +122,7 @@ Dispatcher.prototype = (function() {
             }
             console.info(colors.green(message));
             
-            this.sendOrderToSellers(period.reduction, iteration);
+            this.sendOrderToSellers(period.reduction, iteration, badRequest);
             scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
         }
     }
@@ -132,13 +130,17 @@ Dispatcher.prototype = (function() {
 
 BadRequest.prototype = (function () {
 
+    function getConfiguration(self) {
+        return self.configuration.all().badRequest;
+    }
+
     return {
         shouldSendBadRequest: function (iteration) {
-            return this.sendBadRequest && (iteration % this.sendBadRequestPeriod == 0);
+            return getConfiguration(this).active && (iteration % getConfiguration(this).period == 0);
         },
 
         corruptOrder: function (order) {
-            var mode = _.sample(this.modes),
+            var mode = _.sample(getConfiguration(this).modes),
                 copy = _.clone(order);
 
             console.info(colors.blue('corrupt mode ' + mode));
@@ -147,7 +149,7 @@ BadRequest.prototype = (function () {
                 case 0:
                     return {};
                 case 1:
-                    return _.map(_.range(1200), function (i) {
+                    return _.map(_.range(17), function (i) {
                         return i % 2 == 0;
                     });
                 case 2:

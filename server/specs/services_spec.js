@@ -208,12 +208,32 @@ describe('Dispatcher', function() {
     });
 
     it('should load configuration for reductions', function() {
-        spyOn(configuration, 'all').andReturn({reduction: 'HALF PRICE'});
+        spyOn(configuration, 'all').andReturn({reduction: 'HALF PRICE',
+            badRequest: {
+                active:false
+            }
+        });
         spyOn(dispatcher, 'sendOrderToSellers').andCallFake(function(){});
 
         dispatcher.startBuying(1);
 
-        expect(dispatcher.sendOrderToSellers).toHaveBeenCalledWith(Reduction.HALF_PRICE, 1);
+        expect(dispatcher.sendOrderToSellers).toHaveBeenCalledWith(Reduction.HALF_PRICE, 1, false);
+    });
+
+
+    it('should broadcast a bad request', function() {
+        spyOn(configuration, 'all').andReturn({
+            reduction: 'HALF PRICE',
+            badRequest: {
+                active:true,
+                period:2
+            }
+        });
+        spyOn(dispatcher, 'sendOrderToSellers').andCallFake(function(){});
+
+        dispatcher.startBuying(2);
+
+        expect(dispatcher.sendOrderToSellers).toHaveBeenCalledWith(Reduction.HALF_PRICE, 2, true);
     });
 
     it('should send the same order to each seller using reduction', function() {
@@ -234,17 +254,21 @@ describe('Dispatcher', function() {
 });
 
 describe('BadRequest', function(){
-    var badRequest, sellerService, sellers;
+    var badRequest, sellerService, sellers, configuration;
 
     beforeEach(function(){
+        configuration = new Configuration();
         sellers = new Sellers();
         sellerService = new SellerService(sellers);
-        badRequest = new BadRequest();
+        badRequest = new BadRequest(configuration);
     });
 
     it('should suggest bad request periodically', function() {
-        badRequest.sendBadRequest = true;
-        badRequest.sendBadRequestPeriod = 3;
+        spyOn(configuration, 'all').andReturn({badRequest: {
+            active: true,
+            period: 3,
+            modes: [1,2,3,4,5,6,7,8,9,10]
+        }});
 
         expect(badRequest.shouldSendBadRequest(1)).toEqual(false);
         expect(badRequest.shouldSendBadRequest(2)).toEqual(false);
@@ -255,8 +279,11 @@ describe('BadRequest', function(){
     });
 
     it('should not suggest bad request if not activated', function() {
-        badRequest.sendBadRequest = false;
-        badRequest.sendBadRequestPeriod = 3;
+        spyOn(configuration, 'all').andReturn({badRequest: {
+            active: false,
+            period: 3,
+            modes: [1,2,3,4,5,6,7,8,9,10]
+        }});
 
         expect(badRequest.shouldSendBadRequest(1)).toEqual(false);
         expect(badRequest.shouldSendBadRequest(2)).toEqual(false);
@@ -267,6 +294,10 @@ describe('BadRequest', function(){
     });
 
     it('should randomly corrupt order', function() {
+        spyOn(configuration, 'all').andReturn({badRequest: {
+            modes: [1,2,3,4,5,6,7,8,9,10]
+        }});
+
         var order =  {
             "prices":[64.73,29.48,73.49,58.88,46.61,65.4,16.23],
             "quantities":[8,3,10,6,5,9,5],
