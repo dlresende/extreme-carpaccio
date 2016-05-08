@@ -4,15 +4,17 @@ var SellerForm = React.createClass({
 	handleSubmit: function(e){
 		e.preventDefault();
 		var name = this.refs.name.getDOMNode().value.trim();
+		var password = this.refs.password.getDOMNode().value.trim();
 		var url = this.refs.url.getDOMNode().value.trim();
 
 		if(!name || !url) {
 			return;
 		}
 
-		this.props.onSellerSubmit({name:name, url:url});
+		this.props.onSellerSubmit({name:name, password:password, url:url});
 
 		this.refs.name.getDOMNode().value= '';
+		this.refs.password.getDOMNode().value= '';
 		this.refs.url.getDOMNode().value= '';
 	},
 
@@ -23,12 +25,19 @@ var SellerForm = React.createClass({
 
 				<form className='form-inline' onSubmit={this.handleSubmit}>
 					<div className='form-group'>
-						<label for='name'>Name</label>
-						<input type='text' placeholder='your name' className='form-control' ref='name' />
+						<label htmlFor='name' className='sr-only'>Name</label>
+						<input type='text' placeholder='your name' className='form-control' ref='name'
+                               data-toggle='tooltip' data-placement='bottom' title='Your username'/>
 					</div>
 					<div className='form-group'>
-						<label for='url'>URL</label>
-							<input type='text' placeholder='http://192.168.1.1:3000' className='form-control' ref='url' />
+						<label htmlFor='password' className='sr-only'>Password</label>
+						<input type='password' placeholder='your password' className='form-control' ref='password'
+                               data-toggle='tooltip' data-placement='bottom' title='Password is used if you want to register yourself on a different url. You will need to provide the same username with the same password. Beware that there is nothing that can be done to retrieve it...'/>
+					</div>
+					<div className='form-group'>
+						<label htmlFor='url' className='sr-only'>URL</label>
+                        <input type='text' placeholder='http://192.168.1.1:3000' className='form-control' ref='url'
+                               data-toggle='tooltip' data-placement='bottom' title='Base url of your own client' />
 					</div>
 					<button type='submit' className='btn btn-success'>Register</button>
 				</form>
@@ -114,7 +123,7 @@ var SellerView = React.createClass({
 			var sellerColor = self.string2Color(seller.name);
 			var showOfflineWarning = !seller.online ? <span title="offline" className="glyphicon glyphicon-alert" aria-hidden="true"></span> : '';
 			return (
-				<tr style={{color: sellerColor}}>
+				<tr key={seller.name} style={{color: sellerColor}}>
 					<td className="col-md-6"><strong>{seller.name}</strong></td>
 					<td className="col-md-5">
 						<FormattedNumber
@@ -235,3 +244,7 @@ React.render(
 	<Seller url='/seller' pollInterval='5000' historyFrequency='10' />,
 	document.getElementById('seller')
 );
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});
