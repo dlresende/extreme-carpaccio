@@ -6,12 +6,18 @@ A ruby client based on [http://www.sinatrarb.com/](Sinatra)
 
 ## Install
 ```
-gem install sinatra sinatra-releader json
+    gem install sinatra sinatra-reloader json rack-test
 ```
 
 ## Start
 ```
-ruby extreme-carpaccio.rb
+ruby lib/extreme-carpaccio.rb
 ```
 
 The server listens on port 9000: (http://localhost:4567/ping)[http://localhot:4567]
+
+## Test
+
+```
+    rake test
+```
