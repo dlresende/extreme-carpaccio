@@ -1,6 +1,7 @@
 'use strict';
 
-var _ = require('lodash');
+var _ = require('lodash'),
+    colors = require('colors');
 
 var Sellers = function() {
     var sellersMap = {};
@@ -104,13 +105,6 @@ var Countries = function(configuration) {
 };
 
 Countries.prototype = (function() {
-    var Country = function(name, taxRule) {
-        this.name = name;
-        this.taxRule = taxRule;
-    };
-    Country.prototype = {
-        applyTax : function(sum) { return this.taxRule.apply(this, [sum]); }
-    };
 
     var europeanCountries = {
         'DE': [1.2, 190995],
@@ -143,6 +137,74 @@ Countries.prototype = (function() {
         'MT': [1.2, 1]
     };
 
+    function scale(factor) {
+        return function(price) { return price * factor };
+    }
+
+    function defaultTaxRule(name) {
+        return scale(europeanCountries[name][0]);
+    }
+
+    var Country = function(name, taxRule) {
+        this.name = name;
+        this.taxRule = taxRule;
+    };
+
+    function customEval(s) { return new Function("return " + s)(); }
+
+    function lookupForOverridenDefinition(configuration, country) {
+        var conf = configuration.all();
+        if(!conf.taxes || !conf.taxes[country]) {
+            return null;
+        }
+
+        var def = conf.taxes[country];
+        if(_.isNumber(def)) {
+            console.info(colors.blue('Tax rule for country ' + country + ' changed to scale factor ' + def));
+            return scale(def);
+        }
+
+        if(_.isString(def)) {
+            try {
+                var taxRule = customEval(def);
+                if(_.isFunction(taxRule)) {
+                    console.info(colors.blue('Tax rule for country ' + country + ' changed to function ' + def));
+                    return taxRule;
+                }
+                else {
+                    console.error(colors.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', result is not a function'));
+                    return null;
+                }
+            } catch (e) {
+                console.error(colors.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', got: ' + e));
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    Country.prototype = {
+        withConfiguration: function(configuration) {
+            this.configuration = configuration;
+            return this;
+        },
+        applyTax : function(sum) {
+            var newRule = lookupForOverridenDefinition(this.configuration, this.name);
+
+            if(newRule==null) {
+                return this.taxRule.apply(this, [sum]);
+            }
+
+            try {
+                return newRule.apply(this, [sum]);
+            } catch(e) {
+                console.error(colors.red('Failed to evaluate tax rule for country ' + this.name + ' falling back to original value, got:' + e));
+                return this.taxRule.apply(this, [sum]);
+            }
+        }
+    };
+
     var countryDistributionByWeight = _.reduce(europeanCountries, function(distrib, infos, country) {
         var i;
         for(i=0; i<infos[1]; i++) {
@@ -153,8 +215,7 @@ Countries.prototype = (function() {
     _.shuffle(countryDistributionByWeight);
 
     var countryMap = _.reduce(europeanCountries, function(map, infos, country) {
-	    var tax = infos[0];
-        map[country] = new Country(country, function(price) { return price*tax; });
+        map[country] = new Country(country, defaultTaxRule(country));
         return map;
     }, {});
 
@@ -166,7 +227,8 @@ Countries.prototype = (function() {
         },
 
     	taxRule: function(countryName) {
-            return countryMap[countryName];
+            var country = countryMap[countryName];
+            return country.withConfiguration(this.configuration);
         },
 
 	    updateTax: function(country, taxRule) {
