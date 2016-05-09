@@ -189,7 +189,7 @@ describe('Countries', function() {
 
     it('should keep tax unchanged when it fails to execute evaluation from configuration', function() {
         spyOn(configuration, 'all').andReturn({taxes: {
-            'EE': "function(price) {return 7;}"
+            'EE': "function(price) {throw {error:'oops'};}"
         }});
 
         expect(countries.taxRule('EE').applyTax(231)).toBe(231 * 1.22);
