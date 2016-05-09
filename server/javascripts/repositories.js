@@ -99,14 +99,17 @@ Sellers.prototype = (function(){
     }
 })();
 
-var Countries = function() {};
+var Countries = function(configuration) {
+    this.configuration = configuration;
+};
 
 Countries.prototype = (function() {
     var Country = function(name, taxRule) {
         this.name = name;
         this.taxRule = taxRule;
-        var self = this;
-        this.applyTax = function(sum) { return self.taxRule.apply(self, [sum]); }
+    };
+    Country.prototype = {
+        applyTax : function(sum) { return this.taxRule.apply(this, [sum]); }
     };
 
     var europeanCountries = {
@@ -172,7 +175,7 @@ Countries.prototype = (function() {
     };
 })();
 
-var exports = module.exports;
-
-exports.Sellers = Sellers;
-exports.Countries = Countries;
+module.exports = {
+    Sellers: Sellers,
+    Countries: Countries
+};

@@ -7,11 +7,12 @@ var _ = require('lodash'),
     //
     routes = require('../javascripts/routes'),
     services = require('../javascripts/services'),
-    repositories = require('../javascripts/repositories');
+    repositories = require('../javascripts/repositories'),
+    Configuration = require('../javascripts/config').Configuration;
 
 
 describe('Route', function () {
-    var sellers, dispatcher, sellerService, orderService;
+    var sellers, dispatcher, sellerService, orderService, configuration;
     var app;
 
     var done, error, grabError = function (err, res) {
@@ -24,10 +25,11 @@ describe('Route', function () {
     };
 
     beforeEach(function () {
+        configuration = new Configuration();
         sellers = new repositories.Sellers();
         sellerService = new services.SellerService(sellers);
-        orderService = new services.OrderService();
-        dispatcher = new services.Dispatcher(sellerService, orderService);
+        orderService = new services.OrderService(configuration);
+        dispatcher = new services.Dispatcher(sellerService, orderService, configuration);
 
         app = express();
         app.use(bodyParser.json());

@@ -5,6 +5,7 @@ var repositories = require('../javascripts/repositories'),
 var Sellers = repositories.Sellers;
 var Countries = repositories.Countries;
 var Reductions = repositories.Reductions;
+var Configuration = require('../javascripts/config').Configuration;
 
 describe('Sellers', function(){
     var bob;
@@ -91,10 +92,11 @@ describe('Sellers', function(){
 });
 
 describe('Countries', function() {
-    var countries;
+    var countries, configuration;
 
     beforeEach(function() {
-        countries = new Countries();
+        configuration = new Configuration();
+        countries = new Countries(configuration);
     });
 
     it('should get the corresponding tax for a given country', function() {

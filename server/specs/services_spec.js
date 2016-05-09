@@ -118,12 +118,13 @@ describe('Seller Service', function() {
 });
 
 describe('Order Service', function() {
-    var orderService;
+    var orderService, configuration;
     var countries;
 
     beforeEach(function(){
-        orderService = new OrderService();
-        countries = new Countries();
+        configuration = new Configuration();
+        orderService = new OrderService(configuration);
+        countries = new Countries(configuration);
     });
 
     it('should send order to seller', function() {
@@ -201,9 +202,9 @@ describe('Dispatcher', function() {
     var dispatcher, orderService, sellerService, configuration;
 
     beforeEach(function(){
-        sellerService = new SellerService();
-        orderService = new OrderService();
         configuration = new Configuration();
+        sellerService = new SellerService();
+        orderService = new OrderService(configuration);
         dispatcher = new Dispatcher(sellerService, orderService, configuration);
     });
 
