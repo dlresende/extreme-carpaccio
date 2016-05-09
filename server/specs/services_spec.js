@@ -118,12 +118,13 @@ describe('Seller Service', function() {
 });
 
 describe('Order Service', function() {
-    var orderService;
+    var orderService, configuration;
     var countries;
 
     beforeEach(function(){
-        orderService = new OrderService();
-        countries = new Countries();
+        configuration = new Configuration();
+        orderService = new OrderService(configuration);
+        countries = new Countries(configuration);
     });
 
     it('should send order to seller', function() {
@@ -165,6 +166,7 @@ describe('Order Service', function() {
     });
 
     it('should calculate the sum of the order using PAY_THE_PRICE reduction', function() {
+        spyOn(configuration, 'all').andReturn({});
         var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.PAY_THE_PRICE);
@@ -173,6 +175,7 @@ describe('Order Service', function() {
     });
 
     it('should calculate the sum of the order using STANDARD reduction', function() {
+        spyOn(configuration, 'all').andReturn({});
         var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.STANDARD);
@@ -181,6 +184,7 @@ describe('Order Service', function() {
     });
 
     it('should calculate the sum of the order using HALF_PRICE reduction', function() {
+        spyOn(configuration, 'all').andReturn({});
         var order = {prices: [1000, 50], quantities: [1, 2], country: 'IT'};
 
         var bill = orderService.bill(order, Reduction.HALF_PRICE);
@@ -201,9 +205,9 @@ describe('Dispatcher', function() {
     var dispatcher, orderService, sellerService, configuration;
 
     beforeEach(function(){
-        sellerService = new SellerService();
-        orderService = new OrderService();
         configuration = new Configuration();
+        sellerService = new SellerService();
+        orderService = new OrderService(configuration);
         dispatcher = new Dispatcher(sellerService, orderService, configuration);
     });
 
@@ -237,6 +241,8 @@ describe('Dispatcher', function() {
     });
 
     it('should send the same order to each seller using reduction', function() {
+        spyOn(configuration, 'all').andReturn({});
+
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
         spyOn(sellerService, 'addCash');

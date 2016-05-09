@@ -5,6 +5,7 @@ var repositories = require('../javascripts/repositories'),
 var Sellers = repositories.Sellers;
 var Countries = repositories.Countries;
 var Reductions = repositories.Reductions;
+var Configuration = require('../javascripts/config').Configuration;
 
 describe('Sellers', function(){
     var bob;
@@ -91,13 +92,15 @@ describe('Sellers', function(){
 });
 
 describe('Countries', function() {
-    var countries;
+    var countries, configuration;
 
     beforeEach(function() {
-        countries = new Countries();
+        configuration = new Configuration();
+        countries = new Countries(configuration);
     });
 
     it('should get the corresponding tax for a given country', function() {
+        spyOn(configuration, 'all').andReturn({});
         expect(countries.taxRule('DE').applyTax(1)).toBe(1.2);
         expect(countries.taxRule('UK').applyTax(1)).toBe(1.21);
         expect(countries.taxRule('FR').applyTax(1)).toBe(1.2);
@@ -129,6 +132,7 @@ describe('Countries', function() {
     });
 
     it('should get the updated tax for a given country', function() {
+        spyOn(configuration, 'all').andReturn({});
     	var newTaxRule = function(total) { if(total > 100) return total * 1.2; else return total * 1.2 + 100; };
 	    countries.updateTax('FR', newTaxRule);
 
@@ -139,6 +143,7 @@ describe('Countries', function() {
     });
 
     it('should return random country according to its frequency', function() {
+        spyOn(configuration, 'all').andReturn({});
         var mostImportantPopulation = 200000,
             samples = _.times(mostImportantPopulation * 10, countries.randomOne);
 
@@ -148,6 +153,46 @@ describe('Countries', function() {
         expect(_.size(occurrences['UK'])).toBeGreaterThan(152741);
         expect(_.size(occurrences['LT'])).toBeLessThan(6844 * 10);
         expect(_.size(occurrences['NL'])).toBeLessThan(39842 * 10);
+    });
+
+    it('should return tax modified from configuration - percentage case', function() {
+        spyOn(configuration, 'all').andReturn({taxes: {
+            'LU': 3.44
+        }});
+
+        var newTax = countries.taxRule('LU');
+
+        expect(newTax.applyTax(100)).toBe(100 * 3.44);
+    });
+
+    it('should return tax modified from configuration - function case', function() {
+        spyOn(configuration, 'all').andReturn({taxes: {
+            'CY': "function(price) { return 1234; }"
+        }});
+
+        var newTax = countries.taxRule('CY');
+
+        expect(newTax.applyTax(421)).toBe(1234);
+    });
+
+    it('should keep tax unchanged when it fails to read it from configuration - invalid function case', function() {
+        spyOn(configuration, 'all').andReturn({taxes: {
+            'EE': "funn(price) {return unprobableVariable*7;}",
+            'LV': "function(price) return 4",
+            'SI': "45"
+        }});
+
+        expect(countries.taxRule('EE').applyTax(231)).toBe(231 * 1.22);
+        expect(countries.taxRule('LV').applyTax(232)).toBe(232 * 1.2);
+        expect(countries.taxRule('SI').applyTax(233)).toBe(233 * 1.24);
+    });
+
+    it('should keep tax unchanged when it fails to execute evaluation from configuration', function() {
+        spyOn(configuration, 'all').andReturn({taxes: {
+            'EE': "function(price) {return 7;}"
+        }});
+
+        expect(countries.taxRule('EE').applyTax(231)).toBe(231 * 1.22);
     });
 });
 
