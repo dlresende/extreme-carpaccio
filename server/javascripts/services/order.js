@@ -1,7 +1,8 @@
 var repositories = require('../repositories');
 var countries = new repositories.Countries();
 var _ = require('lodash');
-var utils = require('../utils');
+var utils = require('../utils'),
+    colors = require('colors');
 
 module.exports = OrderService;
 
@@ -10,7 +11,7 @@ function OrderService () {}
 var service = OrderService.prototype;
 
 service.sendOrder = function (seller, order, cashUpdater, logError) {
-  console.info('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller));
+  console.info(colors.grey('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller)));
   utils.post(seller.hostname, seller.port, seller.path + '/order', order, cashUpdater, logError);
 };
 
