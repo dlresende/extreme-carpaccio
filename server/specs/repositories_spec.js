@@ -96,6 +96,7 @@ describe('Countries', function() {
 
     beforeEach(function() {
         configuration = new Configuration();
+        spyOn(configuration, 'all').andReturn({});
         countries = new Countries(configuration);
     });
 
