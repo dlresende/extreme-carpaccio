@@ -11,11 +11,13 @@ import time
 import json
 
 from client import start_server, shutdown_server
+from client import HOST_NAME_TEST, PORT_NUMBER_TEST
 
+CLIENT_URL = "http://" + HOST_NAME_TEST + ":" + str(PORT_NUMBER_TEST)
 
 def start_tested_server(threadname):
     print 'start %s' % threadname
-    start_server()
+    start_server(testMode=True)
 
 
 class ServerHandlerTest(unittest.TestCase):
@@ -36,16 +38,16 @@ class ServerHandlerTest(unittest.TestCase):
         self.assertTrue(found)
 
     def test_should_call_get(self):
-        response = urllib2.urlopen("http://localhost:8080/")
+        response = urllib2.urlopen(CLIENT_URL)
         self.assertContent('hello world', response)
 
     def test_should_call_post_ping(self):
         data = urllib.urlencode({'q': 'Ping'})
-        response = urllib2.urlopen("http://localhost:8080/ping", data)
+        response = urllib2.urlopen(CLIENT_URL + "/ping", data)
         self.assertContent('pong', response)
 
     def test_should_call_post_path(self):
-        req = urllib2.Request('http://localhost:8080/path')
+        req = urllib2.Request(CLIENT_URL + "/path")
         req.add_header('Content-Type', 'application/json')
         response = urllib2.urlopen(req, json.dumps({'q': 'Path'}))
         self.assertEqual(response.readlines(), ['{"total": 1000}'])
@@ -53,7 +55,7 @@ class ServerHandlerTest(unittest.TestCase):
     @unittest.expectedFailure
     def test_should_call_post_unknown(self):
         data = urllib.urlencode({'answer': 'hello'})
-        urllib2.urlopen("http://localhost:8080/unknown", data)
+        urllib2.urlopen(CLIENT_URL + "/unknown", data)
 
 if __name__ == '__main__':
     unittest.main()

@@ -8,7 +8,9 @@ import json
 
 # Server Configuration
 HOST_NAME = 'localhost'
+HOST_NAME_TEST = HOST_NAME
 PORT_NUMBER = 8080
+PORT_NUMBER_TEST = PORT_NUMBER + 10
 
 
 class ServerHandler(BaseHTTPRequestHandler):
@@ -44,12 +46,19 @@ class ServerHandler(BaseHTTPRequestHandler):
         }.get(self.path, lambda: self.__write_response('Unknown', 404))()
 
 
-def start_server():
+def start_server(testMode=False):
     global server
     from BaseHTTPServer import HTTPServer
 
-    server = HTTPServer((HOST_NAME, PORT_NUMBER), ServerHandler)
-    print 'Starting server %s:%s use <Ctrl-C> to stop' % (HOST_NAME, PORT_NUMBER)
+    if testMode:
+        host_name = HOST_NAME_TEST
+        port_number = PORT_NUMBER_TEST
+    else:
+        host_name = HOST_NAME
+        port_number = PORT_NUMBER
+
+    server = HTTPServer((host_name, port_number), ServerHandler)
+    print 'Starting server %s:%s use <Ctrl-C> to stop' % (host_name, port_number)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
