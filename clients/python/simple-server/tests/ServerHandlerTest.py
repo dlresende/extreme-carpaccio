@@ -52,6 +52,12 @@ class ServerHandlerTest(unittest.TestCase):
         response = urllib2.urlopen(req, json.dumps({'q': 'Path'}))
         self.assertEqual(response.readlines(), ['{"total": 1000}'])
 
+    def test_should_call_feedback(self):
+        req = urllib2.Request(CLIENT_URL + "/feedback")
+        req.add_header('Content-Type', 'application/json')
+        response = urllib2.urlopen(req, json.dumps({'reason': 'Feedback Test'}))
+        self.assertEqual(response.getcode(), 204)
+
     @unittest.expectedFailure
     def test_should_call_post_unknown(self):
         data = urllib.urlencode({'answer': 'hello'})

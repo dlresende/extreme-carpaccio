@@ -25,11 +25,18 @@ class ServerHandler(BaseHTTPRequestHandler):
         content = self.rfile.read(length)
         return json.loads(content)
 
+    def __feedback(self):
+        object = self.__get_object()
+
+        print "LOG in Feedback >> " , object
+        self.__write_response(json.dumps(object), 204)
+        return object
+
     def __your_path(self):
         object = self.__get_object()
 
         # log
-        print object
+        print "LOG in PATH >> " , object
         # Only for test
         #total = calculate(object)
         self.__write_response(json.dumps({'total': 1000}), 200)
@@ -41,6 +48,7 @@ class ServerHandler(BaseHTTPRequestHandler):
         {
 
             '/ping': lambda: self.__write_response('pong', 200),
+            '/feedback': self.__feedback,
             '/path': self.__your_path
 
         }.get(self.path, lambda: self.__write_response('Unknown', 404))()
