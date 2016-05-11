@@ -1,7 +1,6 @@
 # Python Client server
 
-The server is developed with python 2.7 
-To run the test you need at least python 2.7.8
+The server is developed with python 3.4 
 
 ## How to run the server
 
