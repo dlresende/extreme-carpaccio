@@ -1,9 +1,11 @@
+#!python3
+
 """
 Very simple HTTP server in python
 
 """
 
-from BaseHTTPServer import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler
 import json
 
 # Server Configuration
@@ -18,17 +20,17 @@ class ServerHandler(BaseHTTPRequestHandler):
     def __write_response(self, body_html_, code):
         self.send_response(code)
         self.end_headers()
-        self.wfile.write(body_html_)
+        self.wfile.write(body_html_.encode("utf_8"))
 
     def __get_object(self):
         length = int(self.headers['content-length'])
-        content = self.rfile.read(length)
+        content = self.rfile.read(length).decode("utf-8")
         return json.loads(content)
 
     def __feedback(self):
         object = self.__get_object()
 
-        print "LOG in Feedback >> " , object
+        print("LOG in Feedback >> " , object)
         self.__write_response(json.dumps(object), 204)
         return object
 
@@ -36,10 +38,10 @@ class ServerHandler(BaseHTTPRequestHandler):
         object = self.__get_object()
 
         # log
-        print "LOG in PATH >> " , object
+        print("LOG in PATH >> " , object)
         # Only for test
         #total = calculate(object)
-        self.__write_response(json.dumps({'total': 1000}), 200)
+        self.__write_response((json.dumps({'total': 1000})), 200)
 
     def do_GET(self):
         self.__write_response('hello world', 200)
@@ -56,7 +58,7 @@ class ServerHandler(BaseHTTPRequestHandler):
 
 def start_server(testMode=False):
     global server
-    from BaseHTTPServer import HTTPServer
+    from http.server import HTTPServer
 
     if testMode:
         host_name = HOST_NAME_TEST
@@ -66,18 +68,18 @@ def start_server(testMode=False):
         port_number = PORT_NUMBER
 
     server = HTTPServer((host_name, port_number), ServerHandler)
-    print 'Starting server %s:%s use <Ctrl-C> to stop' % (host_name, port_number)
+    print('Starting server %s:%s use <Ctrl-C> to stop' % (host_name, port_number))
     try:
         server.serve_forever()
     except KeyboardInterrupt:
         server.server_close()
-    print 'Server interrupted'
+    print('Server interrupted')
 
 
 def shutdown_server():
     global server
     server.server_close()
-    print 'Shutdown server %s:%s ' % (HOST_NAME, PORT_NUMBER)
+    print('Shutdown server %s:%s ' % (HOST_NAME, PORT_NUMBER))
 
 if __name__ == '__main__':
     start_server()

@@ -1,6 +1,6 @@
 # Python Client server
 
-The server is developed with python 3.4
+The server is developed with python 3.4 
 
 ## How to run the server
 
