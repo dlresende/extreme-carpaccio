@@ -7,127 +7,6 @@ var BadRequest = function (_configuration) {
     this.configuration = _configuration;
 };
 
-var Dispatcher = function(_sellerService, _orderService, _configuration) {
-    this.sellerService = _sellerService ;
-    this.orderService = _orderService;
-    this.configuration = _configuration;
-    this.offlinePenalty = 0;
-    this.badRequest = new BadRequest(_configuration);
-};
-
-Dispatcher.prototype = (function() {
-    function updateSellersCash(self, seller, expectedBill, currentIteration) {
-        return function(response) {
-            if(response.statusCode === 200) {
-                self.sellerService.setOnline(seller);
-
-                response.on('error', function(err) {
-                    console.error(err);
-                });
-
-                response.on('data', function (sellerResponse) {
-                    console.info(colors.grey(seller.name + ' replied "' + sellerResponse + '"'));
-
-                    try {
-                        var actualBill = utils.jsonify(sellerResponse);
-                        self.orderService.validateBill(actualBill);
-                        self.sellerService.updateCash(seller, expectedBill, actualBill, currentIteration);
-                    } catch(exception) {
-                        self.sellerService.notify(seller, {'type': 'ERROR', 'content': exception.message});
-                    }
-                });
-            }
-        }
-    }
-
-    function putSellerOffline(self, seller, currentIteration) {
-        return function() {
-            console.error(colors.red('Could not reach seller ' + utils.stringify(seller)));
-            var offlinePenalty = getConfiguration(self).offlinePenalty;
-
-            if (! _.isNumber(offlinePenalty)) {
-                console.warn(colors.yellow('Offline penalty is missing or is not a number. Using 0.'));
-                offlinePenalty = 0;
-            }
-
-            self.sellerService.setOffline(seller, offlinePenalty, currentIteration);
-        }
-    }
-
-    var Period = function(reduction, shoppingIntervalInMillis) {
-        this.reduction = reduction;
-        this.shoppingIntervalInMillis = shoppingIntervalInMillis;
-    };
-
-    function getReductionPeriodFor(reductionStrategy) {
-        if(reductionStrategy === 'PAY THE PRICE') {
-            return new Period(Reduction.PAY_THE_PRICE,  10000);
-        }
-
-        if(reductionStrategy === 'HALF PRICE') {
-            return new Period(Reduction.HALF_PRICE,  1000);
-        }
-
-        if(reductionStrategy !== 'STANDARD') {
-            console.warn(colors.yellow('Unknown reduction strategy ' + reductionStrategy + '. Using STANDARD.'));
-        }
-
-        return new Period(Reduction.STANDARD, 5000);
-    }
-
-    function scheduleNextIteration(self, nextIteration, intervalInMillis) {
-        setTimeout(function () {
-            self.startBuying(nextIteration);
-        }, intervalInMillis);
-    }
-
-
-    function getConfiguration(self) {
-        return self.configuration.all();
-    }
-
-    return {
-        sendOrderToSellers: function(reduction, currentIteration, badRequest) {
-            var self = this,
-                order = self.orderService.createOrder(reduction),
-                expectedBill = self.orderService.bill(order, reduction);
-
-            if(badRequest) {
-                order = self.badRequest.corruptOrder(order);
-            }
-
-            _.forEach(self.sellerService.allSellers(), function(seller) {
-                self.sellerService.addCash(seller, 0, currentIteration);
-                var cashUpdater;
-                if(badRequest) {
-                    cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
-                }
-                else {
-                    cashUpdater = updateSellersCash(self, seller, expectedBill, currentIteration);
-                }
-
-                var errorCallback = putSellerOffline(self, seller, currentIteration);
-                self.orderService.sendOrder(seller, order, cashUpdater, errorCallback);
-            });
-        },
-
-        startBuying: function(iteration) {
-            var reductionStrategy = getConfiguration(this).reduction,
-                period = getReductionPeriodFor(reductionStrategy),
-                badRequest = this.badRequest.shouldSendBadRequest(iteration),
-                message = '>>> Shopping iteration ' + iteration;
-
-            if(badRequest) {
-                message = message + ' (bad request)';
-            }
-            console.info(colors.green(message));
-            
-            this.sendOrderToSellers(period.reduction, iteration, badRequest);
-            scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
-        }
-    }
-})();
-
 BadRequest.prototype = (function () {
 
     function getConfiguration(self) {
@@ -205,7 +84,150 @@ BadRequest.prototype = (function () {
     }
 })();
 
+var SellerCashUpdater = function (_sellerService, _orderService) {
+    this.sellerService = _sellerService;
+    this.orderService = _orderService;
+};
+
+SellerCashUpdater.prototype = (function () {
+    return {
+        doUpdate: function (seller, expectedBill, currentIteration) {
+            var self = this;
+            return function (response) {
+                if (response.statusCode === 200) {
+                    self.sellerService.setOnline(seller);
+
+                    response.on('error', function (err) {
+                        console.error(err);
+                    });
+
+                    response.on('data', function (sellerResponse) {
+                        console.info(colors.grey(seller.name + ' replied "' + sellerResponse + '"'));
+
+                        try {
+                            var actualBill = utils.jsonify(sellerResponse);
+                            self.orderService.validateBill(actualBill);
+                            self.sellerService.updateCash(seller, expectedBill, actualBill, currentIteration);
+                        } catch (exception) {
+                            self.sellerService.notify(seller, {'type': 'ERROR', 'content': exception.message});
+                        }
+                    });
+                }
+
+                else if(response.statusCode === 404) {
+                    self.sellerService.setOnline(seller);
+                    console.info(colors.grey(seller.name + ' replied 404. Everything is fine.'));
+                }
+
+                else {
+                    self.sellerService.setOnline(seller);
+                    self.sellerService.updateCash(seller, expectedBill, undefined, currentIteration);
+                }
+            }
+        }
+    }
+})();
+
+var Dispatcher = function (_sellerService, _orderService, _configuration) {
+    this.sellerService = _sellerService;
+    this.orderService = _orderService;
+    this.configuration = _configuration;
+    this.offlinePenalty = 0;
+    this.badRequest = new BadRequest(_configuration);
+    this.sellerCashUpdater = new SellerCashUpdater(_sellerService, _orderService);
+};
+
+Dispatcher.prototype = (function () {
+    function putSellerOffline(self, seller, currentIteration) {
+        return function () {
+            console.error(colors.red('Could not reach seller ' + utils.stringify(seller)));
+            var offlinePenalty = getConfiguration(self).offlinePenalty;
+
+            if (!_.isNumber(offlinePenalty)) {
+                console.warn(colors.yellow('Offline penalty is missing or is not a number. Using 0.'));
+                offlinePenalty = 0;
+            }
+
+            self.sellerService.setOffline(seller, offlinePenalty, currentIteration);
+        }
+    }
+
+    var Period = function (reduction, shoppingIntervalInMillis) {
+        this.reduction = reduction;
+        this.shoppingIntervalInMillis = shoppingIntervalInMillis;
+    };
+
+    function getReductionPeriodFor(reductionStrategy) {
+        if (reductionStrategy === 'PAY THE PRICE') {
+            return new Period(Reduction.PAY_THE_PRICE, 10000);
+        }
+
+        if (reductionStrategy === 'HALF PRICE') {
+            return new Period(Reduction.HALF_PRICE, 1000);
+        }
+
+        if (reductionStrategy !== 'STANDARD') {
+            console.warn(colors.yellow('Unknown reduction strategy ' + reductionStrategy + '. Using STANDARD.'));
+        }
+
+        return new Period(Reduction.STANDARD, 5000);
+    }
+
+    function scheduleNextIteration(self, nextIteration, intervalInMillis) {
+        setTimeout(function () {
+            self.startBuying(nextIteration);
+        }, intervalInMillis);
+    }
+
+
+    function getConfiguration(self) {
+        return self.configuration.all();
+    }
+
+    return {
+        sendOrderToSellers: function (reduction, currentIteration, badRequest) {
+            var self = this,
+                order = self.orderService.createOrder(reduction),
+                expectedBill = self.orderService.bill(order, reduction);
+
+            if (badRequest) {
+                order = self.badRequest.corruptOrder(order);
+            }
+
+            _.forEach(self.sellerService.allSellers(), function (seller) {
+                self.sellerService.addCash(seller, 0, currentIteration);
+                var cashUpdater;
+
+                if (badRequest) {
+                    cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration);
+                } else {
+                    cashUpdater = self.sellerCashUpdater.doUpdate(seller, expectedBill, currentIteration);
+                }
+
+                var errorCallback = putSellerOffline(self, seller, currentIteration);
+                self.orderService.sendOrder(seller, order, cashUpdater, errorCallback);
+            });
+        },
+
+        startBuying: function (iteration) {
+            var reductionStrategy = getConfiguration(this).reduction,
+                period = getReductionPeriodFor(reductionStrategy),
+                badRequest = this.badRequest.shouldSendBadRequest(iteration),
+                message = '>>> Shopping iteration ' + iteration;
+
+            if (badRequest) {
+                message = message + ' (bad request)';
+            }
+            console.info(colors.green(message));
+
+            this.sendOrderToSellers(period.reduction, iteration, badRequest);
+            scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
+        }
+    }
+})();
+
 module.exports = {
     Dispatcher: Dispatcher,
-    BadRequest: BadRequest
+    BadRequest: BadRequest,
+    SellerCashUpdater: SellerCashUpdater
 };

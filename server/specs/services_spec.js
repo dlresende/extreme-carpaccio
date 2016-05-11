@@ -7,6 +7,7 @@ var utils = require('../javascripts/utils');
 var http = require('http');
 
 var Dispatcher = services.Dispatcher;
+var SellerCashUpdater = services.SellerCashUpdater;
 var BadRequest = services.BadRequest;
 var OrderService = services.OrderService;
 var SellerService = services.SellerService;
@@ -48,6 +49,15 @@ describe('Seller Service', function() {
         sellerService.updateCash(bob, {total: 100}, {total: 100});
 
         expect(sellerService.allSellers()).toContain({name: 'bob', cash: 100})
+    });
+
+    it('should deduct 50% of the bill amount from seller\'s cash when the seller\'s bill is missing', function() {
+        var bob = {name: 'bob', cash: 0};
+        sellers.save(bob);
+
+        sellerService.updateCash(bob, {total: 100}, undefined);
+
+        expect(sellerService.allSellers()).toContain({name: 'bob', cash: -50})
     });
 
     it('should deduct 50% of the bill amount from seller\'s cash when the seller\'s bill does not correspond with the expected one', function() {
@@ -224,7 +234,6 @@ describe('Dispatcher', function() {
         expect(dispatcher.sendOrderToSellers).toHaveBeenCalledWith(Reduction.HALF_PRICE, 1, false);
     });
 
-
     it('should broadcast a bad request', function() {
         spyOn(configuration, 'all').andReturn({
             reduction: 'HALF PRICE',
@@ -242,7 +251,6 @@ describe('Dispatcher', function() {
 
     it('should send the same order to each seller using reduction', function() {
         spyOn(configuration, 'all').andReturn({});
-
         var alice = {name: 'alice', hostname : 'seller', port : '8080', path : '/', cash: 0};
         var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
         spyOn(sellerService, 'addCash');
@@ -256,6 +264,37 @@ describe('Dispatcher', function() {
         expect(orderService.createOrder).toHaveBeenCalledWith(Reduction.STANDARD);
         expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
         expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
+    });
+});
+
+describe('Seller\'s cash updater', function() {
+    var sellerCashUpdater, configuration, sellerService, orderService;
+
+    beforeEach(function() {
+        configuration = new Configuration();
+        sellerService = new SellerService();
+        orderService = new OrderService(configuration);
+        sellerCashUpdater = new SellerCashUpdater(sellerService, orderService);
+    });
+
+    it('should deduct a penalty when the sellers\'s response is neither 200 nor 404', function() {
+        var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
+        spyOn(sellerService, 'setOnline');
+        spyOn(sellerService, 'updateCash');
+
+        sellerCashUpdater.doUpdate(bob, {total: 100}, -1)({statusCode: 400});
+
+        expect(sellerService.updateCash).toHaveBeenCalledWith(bob, {total: 100}, undefined, -1);
+    });
+
+    it('should NOT deduct a penalty when the sellers\'s response is 404', function() {
+        var bob = {name: 'bob', hostname : 'seller', port : '8081', path : '/', cash: 0};
+        spyOn(sellerService, 'setOnline');
+        spyOn(sellerService, 'updateCash');
+
+        sellerCashUpdater.doUpdate(bob, {total: 100}, -1)({statusCode: 404});
+
+        expect(sellerService.updateCash).not.toHaveBeenCalled();
     });
 });
 
