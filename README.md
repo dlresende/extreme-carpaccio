@@ -40,8 +40,7 @@ If you answer a total that does not match the expected bill, you will be charged
 
 Your answer will be ignored if one of these conditions are met:
 - your server is unreachable
-- you responded with an HTTP code different than 200
-- your answer does not match the expected JSON structure
+- you responded with HTTP code 404
 
 ## Functional Instructions
 
