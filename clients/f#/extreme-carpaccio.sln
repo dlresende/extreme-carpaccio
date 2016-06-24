@@ -1,0 +1,15 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{E3B27B6E-D10F-4B36-A712-914C0FC682E7}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
