@@ -1,14 +1,25 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{E3B27B6E-D10F-4B36-A712-914C0FC682E7}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "carpaccio-client", "carpaccio-client\carpaccio-client.fsproj", "{7FB4BC27-7497-475F-BEDA-4B298BA08ED1}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FB4BC27-7497-475F-BEDA-4B298BA08ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FB4BC27-7497-475F-BEDA-4B298BA08ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FB4BC27-7497-475F-BEDA-4B298BA08ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FB4BC27-7497-475F-BEDA-4B298BA08ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

@@ -39,7 +39,7 @@ let app =
            ]
 
 let port = Sockets.Port.Parse <| "8080"
-let ip = IPAddress.Loopback
+let ip = IPAddress.Any
 
 let serverConfig =
     { defaultConfig with
