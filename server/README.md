@@ -1,3 +1,5 @@
+[![build status](https://travis-ci.org/dlresende/extreme-carpaccio.svg?branch=master)]()
+
 ## Install
 
 ```
