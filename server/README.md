@@ -1,6 +1,6 @@
 [![build status](https://travis-ci.org/dlresende/extreme-carpaccio.svg?branch=master)]()
 
-# Instructor for Facilitators
+# Instructions for Facilitators
 
 ## Technical Instructions
 
