@@ -8,7 +8,7 @@
 - nodejs
 - bower
 
-## Install & Run
+### Install & Run
 
 ```
 npm install
