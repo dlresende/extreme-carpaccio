@@ -1,15 +1,16 @@
 {
-  "name": "katazon-client-nodejs",
-  "version": "0.1.0",
+  "name": "extreme-carpaccio-client-node-plain",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "start": "node main.js",
     "test": "./node_modules/jasmine-node/bin/jasmine-node ."
   },
   "dependencies": {
+    "request": "2.53.*",
+    "chalk": "^1.1.3"
   },
   "devDependencies": {
-    "request": "2.53.*",
     "jasmine-node": "^1.14.5"
   }
 }

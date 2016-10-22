@@ -6,6 +6,8 @@
  * @api public
  */
 var applyLogic = function(reqBody) {
+
+  // TODO implement from here
   return {total: 0.0};
 };
 
