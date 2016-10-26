@@ -1,0 +1,56 @@
+group 'extreme-carpaccio'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.0.4'
+
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven {
+        url 'https://dl.bintray.com/wasabifx/wasabifx'
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'org.wasabifx:wasabi:0.3.80'
+    testCompile 'io.kotlintest:kotlintest:1.3.5'
+    testCompile "org.mockito:mockito-core:2.1.0"
+    testCompile "org.apache.httpcomponents:httpclient:4.5.1"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/kotlin'
+        }
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+    test {
+        java {
+            srcDir 'src/test/kotlin'
+        }
+        resources {
+            srcDir 'src/test/resources'
+        }
+    }
+}
