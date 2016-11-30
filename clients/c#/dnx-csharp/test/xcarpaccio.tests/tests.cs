@@ -1,6 +1,5 @@
 namespace XCarpaccio.Tests
 {
-  using System;
   using Xunit;
 
   public class WalkingSkeleton

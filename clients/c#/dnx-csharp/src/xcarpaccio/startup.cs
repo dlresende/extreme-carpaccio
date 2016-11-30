@@ -1,9 +1,9 @@
-namespace XCarpaccio
-{
-    using Microsoft.AspNet.Builder;
-    using Nancy.Owin;
-    using static System.Console;
+using Microsoft.AspNetCore.Builder;
+using Nancy.Owin;
+using static System.Console;
 
+namespace XCarpaccio
+{    
     public class Startup
     {
         public void Configure(IApplicationBuilder app)
