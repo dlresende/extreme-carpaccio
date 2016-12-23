@@ -1,17 +1,21 @@
+using System.IO;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+
 namespace XCarpaccio
 {
-  using System;
-  using static System.Console;
-
+  
   public class Program
   {
-    public void Main(params string[] args)
+    public static void Main(params string[] args)
     {
-      WriteLine(@"
-        Use `dnx run` to execute this Main function and
-        test some code if you need
-
-      ");
+      var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+ 
+            host.Run();
     }
   }
 

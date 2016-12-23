@@ -1,15 +1,14 @@
 namespace XCarpaccio.Tests
 {
-  using System;
-  using Xunit;
+    using Xunit;
 
-  public class WalkingSkeleton
-  {
-    [Fact]
-    public void feedback_model_prints_nicely()
+    public class WalkingSkeleton
     {
-      var feedback = new Feedback(){Type="Error",Content="Hello"};
-      Assert.Equal("[Error] Hello",feedback.ToString());
+        [Fact]
+        public void feedback_model_prints_nicely()
+        {
+            var feedback = new Feedback() { Type = "Error", Content = "Hello" };
+            Assert.Equal("[Error] Hello", feedback.ToString());
+        }
     }
-  }
 }

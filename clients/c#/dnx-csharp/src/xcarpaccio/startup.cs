@@ -1,6 +1,6 @@
 namespace XCarpaccio
 {
-    using Microsoft.AspNet.Builder;
+    using Microsoft.AspNetCore.Builder;
     using Nancy.Owin;
     using static System.Console;
 
@@ -8,11 +8,12 @@ namespace XCarpaccio
     {
         public void Configure(IApplicationBuilder app)
         {
-          app.Use( (ctx,next) => {
-            WriteLine($"[{ctx.Request.Method}] {ctx.Request.Path}");
-            return next();
-          });
-          app.UseOwin(x => x.UseNancy());
+            app.Use((ctx, next) =>
+            {
+                WriteLine($"[{ctx.Request.Method}] {ctx.Request.Path}");
+                return next();
+            });
+            app.UseOwin(x => x.UseNancy());
         }
     }
 }
