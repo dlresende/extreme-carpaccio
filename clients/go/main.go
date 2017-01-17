@@ -3,14 +3,27 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 
 	"fmt"
 )
 
+type Order struct {
+	Prices     []float32
+	Quantities []int
+	Country    string
+	Reduction  string
+}
+
+type Reply struct {
+	Total float32 `json:"total"`
+}
+
 func main() {
 	http.HandleFunc("/order", handler)
-	http.HandleFunc("/feedback", func (rw http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/feedback", func(rw http.ResponseWriter, req *http.Request) {
 		defer req.Body.Close()
 
 		body, err := ioutil.ReadAll(req.Body)
