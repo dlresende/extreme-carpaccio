@@ -1,0 +1,6 @@
+---
+applications:
+- name: extreme-carpaccio
+  memory: 512M
+  instances: 1
+  buildpack: nodejs_buildpack
