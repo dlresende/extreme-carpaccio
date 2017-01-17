@@ -1,0 +1,8 @@
+---
+applications:
+- name: extreme-carpaccio-java-http-server
+memory: 512M
+instances: 1
+path: target/extreme-carpaccio-java-httpserver-1.0-SNAPSHOT-jar-with-dependencies.jar
+buildpack: https://github.com/cloudfoundry/java-buildpack.git
+stack: cflinuxfs2

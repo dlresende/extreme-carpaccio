@@ -22,6 +22,10 @@ public class MyHttpServer
 
     private HttpServer server;
 
+    public MyHttpServer(String port, Logger logger) {
+        this(Integer.parseInt(port), logger);
+    }
+
     public MyHttpServer(int port, Logger logger) {
         this.port = port;
         this.logger = logger;
@@ -46,7 +50,7 @@ public class MyHttpServer
 
     public static void main( String[] args ) throws IOException {
         Logger logger = new Logger();
-        new MyHttpServer(9000, logger).start();
+        new MyHttpServer(System.getenv("PORT"), logger).start();
     }
 
     private abstract class AbstractHttpHandler implements HttpHandler {

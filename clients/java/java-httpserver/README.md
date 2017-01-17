@@ -14,8 +14,8 @@ The game server will post orders on `/order` endpoint.
 ## Run
 You don't need any application server. No Tomcat, no WAR to deploy. The server is embedded.
 
-- `mvn exec:java -Dexec.mainClass="xcarpaccio.MyHttpServer"`
+- `PORT=9000 java -jar target/extreme-carpaccio-java-httpserver-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
-The server listens on port 9000: [http://localhost:9000/ping](http://localhost:9000/ping)
+In the example above the server listens on port 9000: [http://localhost:9000/ping](http://localhost:9000/ping)
 
 You can also launch the server with your IDE. You just have to launch `MyHttpServer` class. It has a `main` method.
