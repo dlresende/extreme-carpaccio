@@ -3,14 +3,27 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 
 	"fmt"
 )
 
+type Order struct {
+	Prices     []float32
+	Quantities []int
+	Country    string
+	Reduction  string
+}
+
+type Reply struct {
+	Total float32 `json:"total"`
+}
+
 func main() {
 	http.HandleFunc("/order", handler)
-	http.HandleFunc("/feedback", func (rw http.ResponseWriter, req *http.Request) {
+	http.HandleFunc("/feedback", func(rw http.ResponseWriter, req *http.Request) {
 		defer req.Body.Close()
 
 		body, err := ioutil.ReadAll(req.Body)
@@ -24,7 +37,11 @@ func main() {
 
 		rw.WriteHeader(200)
 	})
-	http.ListenAndServe(":6666", nil)
+
+	err := http.ListenAndServe(fmt.Sprintf(":%s", getPort()), nil)
+	if err != nil {
+		log.Fatal("Listen and serve:", err)
+	}
 }
 
 func handler(rw http.ResponseWriter, req *http.Request) {
@@ -44,6 +61,14 @@ func handler(rw http.ResponseWriter, req *http.Request) {
 
 	rw.Header().Add("Content-Type", "application/json")
 	rw.WriteHeader(200)
-//	encoder := json.NewEncoder(rw)
-//	encoder.Encode(Reply{0})
+	//	encoder := json.NewEncoder(rw)
+	//	encoder.Encode(Reply{0})
+}
+
+func getPort() string {
+	port := os.Getenv("PORT")
+	if port == "" {
+		return "9000"
+	}
+	return port
 }

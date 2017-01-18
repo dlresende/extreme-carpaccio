@@ -12,7 +12,6 @@
 
 ```
 npm install
-bower install
 npm start
 ```
 Start in debug mode (activate debug mode for `xcarpaccio:server`):
