@@ -1,0 +1,8 @@
+---
+applications:
+- name: extreme-carpaccio-go
+  memory: 128M
+  instances: 1
+  buildpack: https://github.com/cloudfoundry/go-buildpack
+  env:
+    GOPACKAGENAME: go
