@@ -9,6 +9,6 @@
   },
 
   "taxes": {
-    "SK": "function(price) { if(price>2000) return price * 1.2; else return price * 1.1; }"
+    "SK": "function(price) { if(price>2000) return price * 1.18; else return price * 1.18; }"
   }
 }
