@@ -1,0 +1,18 @@
+{
+  "name": "extreme-carpaccio/clients-php-native",
+  "autoload": {
+    "psr-4": {
+      "ExtremeCarpaccio\\": "src/ExtremeCarpaccio"
+    }
+  },
+  "require-dev": {
+    "atoum/atoum": "~3.0",
+    "atoum/stubs": "~2.5"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Units\\": "tests/units",
+      "Tests\\Units\\ExtremeCarpaccio\\": "tests/units/src/ExtremeCarpaccio"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+php:
+  build: docker/php
+  volumes:
+    - .:/home/project
+  working_dir: /home/project
+
+web:
+  image: nginx:latest
+  ports:
+    - "80:80"
+  volumes:
+    - .:/home/project
+    - ./docker/nginx/site.conf:/etc/nginx/conf.d/site.conf
+  links:
+    - php
+
+testing:
+  image: vitr/casperjs
+  volumes:
+    - .:/home/project
+  links:
+    - "web:project.loc"
