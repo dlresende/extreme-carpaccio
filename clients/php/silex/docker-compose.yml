@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/home/project
+      - ./docker/nginx/site.conf:/etc/nginx/conf.d/site.conf
+
+  php:
+    build: ./docker/php
+    volumes:
+      - .:/home/project
+    working_dir: /home/project
+    links:
+      - "web:project.loc"
