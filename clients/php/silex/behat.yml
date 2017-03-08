@@ -1,0 +1,21 @@
+aliases:
+    - &baseUrl http://project.loc
+
+default:
+    extensions:
+        Behat\MinkExtension:
+            base_url: *baseUrl
+            sessions:
+                default:
+                    goutte: ~
+    suites:
+        ping:
+            paths: [%paths.base%/tests/functionals/features/Ping.feature]
+            contexts:
+                - 'Tests\Functionals\ExtremeCarpaccio\ApiContext\PingContext':
+                    - *baseUrl
+        order:
+            paths: [%paths.base%/tests/functionals/features/Order.feature]
+            contexts:
+                - 'Tests\Functionals\ExtremeCarpaccio\ApiContext\OrderContext':
+                    - *baseUrl

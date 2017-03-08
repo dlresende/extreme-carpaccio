@@ -1,0 +1,26 @@
+{
+  "name": "extreme-carpaccio/clients-php-silex",
+  "require": {
+    "silex/silex": "~2.0",
+    "monolog/monolog": "~1.22"
+  },
+  "autoload": {
+    "psr-4": {
+      "ExtremeCarpaccio\\": "src/ExtremeCarpaccio"
+    }
+  },
+  "require-dev": {
+    "atoum/atoum": "~3.0",
+    "atoum/stubs": "~2.5",
+    "behat/behat": "~3.3",
+    "behat/mink-extension": "~2.2",
+    "behat/mink-goutte-driver": "~1.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Units\\": "tests/units",
+      "Tests\\Units\\ExtremeCarpaccio\\": "tests/units/src/ExtremeCarpaccio",
+      "Tests\\Functionals\\": "tests/functionals/features/bootstrap"
+    }
+  }
+}
