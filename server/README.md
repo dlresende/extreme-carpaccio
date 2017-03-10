@@ -2,13 +2,10 @@
 
 # Instructions for Facilitators
 
-## Technical Instructions
+## Requirements
+- [nodejs](https://nodejs.org/en/)
 
-### Requirements
-- nodejs
-- bower
-
-### Install & Run
+## Install & Run
 
 ```
 npm install
@@ -20,7 +17,7 @@ Start in debug mode (activate debug mode for `xcarpaccio:server`):
 DEBUG=xcarpaccio:server npm start
 ```
 
-## Functional Instructions
+## Workshop
 Extreme Carpaccio is intended to be played with Product Owners (PO) and Developers together. It can be played with only Developers, but the strategies tend to be more biased following one or another perspective/mindset.
 
 The goal is to create teams that are going to compete against each other. The workshop has mainly 3 stages: slicing, implementing and retrospective, and normally takes between 1:30 and 3:00 hours.
