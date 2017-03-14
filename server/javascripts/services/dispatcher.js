@@ -70,7 +70,7 @@ BadRequest.prototype = (function () {
 
                 if (response.statusCode !== 400) {
                     var loss = amount * .5;
-                    message = 'Hey ' + seller.name + ' lose ' + loss + ' because he does not know how to handle correctly a bad request';
+                    message = 'Hey, ' + seller.name + ' lose ' + loss + ' because he/she does not know how to handle correctly a bad request';
                     sellerService.deductCash(seller, loss, currentIteration);
                     sellerService.notify(seller, {'type': 'ERROR', 'content': message});
                 }
