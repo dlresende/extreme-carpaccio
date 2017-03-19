@@ -1,24 +1,17 @@
-# README
+## Dependencies
+- Ruby v2.0+
+- Ruby gem
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Install
+```
+gem install bundler
+bundle install
+```
 
-Things you may want to cover:
+## Start
+```
+bundle exec rails s -p8888 -b0.0.0.0
+# -b0.0.0.0 Is to allow access from LAN or else only localhost can access
+```
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+The server listens on port 8888: [http://localhost:8888](http://localhot:8888)
