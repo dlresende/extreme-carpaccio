@@ -43,13 +43,13 @@ For the order `{"prices":[15.99],"quantities":[1],"country":"ES","reduction":"ST
 ### Reductions
 Following the STANDARD reductions applied for the most part of the orders:
 
-*Total* | *Reduction*
---- | ---
->= 50 000 EUR | 15 %
->= 10 000 EUR | 10 %
->= 7 000 EUR | 7 %
->= 5 000 EUR | 5 %
->= 1 000 EUR | 3 %
+| *Total* | *Reduction* |
+| --- | --- |
+| >= 50 000 EUR | 15 % |
+| >= 10 000 EUR | 10 % |
+| >= 7 000 EUR | 7 % |
+| >= 5 000 EUR | 5 % |
+| >= 1 000 EUR | 3 % |
 
 For the order `{"prices":[4.1,8.03,86.83,65.62,44.82],"quantities":[10,3,5,4,5],"country":"AT","reduction":"STANDARD"}`, for example, the response should be `{"total":1166.62}`.
 
