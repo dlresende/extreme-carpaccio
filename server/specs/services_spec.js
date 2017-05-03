@@ -350,12 +350,9 @@ describe('BadRequest', function(){
             "reduction":"STANDARD"
         };
 
-        var corrupted1 = badRequest.corruptOrder(order);
-        var corrupted2 = badRequest.corruptOrder(order);
+        var corrupted = badRequest.corruptOrder(order);
 
-        expect(corrupted1).not.toEqual(order);
-        expect(corrupted2).not.toEqual(order);
-        expect(corrupted1).not.toEqual(corrupted2);
+        expect(corrupted).not.toEqual(order);
     });
 
     it('should deduct cash if response status is not "bad request"', function() {

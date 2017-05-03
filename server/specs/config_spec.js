@@ -1,7 +1,7 @@
 'use strict';
 
-var _500_MILLIS_TIMEOUT = 500;
-var _100_MILLIS = 100;
+var _1000_MILLIS_TIMEOUT = 1000;
+var _200_MILLIS = 200;
 
 var fs = require('fs'),
     Configuration = require('../javascripts/config').Configuration;
@@ -27,7 +27,7 @@ describe('Configuration', function(){
 
         waitsFor(function() {
             return synchronized;
-        }, "Properties should be loaded in time", _500_MILLIS_TIMEOUT);
+        }, "Properties should be loaded in time", _1000_MILLIS_TIMEOUT);
 
         runs(function() {
             var properties = config.all();
@@ -39,14 +39,14 @@ describe('Configuration', function(){
         runs(function() {
             config.watch(function() {
                 synchronized = true;
-            }, true, _100_MILLIS);
+            }, true, _200_MILLIS);
 
             fs.writeFileSync(configFilepath, '{"reduction": "HALF PIPE"}');
         });
 
         waitsFor(function() {
             return synchronized;
-        }, "File change should be detected", _500_MILLIS_TIMEOUT);
+        }, "File change should be detected", _1000_MILLIS_TIMEOUT);
 
         runs(function() {
             var properties = config.all();
