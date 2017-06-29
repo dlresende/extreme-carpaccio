@@ -7,5 +7,7 @@ lazy val root = (project in file(".")).
       version      := "1.0"
     )),
     name := "scala",
-    libraryDependencies += `akka-http`
+    libraryDependencies += `akka-http`,
+    libraryDependencies += `akka-http-circe`,
+    libraryDependencies += `circe-generic`
   )
