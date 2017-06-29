@@ -3,12 +3,9 @@ import Dependencies._
 lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
-      scalaVersion := "2.11.6",
+      scalaVersion := "2.12.2",
       version      := "1.0"
     )),
     name := "scala",
-    libraryDependencies += `spray-routing`,
-    libraryDependencies += `spray-can`,
-    libraryDependencies += `akka-actor`,
-    libraryDependencies += `play-json`
+    libraryDependencies += `akka-http`
   )

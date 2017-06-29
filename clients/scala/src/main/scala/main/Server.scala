@@ -1,13 +1,10 @@
 package main
 
-import akka.actor.ActorSystem
-import spray.routing.SimpleRoutingApp
+import akka.http.scaladsl.server.{HttpApp, Route}
 
 case class Order(prices: Seq[Float], quantities: Seq[Int], country: String)
 
-object Server extends App with SimpleRoutingApp {
-
-  implicit val system = ActorSystem("my-system")
+object Server extends HttpApp with App {
 
   type ProcessOrder = Order => Option[Float]
 
@@ -23,10 +20,7 @@ object Server extends App with SimpleRoutingApp {
     order => Some(0.0f)
   }
 
-  startServer(interface = address, port = port) {
-
-    println("Server started @ " + address + ":" + port)
-
+  override def routes: Route =
     path(orderRoute) {
       post {
         entity(as[String]) {
@@ -57,5 +51,5 @@ object Server extends App with SimpleRoutingApp {
         }
       }
 
-  }
+  startServer(host = address, port = port)
 }
