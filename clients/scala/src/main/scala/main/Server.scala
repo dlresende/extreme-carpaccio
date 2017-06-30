@@ -1,61 +1,52 @@
 package main
 
-import akka.actor.ActorSystem
-import spray.routing.SimpleRoutingApp
+import akka.http.scaladsl.marshalling.ToResponseMarshallable
+import akka.http.scaladsl.model.ContentTypes.`application/json`
+import akka.http.scaladsl.model.HttpEntity
+import akka.http.scaladsl.server.{HttpApp, Route}
+import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport._
+import io.circe.generic.auto._
 
 case class Order(prices: Seq[Float], quantities: Seq[Int], country: String)
 
-object Server extends App with SimpleRoutingApp {
+case class Result(total: Float)
 
-  implicit val system = ActorSystem("my-system")
+case class Feedback(`type`: String, content: String)
+
+object Server extends HttpApp with App {
 
   type ProcessOrder = Order => Option[Float]
-
-  // TODO Modify the server configuration if necessary
-  val address = "localhost"
-  val port: Int = 9000
-
-  val orderRoute = "order"
-  val feedbackRoute = "feedback"
 
   lazy val process: ProcessOrder = {
     // TODO To implement
     order => Some(0.0f)
   }
 
-  startServer(interface = address, port = port) {
-
-    println("Server started @ " + address + ":" + port)
-
-    path(orderRoute) {
+  override def routes: Route =
+    path("order") {
       post {
-        entity(as[String]) {
-          order =>
-            complete {
+        entity(as[Order]) { order =>
+          complete {
+            println("Request received : " + order)
 
-              println("Request received : " + order)
+            val total = process(order)
 
-              // TODO To implement
-              val total = 0
-
-              s"""{
-                 |"total": $total
-                  }""".stripMargin
-            }
+            Result(total.getOrElse(0f))
+          }
         }
       }
     } ~
       path("feedback") {
         post {
-          entity(as[String]) {
-            feedback =>
-              complete {
-                println("Feedback received : " + feedback)
-                ""
-              }
+          entity(as[Feedback]) { feedback =>
+            complete {
+              println("Feedback received : " + feedback)
+              ""
+            }
           }
         }
       }
 
-  }
+  startServer(host = "0.0.0.0", port = 9000)
+
 }
