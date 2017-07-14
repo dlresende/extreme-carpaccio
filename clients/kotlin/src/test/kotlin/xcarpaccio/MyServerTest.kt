@@ -1,6 +1,9 @@
 package xcarpaccio
 
-import io.kotlintest.specs.FlatSpec
+import io.kotlintest.Spec
+import io.kotlintest.matchers.shouldBe
+import io.kotlintest.mock.mock
+import io.kotlintest.specs.StringSpec
 import org.apache.http.Header
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
 import org.apache.http.client.methods.HttpGet
@@ -10,36 +13,36 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.util.EntityUtils
 import org.mockito.BDDMockito.then
-import org.mockito.Mockito.mock
 import java.util.*
 
-class MyServerTest : FlatSpec() {
-    private val TEST_PORT = 8001
-    private val logger = mock(Logger::class.java)
-    private var myServer: MyServer = MyServer(TEST_PORT, logger)
+class MyServerTest : StringSpec() {
+    val TEST_PORT = 8001
 
-    override fun beforeAll() {
+    val logger: Logger = mock()
+    val myServer: MyServer = MyServer(TEST_PORT, logger)
+
+    override val oneInstancePerTest = false
+
+    override fun interceptSpec(context: Spec, spec: () -> Unit) {
         myServer.start(false)
-    }
-
-    override fun afterAll() {
+        spec()
         myServer.shutdown()
     }
 
     init {
-        "MyServer" should "respond 'pong' when 'ping' is received" {
+        "MyServer should respond 'pong' when 'ping' is received" {
             val response = sendSimpleRequest("/ping", "GET")
 
             response.statusCode shouldBe 200
             response.body shouldBe "pong"
         }
 
-        "MyServer" should "log feedback message received via POST" {
+        "MyServer should log feedback message received via POST" {
             sendJson("/feedback", "POST", """{"type":"ERROR", "content":"The field \"total\" in the response is missing."}""")
             then(logger).should().log("""ERROR: The field "total" in the response is missing.""")
         }
 
-        "MyServer" should "respond to order" {
+        "MyServer should respond to order" {
             val response = sendJson("/order", "POST", """{"prices":[3.5], "quantities":[2], "country":"FR", "reduction":"STANDARD"}""")
             then(logger).should().log("POST /order {quantities=[2], country=FR, prices=[3.5], reduction=STANDARD}")
             then(logger).should().log("Order(prices=[3.5], quantities=[2], country=FR, reduction=STANDARD)")

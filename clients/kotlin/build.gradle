@@ -2,13 +2,10 @@ group 'extreme-carpaccio'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.0.4'
+    ext.kotlin_version = '1.1.3-2'
 
     repositories {
         mavenCentral()
-        maven {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -17,12 +14,10 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'idea'
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://oss.sonatype.org/content/repositories/snapshots"
-    }
     maven {
         url 'https://dl.bintray.com/wasabifx/wasabifx'
     }
@@ -30,10 +25,17 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile 'org.wasabifx:wasabi:0.3.80'
-    testCompile 'io.kotlintest:kotlintest:1.3.5'
-    testCompile "org.mockito:mockito-core:2.1.0"
-    testCompile "org.apache.httpcomponents:httpclient:4.5.1"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compile("org.wasabifx:wasabi:0.3.129") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+
+    testCompile('io.kotlintest:kotlintest:2.0.3') {
+        exclude group: 'org.mockito'
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testCompile "org.mockito:mockito-core:2.8.47"
+    testCompile "org.apache.httpcomponents:httpclient:4.5.3"
 }
 
 sourceSets {
@@ -53,4 +55,9 @@ sourceSets {
             srcDir 'src/test/resources'
         }
     }
+}
+
+idea.module {
+    downloadSources = true
+    downloadJavadoc = true
 }
