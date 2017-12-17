@@ -17,6 +17,17 @@ Start in debug mode (activate debug mode for `xcarpaccio:server`):
 DEBUG=xcarpaccio:server npm start
 ```
 
+## Test the network
+During the workshop, HTTP packages will be exchanged between participant's computers and the server. Although, many networks block incoming connections using firewalls, which will prevent the server from reaching participants.
+
+Before you start an Extreme Carpaccio workshop, it is strongly suggested that you test if the network you will playing with accepts incoming connections. Follow the instructions bellow.
+
+1. Connect a first computer in the network
+1. In that computer run: `$ echo "Hello Extreme Carpaccio" | nc -l 3000`
+1. Connect a second computer in the network
+1. In the second computer run: `$ nc <IP address of the 1st computer> 3000 | tee `
+1. If the network allows incoming connections, you should see the message `Hello Extreme Carpaccio` appearing in the second computer
+
 ## Workshop
 Extreme Carpaccio is intended to be played with Product Owners (PO) and Developers together. It can be played with only Developers, but slicing strategies tend to be more biased since developers generally focus more on code and than on product and iterations.
 
