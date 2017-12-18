@@ -20,7 +20,7 @@ DEBUG=xcarpaccio:server npm start
 ## Test the network
 During the workshop, HTTP packages will be exchanged between participant's computers and the server. Although, many networks block incoming connections using firewalls, which will prevent the server from reaching participants.
 
-Before you start an Extreme Carpaccio workshop, it is strongly suggested that you test if the network you will playing with accepts incoming connections. Follow the instructions bellow.
+Before you start an Extreme Carpaccio workshop, it is strongly recommended that you test if the network you will playing with accepts incoming connections. Follow the instructions bellow.
 
 1. Connect a first computer in the network
 1. In that computer run: `$ echo "Hello Extreme Carpaccio" | nc -l 3000`
