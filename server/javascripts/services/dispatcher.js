@@ -179,6 +179,10 @@ Dispatcher.prototype = (function () {
         }, intervalInMillis);
     }
 
+    function shouldSendOrders(self) {
+        const active = getConfiguration(self).active;
+        return active == null ? true : active;
+    }
 
     function getConfiguration(self) {
         return self.configuration.all();
@@ -213,15 +217,23 @@ Dispatcher.prototype = (function () {
             var reductionStrategy = getConfiguration(this).reduction,
                 period = getReductionPeriodFor(reductionStrategy),
                 badRequest = this.badRequest.shouldSendBadRequest(iteration),
-                message = '>>> Shopping iteration ' + iteration;
+                message = '>>> Shopping iteration ' + iteration,
+                nextIteration = iteration + 1
 
             if (badRequest) {
                 message = message + ' (bad request)';
             }
-            console.info(colors.green(message));
+            
+            if (shouldSendOrders(this)) {
+                console.info(colors.green(message));
+                this.sendOrderToSellers(period.reduction, iteration, badRequest);
+            } else {
+                nextIteration = iteration;
+                console.info(colors.red("Order dispatching disabled"));
+            }
 
-            this.sendOrderToSellers(period.reduction, iteration, badRequest);
-            scheduleNextIteration(this, iteration + 1, period.shoppingIntervalInMillis);
+            scheduleNextIteration(this, nextIteration, period.shoppingIntervalInMillis);
+            return nextIteration;
         }
     }
 })();

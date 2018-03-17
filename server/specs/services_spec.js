@@ -221,6 +221,23 @@ describe('Dispatcher', function() {
         dispatcher = new Dispatcher(sellerService, orderService, configuration);
     });
 
+    it('should not send request to sellers when active config is set to false', function() {
+        spyOn(configuration, 'all').andReturn(
+            {
+                reduction: 'STANDARD',
+                badRequest: {
+                    active:true,
+                    period:2
+                },
+                active: false
+            }
+        );
+        spyOn(dispatcher, 'sendOrderToSellers').andCallFake(function(){});
+
+        expect(dispatcher.startBuying(1)).toEqual(1);
+        expect(dispatcher.sendOrderToSellers).not.toHaveBeenCalled();
+    })
+
     it('should load configuration for reductions', function() {
         spyOn(configuration, 'all').andReturn({reduction: 'HALF PRICE',
             badRequest: {
