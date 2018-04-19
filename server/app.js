@@ -12,7 +12,7 @@ var config = require('./javascripts/config');
 
 var configuration = new config.Configuration(CONFIGURATION_FILE);
 var sellers = new repositories.Sellers();
-var sellerService = new services.SellerService(sellers);
+var sellerService = new services.SellerService(sellers, configuration);
 var orderService = new services.OrderService(configuration);
 var dispatcher = new services.Dispatcher(sellerService, orderService, configuration);
 

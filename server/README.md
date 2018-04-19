@@ -28,6 +28,25 @@ Before you start an Extreme Carpaccio workshop, it is strongly recommended that 
 1. In the second computer run: `$ nc <IP address of the 1st computer> 3000 | tee `
 1. If the network allows incoming connections, you should see the message `Hello Extreme Carpaccio` appearing in the second computer
 
+## Freeze the game to make everyone start at the same time
+
+People will take time to setup their HTTP server. Some of them will need more time than others, because of setup problems.
+
+As a facilitator, you may want everyone to be ready before starting the game, to be fair with people that had problems.
+
+You can do this this way:
+
+1. Open ``configuration.json`` file 
+1. Replace ``"cashFreeze": false,`` with ``"cashFreeze": true,`` and save
+1. Start the game server with ``npm start``
+1. Make everyone register
+1. Thanks to the ``cashFreeze`` parameter, everyone's cash stays at 0.
+1. Wait until every team is registered **and marked online**. This means the game is setup for everyone.
+1. Say '*Looks like that everyone is ready. Then I will start the game in 5 seconds.*' 
+1. Open ``configuration.json`` file 
+1. Replace ``"cashFreeze": true,`` with ``"cashFreeze": false,`` and save
+1. Player's cash is now evaluated. The game starts!
+
 ## Workshop
 Extreme Carpaccio is intended to be played with Product Owners (PO) and Developers together. It can be played with only Developers, but slicing strategies tend to be more biased since developers generally focus more on code and than on product and iterations.
 
