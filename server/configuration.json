@@ -1,5 +1,6 @@
 {
   "active": true,
+  "cashFreeze": false,
   "reduction": "STANDARD",
   "offlinePenalty": 0,
 

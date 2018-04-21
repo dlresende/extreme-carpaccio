@@ -22,12 +22,17 @@ var Configuration = require('../javascripts/config').Configuration;
 })();
 
 describe('Seller Service', function() {
-    var sellers, sellerService, bob;
+    var sellers, sellerService, bob, configurationData;
 
     beforeEach(function() {
         bob = {name: 'bob', hostname: 'localhost', port: '3000', path: '/path', cash: 0, online: false};
         sellers = new Sellers();
-        sellerService = new SellerService(sellers);
+        
+        configurationData = {cashFreeze: false};
+        var configuration = new Configuration();
+        spyOn(configuration, 'all').andReturn(configurationData);
+        
+        sellerService = new SellerService(sellers, configuration);
     });
 
     it('should register new seller', function() {
@@ -69,6 +74,16 @@ describe('Seller Service', function() {
         expect(sellerService.allSellers()).toContain({name: 'bob', cash: -50})
     });
 
+    it('should not update cash if the cash update is frozen', function() {
+        configurationData.cashFreeze = true;
+        var bob = {name: 'bob', cash: 0};
+        sellers.save(bob);
+        
+        sellerService.updateCash(bob, {total: 100}, {total: 100});
+
+        expect(sellerService.allSellers()).not.toContain({name: 'bob', cash: 100})
+    });
+    
     it('should deduct a penalty when a seller is offline', function(){
         var bob = {name: 'bob', cash: 200, online: true};
         var offlinePenalty = 100;

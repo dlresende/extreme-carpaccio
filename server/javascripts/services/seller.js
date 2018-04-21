@@ -3,8 +3,9 @@ var utils = require('../utils');
 var UrlAssembler = require('url-assembler');
 var _ = require('lodash');
 
-function SellerService (_sellers) {
+function SellerService (_sellers, _configuration) {
   this.sellers = _sellers;
+  this.configuration = _configuration;
 }
 module.exports = SellerService;
 
@@ -75,6 +76,10 @@ service.allSellers = function () {
 };
 
 service.updateCash = function (seller, expectedBill, actualBill, currentIteration) {
+  if(this.configuration.all().cashFreeze) {
+    console.info('Cash was not updated because cashFreeze config parameter is true');
+    return;
+  }
   try {
     var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2);
     var message;

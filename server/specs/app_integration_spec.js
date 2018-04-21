@@ -27,7 +27,7 @@ describe('Route', function () {
     beforeEach(function () {
         configuration = new Configuration();
         sellers = new repositories.Sellers();
-        sellerService = new services.SellerService(sellers);
+        sellerService = new services.SellerService(sellers, configuration);
         orderService = new services.OrderService(configuration);
         dispatcher = new services.Dispatcher(sellerService, orderService, configuration);
 
