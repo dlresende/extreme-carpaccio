@@ -13,6 +13,13 @@ Start
 
 default port is 3000
 
+Start with ` nodemon `
+_(Alternatively, you can use nodemon instead of node.)_
+-----
+
+    npm run nodemon
+> about nodemon: http://nodemon.io/
+
 Test
 ----
 
