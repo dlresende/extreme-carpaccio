@@ -6,7 +6,7 @@ var routes = require('./lib/routes');
 
 module.exports = Server;
 
-function Server (doLogRequests) {
+function Server(doLogRequests) {
   var app = express();
   app.set('json spaces', 2);
 
@@ -16,7 +16,7 @@ function Server (doLogRequests) {
   app.use(bodyParser.json());
 
   app.get('/status', function (req, res) {
-    res.json({up: true})
+    res.json({ up: true })
   })
 
   app.post('/order', function (req, res, next) {
