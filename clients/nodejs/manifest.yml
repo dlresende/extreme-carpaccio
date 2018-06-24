@@ -1,0 +1,7 @@
+---
+applications:
+- name: extreme-carpaccio-nodejs
+  memory: 128M
+  instances: 1
+  buildpack: https://github.com/cloudfoundry/nodejs-buildpack
+  command: node bin/www
