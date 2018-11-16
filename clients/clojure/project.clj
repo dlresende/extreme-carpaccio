@@ -8,6 +8,10 @@
                            [ring/ring-mock "0.2.0"]
                            [ring-middleware-format "0.4.0"]]
             :plugins [[lein-ring "0.8.13"]]
-            :ring {:handler extremecarpaccio.core/my-app})
+            :ring {:handler extremecarpaccio.core/my-app}
+            :profiles {:dev {:dependencies [[midje "1.7.0"]]}
+                       :midje {}})
+
+
 
 
