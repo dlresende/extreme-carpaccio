@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/', routes(sellerService, dispatcher));
 app.use(express.static(path.join(__dirname, 'public')));
 
-configuration.watch();
+configuration.watch(function() {}, false, 500);
 dispatcher.startBuying(1);
 
 module.exports = app;
