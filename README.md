@@ -1,4 +1,7 @@
 # Extreme Carpaccio
+
+French version [here](https://github.com/dlresende/extreme-carpaccio/tree/master/README-FR.md).
+
 Extreme Carpaccio is a coding game designed to encourage and favour incremental development and Continuous Delivery best practices.
 
 During a Extreme Carpaccio session, the facilitator uses his/her computer as a server and sends HTTP requests to participant machines (generally organised in teams). Each request is a purchasing order, like those you have when you buy something somewhere. Participants then calculate the order's total amount and send the correct response back to the server. For every correct response, the participant earns points and increases his/her score. For bad responses, penalties are charged and the participant loses points. Participants should slice (or decouple) the problem in order to deploy small chunks of the solution into production as soon as possible and then score before others. This is the purpose of this exercise: define a slicing strategy, implement, deploy, check feedback, adapt the strategy, implement, deploy... and iterate as fast as possible. **Those who don't slice and try go to production only once the whole solution is implemented risk to spend too much time before scoring, leaving the way free to other teams win.**
