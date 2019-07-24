@@ -2,6 +2,8 @@
 
 # Instructions for Facilitators
 
+French version [here](./README-FR.md).
+
 ## Requirements
 - [nodejs](https://nodejs.org/en/)
 

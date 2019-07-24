@@ -1,5 +1,7 @@
 # Instructions for participants
 
+French version [here](./README-FR.md).
+
 ## Slicing
 
 To calculate the bill, you need to consider the tax of the country from which the order came from and the reduction.

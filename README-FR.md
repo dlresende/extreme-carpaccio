@@ -1,6 +1,6 @@
 # Extreme Carpaccio
 
-Version anglaise [ici](https://github.com/dlresende/extreme-carpaccio/tree/master/README.md).
+Version anglaise [ici](./README.md).
 
 L'Extrême Carpccio est un jeu de développement conçu pour encourager et favoriser le développement incrémental et les bonnes pratiques de déploiement continu.
 
@@ -12,9 +12,9 @@ Ce workshop, kata, ou jeu de développement est destiné à aider les équipes �
 
 Prêt à relever le défi ?
 
-Si vous êtes un participant, allez sur [clients/](https://github.com/dlresende/extreme-carpaccio/tree/master/client/README-FR.md) pour avoir les instructions et commencer à jouer.
+Si vous êtes un participant, allez sur [clients/](./clients/README-FR.md) pour avoir les instructions et commencer à jouer.
 
-Si vous êtes un facilitateur, allez sur [server/](https://github.com/dlresende/extreme-carpaccio/tree/master/server/README-FR.md) pour voir comment faciliter une session. 
+Si vous êtes un facilitateur, allez sur [server/](./server/README-FR.md) pour voir comment faciliter une session. 
 
 Amusez-vous bien :D
 

@@ -1,5 +1,7 @@
 # Instructions for participants
 
+Version anglaise [ici](./README.md).
+
 ## Découpage
 
 Pour calculer le total de la facture, il faut prendre en compte les taxes du pays d'où provient la facture, ainsi que la réduction qu'il convient d'appliquer.

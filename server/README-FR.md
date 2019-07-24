@@ -2,6 +2,8 @@
 
 # Instructions pour les facilitateurs
 
+Version anglaise [ici](./README.md).
+
 ## Dépendances
 
 - [nodejs](https://nodejs.org/en/)
