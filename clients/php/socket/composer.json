@@ -1,0 +1,15 @@
+{
+  "description": "extremeCarpaccioPhpClient",
+  "minimum-stability": "stable",
+  "license": "open source",
+  "require": {
+    "phpunit/phpunit": "6.5.14",
+    "ext-sockets": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-0": {
+      "" : "src"
+    }
+  }
+}
