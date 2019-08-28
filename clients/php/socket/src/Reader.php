@@ -14,11 +14,11 @@ class Reader implements ReaderInterface
     /**
      * @var string
      */
-    private $_type;
+    private $_resource;
 
-    public function GetType()
+    public function GetResource()
     {
-        return $this->_type;
+        return $this->_resource;
     }
 
     public function GetMessage()
@@ -36,17 +36,13 @@ class Reader implements ReaderInterface
 
     public function Read()
     {
-        try {
-            $spawn = socket_accept($this->_socket);
-            $body = socket_read($spawn, 1048576);
-            $this->_message = $this->GetMessageFrom($body);
-            $this->_type = $this->GetTypeFrom($body);
-            return $spawn;
-        }
-        catch(Exception $e)
-        {
-            throw $e;
-        }
+
+        $spawn = socket_accept($this->_socket);
+        $body = socket_read($spawn, 1048576);
+        $this->_message = $this->GetMessageFrom($body);
+        $this->_resource = $this->GetResourceFrom($body);
+        return $spawn;
+
     }
 
     public function Close()
@@ -66,7 +62,7 @@ class Reader implements ReaderInterface
         return $message;
     }
 
-    public function GetTypeFrom(string $body)
+    public function GetResourceFrom(string $body)
     {
         $parts = explode("\r\n\r\n", $body);
         $type = "";
@@ -79,17 +75,4 @@ class Reader implements ReaderInterface
 
         return ucfirst($type);
     }
-}
-
-function getUserIpAddr(){
-    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-        //ip from share internet
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-        //ip pass from proxy
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    }else{
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    return $ip;
 }

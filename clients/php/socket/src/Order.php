@@ -11,11 +11,4 @@ class Order
     {
 
     }
-
-    public function Calculate() : Result
-    {
-        return new Result(30.00);
-    }
-
-
 }

@@ -2,7 +2,7 @@
 
 interface ReaderInterface
 {
-    public function GetType();
+    public function GetResource();
     public function Listen($port);
     public function Read();
     public function GetMessage();

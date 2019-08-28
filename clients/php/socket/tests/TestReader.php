@@ -20,7 +20,7 @@ Connection: close
 {\"prices\":[69.61,48.41,65.77,84.48,60.35,96.21,84.8,47.3,16.37],\"quantities\":[5,6,8,9,10,6,3,2,2],\"country\":\"SK\",\"reduction\":\"STANDARD\"}\"";
 
         $reader = new Reader();
-        $commandType = $reader->GetTypeFrom($body);
+        $commandType = $reader->GetResourceFrom($body);
 
         $this->assertEquals("Order", $commandType);
 
@@ -41,7 +41,7 @@ Connection: close
 {\"prices\":[69.61,48.41,65.77,84.48,60.35,96.21,84.8,47.3,16.37],\"quantities\":[5,6,8,9,10,6,3,2,2],\"country\":\"SK\",\"reduction\":\"STANDARD\"}\"";
 
         $reader = new Reader();
-        $commandType = $reader->GetTypeFrom($body);
+        $commandType = $reader->GetResourceFrom($body);
 
         $this->assertEquals("Feedback", $commandType);
 

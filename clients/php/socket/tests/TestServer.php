@@ -7,30 +7,35 @@ class TestServer extends TestCase
     /**
      * @test
      */
-    public function should_post_result_when_order_received()
+    public function should_return_pong_when_ping_received()
     {
-        $result = new Result(30);
-
+        $expected = "Ping";
         $response = $this->createMock(ResponseInterface::class);
         $reader = $this->createMock(ReaderInterface::class);
         $console = $this->createMock(OutputInterface::class);
-        $orderMapper = $this->createMock(OrderMapperInterface::class);
-        $order = $this->createMock(Order::class);
+
         $feedbackMapper = $this->createMock(FeedbackMapperInterface::class);
 
-        $order->method('Calculate')->willReturn($result);
-        $orderMapper->method('SetValues')->willReturn($order);
+        $reader->method('GetResource')->willReturn('Ping');
 
-        $reader->method('GetType')->willReturn('Order');
+        $server = new Server($reader, $response, $console, $feedbackMapper);
+
+        $console->expects($this->exactly(1))
+            ->method('Print')
+            ->with(
+                $this->equalTo($expected)
+            );
 
         $response->expects($this->exactly(1))
             ->method('Post')
             ->with(
-                $result, $this->anything()
+                'pong',
+                $this->anything()
             );
 
-        $server = new Server($reader, $response, $console, $orderMapper, $feedbackMapper);
         $server->Start();
+
+
     }
 
     /**
@@ -43,7 +48,6 @@ class TestServer extends TestCase
         $response = $this->createMock(ResponseInterface::class);
         $reader = $this->createMock(ReaderInterface::class);
         $console = $this->createMock(OutputInterface::class);
-        $orderMapper = $this->createMock(OrderMapperInterface::class);
 
         $feedbackMapper = $this->createMock(FeedbackMapperInterface::class);
         $feedbackMessage = $this->createMock(FeedbackMessage::class);
@@ -53,9 +57,9 @@ class TestServer extends TestCase
 
         $feedbackMapper->method('setValues')->willReturn($feedbackMessage);
 
-        $reader->method('GetType')->willReturn('Feedback');
+        $reader->method('GetResource')->willReturn('Feedback');
 
-        $server = new Server($reader, $response, $console, $orderMapper, $feedbackMapper);
+        $server = new Server($reader, $response, $console, $feedbackMapper);
 
         $console->expects($this->exactly(1))
             ->method('Print')

@@ -6,20 +6,28 @@ class Response implements ResponseInterface
 
     public function Post($result, $spawn)
     {
-        $answer = $this->formatJsonAnswer($result);
+        $answer = $this->formatAnswer($result);
         socket_write($spawn, $answer, strlen($answer));
     }
 
-    private function formatJsonAnswer($result)
+    private function formatAnswer($result)
     {
+        $answer = "";
+        if($result != null) {
+            $answer = json_encode($result);
+        }
+        $result = $this->GetHeader($answer);
+        $result .= $answer;
 
-        $answer = json_encode($result);
+        return $result;
+    }
+
+    private function GetHeader(string $answer): string
+    {
         $result = "HTTP/1.0 200 OK\n";
         $result .= "Content-Type: application/json\n";
         $result .= "Content-Length: " . strlen($answer) . "\n";
         $result .= "\r\n";
-        $result .= $answer;
-
         return $result;
     }
 }

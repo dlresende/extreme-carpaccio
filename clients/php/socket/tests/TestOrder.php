@@ -8,12 +8,12 @@ class TestOrder extends TestCase
     /**
      * @test
      */
-    public function should_return_30()
+    public function should_()
     {
         $order = new Order();
-        $result = $order->Calculate();
+        $actual = new Result(30);
 
         $expected = new Result(30);
-        $this->assertEquals($expected, $result);
+        $this->assertEquals($expected, $actual);
     }
 }
