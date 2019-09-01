@@ -1,11 +1,13 @@
+---
 language: node_js
 node_js:
         - "0.10"
 before_install:
         - cd server/
-        - npm install -g bower 
-install: 
+        - npm install -g bower
+install:
         - npm install
         - bower install
-script: 
+script:
+        - npm run lint
         - npm test
