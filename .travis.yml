@@ -1,13 +1,13 @@
 ---
 language: node_js
 node_js:
-        - lts/*
+  - lts/*
 before_install:
-        - cd server/
-        - npm install -g bower
+  - cd server/
+  - npm install -g bower
 install:
-        - npm install
-        - bower install
+  - npm install
+  - bower install
 script:
-        - npm run lint
-        - npm test
+  - npm run lint
+  - npm test
