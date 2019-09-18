@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"Diego Lemos", "rgeorges"
+	],
+	"copyright": " ",
+	"dependencies": {
+		"vibe-d": "~>0.8.6-rc.1"
+	},
+	"description": "extreme-carpaccio D language client.",
+	"license": "public",
+	"name": "extreme-carpaccio-server"
+}
