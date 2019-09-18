@@ -14,3 +14,4 @@ extreme-carpaccio-server-test-*
 *.obj
 *.lst
 *.dll
+dub.selections.json
