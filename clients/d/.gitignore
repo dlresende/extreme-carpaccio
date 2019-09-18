@@ -13,3 +13,4 @@ extreme-carpaccio-server-test-*
 *.o
 *.obj
 *.lst
+*.dll

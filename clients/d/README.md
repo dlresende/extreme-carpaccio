@@ -17,6 +17,6 @@ How to use this client
 
 Install the [dub package manager](http://code.dlang.org/download) and a [D compiler](https://dlang.org/download.html) (dmd is the best option in this context).
 
-Clone this repository and type dub in current directory.
+Clone this repository and type `dub` in current directory.
 
 Have fun!

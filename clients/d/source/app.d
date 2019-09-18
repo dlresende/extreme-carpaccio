@@ -23,11 +23,12 @@ void main()
  */
 void handleOrder(HTTPServerRequest request, HTTPServerResponse response)
 {
+    info("\n");
     info("Received order JSON: %s", request.json);
 
     auto order = deserializeJson!Order(request.json);
 
-    throw new HTTPStatusException(HTTPStatus.notFound);
+    throwHTTPError(HTTPStatus.notFound);
 }
 
 /**
