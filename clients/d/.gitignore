@@ -1,0 +1,17 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/extreme-carpaccio-server
+extreme-carpaccio-server.so
+extreme-carpaccio-server.dylib
+extreme-carpaccio-server.dll
+extreme-carpaccio-server.a
+extreme-carpaccio-server.lib
+extreme-carpaccio-server-test-*
+*.exe
+*.o
+*.obj
+*.lst
+*.dll
+dub.selections.json
