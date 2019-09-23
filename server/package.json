@@ -13,7 +13,7 @@
     "debug": "~2.6.9",
     "express": "~4.17.1",
     "lodash": "^4.17.13",
-    "url-assembler": "^2.0.0",
+    "url-assembler": "^2.1.0",
     "colors": "~1.3.3"
   },
   "devDependencies": {
