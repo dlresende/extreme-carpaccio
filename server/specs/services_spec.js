@@ -47,6 +47,19 @@ describe('Seller Service', function() {
         expect(actual.url.toString()).toBe('http://localhost:3000/path');
     });
 
+    it('should register new seller with an empty path', function () {
+        sellerService.register('http://localhost:3000', 'bob');
+        var sellers = sellerService.allSellers();
+        expect(sellers.length).toBe(1);
+        var actual = sellers.shift();
+        expect(actual.name).toBe('bob');
+        expect(actual.cash).toBe(0);
+        expect(actual.online).toBe(false);
+        expect(actual.path).toBe('/');
+        expect(actual.url instanceof UrlAssembler).toBeTruthy();
+        expect(actual.url.toString()).toBe('http://localhost:3000');
+    });
+
     it('should compute seller\'s cash based on the order\'s amount', function() {
         var bob = {name: 'bob', cash: 0};
         sellers.save(bob);

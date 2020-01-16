@@ -62,7 +62,7 @@ service.register = function (sellerUrl, name, password) {
     password: password,
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
-    path: parsedUrl.path,
+    path: parsedUrl.pathname,
     cash: 0.0,
     online: false,
     url: new UrlAssembler(sellerUrl)
