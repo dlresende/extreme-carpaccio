@@ -1,7 +1,7 @@
 import { sayHello } from "./logic";
 
 
-describe("Test server logic", () => {
+describe("Test logic", () => {
 
     test("Example unit test", () => {
         expect(true).toBe(true);
