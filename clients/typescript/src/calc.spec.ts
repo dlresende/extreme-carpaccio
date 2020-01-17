@@ -1,7 +1,7 @@
-import { sayHello } from "./logic";
+import { sayHello } from "./calc";
 
 
-describe("Test logic", () => {
+describe("Test calc", () => {
 
     test("Example unit test", () => {
         expect(true).toBe(true);

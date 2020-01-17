@@ -1,7 +1,7 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import bodyParser = require("koa-bodyparser");
-import { sayHello } from './logic';
+import { sayHello } from './calc';
 
 const app = new Koa();
 app.use(bodyParser());
