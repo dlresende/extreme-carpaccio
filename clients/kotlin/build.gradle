@@ -1,20 +1,9 @@
-group 'extreme-carpaccio'
-version '1.0-SNAPSHOT'
 
-buildscript {
-    ext.kotlin_version = '1.1.3-2'
-
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.61"
+    id 'java'
+    id 'idea'
 }
-
-apply plugin: 'java'
-apply plugin: 'kotlin'
-apply plugin: 'idea'
 
 repositories {
     mavenCentral()
@@ -23,38 +12,25 @@ repositories {
     }
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile("org.wasabifx:wasabi:0.3.129") {
-        exclude group: 'org.jetbrains.kotlin'
-    }
+group 'extreme-carpaccio'
+version '1.0-SNAPSHOT'
 
-    testCompile('io.kotlintest:kotlintest:2.0.3') {
-        exclude group: 'org.mockito'
-        exclude group: 'org.jetbrains.kotlin'
-    }
-    testCompile "org.mockito:mockito-core:2.8.47"
-    testCompile "org.apache.httpcomponents:httpclient:4.5.3"
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect"
+
+    implementation("org.wasabifx:wasabi:0.3.129")
+
+    implementation("io.netty:netty-all:4.1.11.Final")
+//    implementation("io.netty:netty-all:4.1.45.Final")
+    implementation "org.apache.httpcomponents:httpclient:4.5.10"
+
+    testImplementation "org.mockito:mockito-core:3.2.4"
+    testImplementation 'io.kotlintest:kotlintest-runner-junit5:3.4.2'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src/main/kotlin'
-        }
-        resources {
-            srcDir 'src/main/resources'
-        }
-    }
-    test {
-        java {
-            srcDir 'src/test/kotlin'
-        }
-        resources {
-            srcDir 'src/test/resources'
-        }
-    }
+test {
+    useJUnitPlatform()
 }
 
 idea.module {
