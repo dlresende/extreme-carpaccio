@@ -153,4 +153,24 @@ class MyServerTest {
         }
     }
 
+    @UnstableDefault
+    @Test
+    fun testOrder() = withTestApplication({
+        myModule(logger)
+    }) {
+        with(handleRequest(HttpMethod.Post, "/order") {
+            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            val order = Order(
+                    prices = listOf(3.5),
+                    quantities = listOf(2.0),
+                    country = "FR",
+                    reduction = "STANDARD")
+            val json = Json.indented.stringify(Order.serializer(), order)
+            setBody(json)
+        }) {
+            then(logger).should().log("order {\"prices\":[3.5],\"quantities\":[2.0],\"country\":\"FR\",\"reduction\":\"STANDARD\"}")
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals("", response.content)
+        }
+    }
 }

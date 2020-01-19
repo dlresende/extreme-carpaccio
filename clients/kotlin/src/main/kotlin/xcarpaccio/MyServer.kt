@@ -17,6 +17,7 @@ import io.ktor.serialization.serialization
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 
 /*
@@ -80,6 +81,7 @@ fun main(args: Array<String>) {
     ).start(wait = true)
 }
 
+@UnstableDefault
 fun Application.myModule(logger: Logger) {
     install(ContentNegotiation) {
         serialization(
@@ -103,9 +105,13 @@ fun Application.myModule(logger: Logger) {
             call.respond(HttpStatusCode.OK, "")
             logger.log("${feedback.type}: ${feedback.content}")
         }
+        post("/order") {
+            val order = call.receive<Order>()
+            logger.log("order ${Json.plain.stringify(Order.serializer(), order)}")
+            call.respond(HttpStatusCode.OK, "")
+        }
     }
 }
-
 
 @Serializable
 data class Feedback(val type: String, val content: String) {
