@@ -1,28 +1,24 @@
 package xcarpaccio
 
-import io.kotlintest.IsolationMode
-import io.kotlintest.Spec
-import io.kotlintest.extensions.SpecExtension
-import io.kotlintest.extensions.SpecLevelExtension
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
-import org.apache.http.Header
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.client.methods.HttpPost
-import org.apache.http.client.methods.HttpRequestBase
-import org.apache.http.entity.StringEntity
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.util.EntityUtils
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.handleRequest
+import io.ktor.server.testing.setBody
+import io.ktor.server.testing.withTestApplication
+import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.json.Json
 import org.mockito.BDDMockito.then
 import org.mockito.Mockito.mock
-import java.util.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
+/*
 class MyServerTest : StringSpec() {
     val TEST_PORT = 8001
 
     val logger: Logger = mock(Logger::class.java)
-    val myServer: MyServer = MyServer(TEST_PORT, logger)
 
     override fun isolationMode(): IsolationMode? {
         return IsolationMode.InstancePerTest;
@@ -32,9 +28,11 @@ class MyServerTest : StringSpec() {
         return listOf(
                 object : SpecExtension {
                     override suspend fun intercept(spec: Spec, process: suspend () -> Unit) {
-                        myServer.start(false)
+                        var server = embeddedServer(Netty, TEST_PORT = PORT, module = Application::myModule)
+                                .start()
                         process()
-                        myServer.shutdown()
+                        server.stop()
+//                        myServer.shutdown()
                     }
                 }
         )
@@ -118,4 +116,41 @@ class MyServerTest : StringSpec() {
     }
 
     data class HttpResponse(val headers: Array<Header>, val body: String?, val statusCode: Int, val statusDescription: String)
+}
+*/
+
+class MyServerTest {
+    val logger: Logger = mock(Logger::class.java)
+
+    @Test
+    fun testBasicGets() = withTestApplication({
+        myModule(logger)
+    }) {
+        with(handleRequest(HttpMethod.Get, "/")) {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals("Hello, world!", response.content)
+        }
+        with(handleRequest(HttpMethod.Get, "/ping")) {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals("pong", response.content)
+        }
+    }
+
+    @UnstableDefault
+    @Test
+    fun testFeedback() = withTestApplication({
+        myModule(logger)
+    }) {
+        with(handleRequest(HttpMethod.Post, "/feedback") {
+            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            val feedback = Feedback("ERROR", "The field \"total\" in the response is missing.")
+            val json = Json.indented.stringify(Feedback.serializer(), feedback)
+            setBody(json)
+        }) {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertEquals("", response.content)
+            then(logger).should().log("""ERROR: The field "total" in the response is missing.""")
+        }
+    }
+
 }
