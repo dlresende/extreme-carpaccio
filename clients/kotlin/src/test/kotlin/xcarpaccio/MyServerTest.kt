@@ -1,8 +1,10 @@
 package xcarpaccio
 
+import io.kotlintest.IsolationMode
 import io.kotlintest.Spec
-import io.kotlintest.matchers.shouldBe
-import io.kotlintest.mock.mock
+import io.kotlintest.extensions.SpecExtension
+import io.kotlintest.extensions.SpecLevelExtension
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import org.apache.http.Header
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase
@@ -13,36 +15,45 @@ import org.apache.http.entity.StringEntity
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.util.EntityUtils
 import org.mockito.BDDMockito.then
+import org.mockito.Mockito.mock
 import java.util.*
 
 class MyServerTest : StringSpec() {
     val TEST_PORT = 8001
 
-    val logger: Logger = mock()
+    val logger: Logger = mock(Logger::class.java)
     val myServer: MyServer = MyServer(TEST_PORT, logger)
 
-    override val oneInstancePerTest = false
+    override fun isolationMode(): IsolationMode? {
+        return IsolationMode.InstancePerTest;
+    }
 
-    override fun interceptSpec(context: Spec, spec: () -> Unit) {
-        myServer.start(false)
-        spec()
-        myServer.shutdown()
+    override fun extensions(): List<SpecLevelExtension> {
+        return listOf(
+                object : SpecExtension {
+                    override suspend fun intercept(spec: Spec, process: suspend () -> Unit) {
+                        myServer.start(false)
+                        process()
+                        myServer.shutdown()
+                    }
+                }
+        )
     }
 
     init {
-        "MyServer should respond 'pong' when 'ping' is received" {
+        "MyServer.kt should respond 'pong' when 'ping' is received" {
             val response = sendSimpleRequest("/ping", "GET")
 
             response.statusCode shouldBe 200
             response.body shouldBe "pong"
         }
 
-        "MyServer should log feedback message received via POST" {
+        "MyServer.kt should log feedback message received via POST" {
             sendJson("/feedback", "POST", """{"type":"ERROR", "content":"The field \"total\" in the response is missing."}""")
             then(logger).should().log("""ERROR: The field "total" in the response is missing.""")
         }
 
-        "MyServer should respond to order" {
+        "MyServer.kt should respond to order" {
             val response = sendJson("/order", "POST", """{"prices":[3.5], "quantities":[2], "country":"FR", "reduction":"STANDARD"}""")
             then(logger).should().log("POST /order {quantities=[2], country=FR, prices=[3.5], reduction=STANDARD}")
             then(logger).should().log("Order(prices=[3.5], quantities=[2], country=FR, reduction=STANDARD)")
@@ -74,9 +85,15 @@ class MyServerTest : StringSpec() {
         val fullUrl = "http://localhost:" + TEST_PORT + url
 
         return when (method) {
-            "GET" -> { HttpGet(fullUrl) }
-            "POST" -> { HttpPost(fullUrl) }
-            else  -> { throw Exception("Invalid method") }
+            "GET" -> {
+                HttpGet(fullUrl)
+            }
+            "POST" -> {
+                HttpPost(fullUrl)
+            }
+            else -> {
+                throw Exception("Invalid method")
+            }
         }
     }
 
@@ -88,7 +105,11 @@ class MyServerTest : StringSpec() {
         request.setHeader("Connection", "Close")
 
         val response = httpClient.execute(request)!!
-        val body = if (response.entity != null) { EntityUtils.toString(response.entity) } else { null }
+        val body = if (response.entity != null) {
+            EntityUtils.toString(response.entity)
+        } else {
+            null
+        }
         val responseHeaders = response.allHeaders!!
 
         return HttpResponse(responseHeaders, body,
