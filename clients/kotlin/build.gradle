@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.60'
 
     id 'java'
+    id 'application'
     id 'idea'
 }
 
@@ -19,13 +20,17 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.14.0"
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test"
-
     implementation "io.ktor:ktor-server-netty:1.3.0"
     implementation "io.ktor:ktor-serialization:1.3.0"
-    testImplementation "io.ktor:ktor-server-test-host:1.3.0"
+    implementation "org.slf4j:slf4j-simple:1.7.30"
 
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
+    testImplementation "io.ktor:ktor-server-test-host:1.3.0"
     testImplementation "org.mockito:mockito-core:3.2.4"
+}
+
+application {
+    mainClassName = 'xcarpaccio.MyServerKt'
 }
 
 idea.module {
