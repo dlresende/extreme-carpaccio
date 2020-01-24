@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --watch",
-    "start": "nodemon --watch 'src/**/*' --ignore 'src/**/*.spec.ts' -e ts,tsx --exec ts-node ./src/server.ts"
+    "start-watch": "nodemon --watch 'src/**/*' --ignore 'src/**/*.spec.ts' -e ts,tsx --exec ts-node ./src/server.ts",
+    "start": "ts-node ./src/server.ts"
   },
   "author": "",
   "license": "ISC",
@@ -24,5 +25,16 @@
     "ts-jest": "^23.10.5",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   }
 }

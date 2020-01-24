@@ -1,13 +1,14 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
 import bodyParser = require("koa-bodyparser");
+import { sayHello } from './calc';
 
 const app = new Koa();
 app.use(bodyParser());
 const router = new Router();
 
 router.get('/*', async (ctx) => {
-    ctx.body = 'Hello World!';
+    ctx.body = sayHello();
 });
 
 router.post('/feedback', async (ctx) => {
@@ -23,3 +24,4 @@ app.use(router.routes());
 app.listen(8080);
 
 console.log('Server running on port 8080');
+
