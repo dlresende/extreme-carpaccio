@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "body-parser": "~1.19.0",
-    "debug": "~2.6.9",
+    "debug": "~4.3.1",
     "express": "~4.17.1",
     "lodash": "^4.17.20",
     "url-assembler": "^2.1.1",
