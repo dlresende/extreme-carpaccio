@@ -12,3 +12,12 @@ if (nlohmann_json_ADDED)
   add_library(nlohmann_json INTERFACE IMPORTED)
   target_include_directories(nlohmann_json INTERFACE ${nlohmann_json_SOURCE_DIR})
 endif()
+
+# This is the latest package provided on CPM repo, but does not seem to work
+
+#CPMAddPackage(
+#  NAME nlohmann_json
+#  VERSION 3.9.1
+#  OPTIONS
+#    "JSON_BuildTests OFF"
+#)

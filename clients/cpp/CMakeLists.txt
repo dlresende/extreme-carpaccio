@@ -15,6 +15,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin CACHE PATH "Where to 
 include(cmake/CPM.cmake)
 include(cmake/FindGoogleTest.cmake)
 include(cmake/FindNlohmannJson.cmake)
+include(cmake/FindBoost.cmake)
 
 #Shared library
 add_library(Extreme-Carpaccio-Client-shared SHARED)
@@ -73,6 +74,7 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY XCODE_STARTUP_PROJEC
 
 set_property(TARGET Extreme-Carpaccio-Client-shared PROPERTY FOLDER "ExtremeCarpaccioClient")
 set_property(TARGET Extreme-Carpaccio-Client-test PROPERTY FOLDER "ExtremeCarpaccioClient")
+set_property(TARGET Extreme-Carpaccio-Client PROPERTY FOLDER "ExtremeCarpaccioClient")
 set_property(TARGET Docs PROPERTY FOLDER "ExtremeCarpaccioClient")
 
 set_property(TARGET gtest gtest_main PROPERTY FOLDER "Third-Party/GoogleTest")

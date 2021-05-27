@@ -3,9 +3,7 @@
 
 #include <vector>
 
-namespace kata {
-namespace bowling_game {
-   EXTREME_CARPACCIO_CLIENT_API int bowlingScore(const std::vector<int> & rolls);
+namespace extreme_carpaccio_client {
+   EXTREME_CARPACCIO_CLIENT_API int dummy();
 
-} // namespace bowling_game
-} // namespace kata
+} // namespace extreme_carpaccio_client
