@@ -1,6 +1,8 @@
 
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
 
+#include <boost/beast/core.hpp>
+
 #include <gtest/gtest.h>
 
 #include <vector>

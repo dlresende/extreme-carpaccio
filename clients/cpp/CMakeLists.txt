@@ -60,7 +60,8 @@ target_sources(Extreme-Carpaccio-Client-test
 target_link_libraries(Extreme-Carpaccio-Client-test
     PRIVATE
         Extreme-Carpaccio-Client-shared
-        gtest_main)
+        gtest_main
+		Boost::boost)
 
 add_test(NAME ctest-Extreme-Carpaccio-Client COMMAND Extreme-Carpaccio-Client-test)
 
