@@ -37,6 +37,8 @@ target_include_directories(Extreme-Carpaccio-Client-shared
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
+target_link_libraries(Extreme-Carpaccio-Client-shared PUBLIC Boost::boost)
+
 # Client executable
 add_executable(Extreme-Carpaccio-Client)
 
