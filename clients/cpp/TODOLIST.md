@@ -1,9 +1,28 @@
 # TO DO LIST
 
-
+## TODO
+- [X] Write a test sending an http request
+  - [X] Deal with all the cmake arcane...
+- [ ] Create a main exe that starts a server and answers OK to a GET /whatever, test it in the browser
+- [ ] Update our test to check that this GET /whatever works well
+- [ ] Deal with starting & stoping the server correctly in the test to avoid resource leaks
+- [ ] Implement the POST /order command
+  - [ ] check what the request and answers should look like from the js versions
+  - [ ] write a test to POST /order with a proper request
+  - [ ] implement POST /order
+  - [ ] test our client with the real extreme carpaccio server
+  - [ ] make sure we can easily build a json response (and play the game)
+- [ ] Implement the POST /feedback command
+  - [ ] check what the request, answers and behavior should look like from the js versions
+  - [ ] write a test to POST /feedback with a proper request
+  - [ ] implement POST /feedback
+  - [ ] test our client can receive feedback form the real extreme carpaccio server
+- [ ] Add a configuration file for main options (ports and maybe others)
+  - [ ] check the js client to see what options are available
+  - [ ] create a config file of command line options to set these options
 
 ## PARKING
 - [ ] Clean gitignore file in cpp
-- [ ] Ajouter dans le cmake le Json en thirdparty pour la soluation VS
+- [ ] Ajouter dans le cmake le Json en thirdparty pour la solution VS
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
 - [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
