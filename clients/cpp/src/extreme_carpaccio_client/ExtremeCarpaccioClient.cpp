@@ -23,8 +23,10 @@ namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
 class http_worker
 {
 public:
-http_worker(tcp::acceptor& acceptor, const std::string& doc_root):
-   m_acceptor(acceptor), m_doc_root(doc_root), m_socket(m_acceptor.get_executor().context())
+http_worker(tcp::acceptor& acceptor, const std::string& doc_root)
+   : m_acceptor(acceptor)
+   , m_doc_root(doc_root)
+   , m_socket(m_acceptor.get_executor())
 {
 }
 
@@ -68,16 +70,16 @@ void read_request()
    // to prevent vulnerability to buffer attacks.
    //
 
-   http::request_parser<http::string_body> parser;
+   //http::request_parser<http::string_body> parser(std::piecewise_construct, std::make_tuple());
 
-   http::async_read(
-      m_socket,
-      m_buffer,
-      parser,
-      [this](boost::beast::error_code ec, std::size_t)
-      {
+   //http::async_read(
+   //   m_socket,
+   //   m_buffer,
+   //   parser,
+   //   [this](boost::beast::error_code ec, std::size_t)
+   //   {
          send_bad_response(http::status::bad_request, "Invalid request-method");
-      });
+      //});
 }
 
 void accept()
@@ -111,8 +113,8 @@ namespace extreme_carpaccio_client {
       auto const address = boost::asio::ip::make_address("127.0.0.1");
       unsigned short port = static_cast<unsigned short>(std::atoi("8081"));
       std::string doc_root = "./feedback";
-      int num_workers = std::atoi("1");
-      bool spin = true;
+      //int num_workers = std::atoi("1");
+      //bool spin = true;
 
       boost::asio::io_context ioc{ 1 };
       tcp::acceptor acceptor{ ioc, {address, port} };
@@ -120,7 +122,7 @@ namespace extreme_carpaccio_client {
       http_worker worker(acceptor, doc_root);
       worker.start();
 
-
+      ioc.run();
 
       return EXIT_SUCCESS;
    }
