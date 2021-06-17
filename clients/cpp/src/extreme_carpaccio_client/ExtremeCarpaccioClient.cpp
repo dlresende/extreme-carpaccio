@@ -20,11 +20,16 @@ namespace ip = boost::asio::ip;         // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio.hpp>
 namespace http = boost::beast::http;    // from <boost/beast/http.hpp>
 
+static void start(tcp::acceptor& acceptor, const std::string& doc_root)
+{
+
+}
+
 namespace extreme_carpaccio_client {
 
    int launchServer()
    {
-      auto const address = boost::asio::ip::make_address("localhost");
+      auto const address = boost::asio::ip::make_address("127.0.0.1");
       unsigned short port = static_cast<unsigned short>(std::atoi("8081"));
       std::string doc_root = "./feedback";
       int num_workers = std::atoi("1");
@@ -32,6 +37,8 @@ namespace extreme_carpaccio_client {
 
       boost::asio::io_context ioc{ 1 };
       tcp::acceptor acceptor{ ioc, {address, port} };
+
+     start(acceptor, doc_root);
 
 
 
