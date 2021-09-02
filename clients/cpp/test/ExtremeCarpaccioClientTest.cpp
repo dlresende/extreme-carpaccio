@@ -30,7 +30,7 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
 
    std::string host = "localhost";
    std::string port = "8081";
-   std::string target = "/feedback";
+   std::string target = "/toto.png";
    int version = 11;
 
    net::io_context ioc;
