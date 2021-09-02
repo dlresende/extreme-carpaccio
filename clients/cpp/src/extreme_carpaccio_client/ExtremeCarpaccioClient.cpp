@@ -296,6 +296,11 @@ namespace extreme_carpaccio_client {
       http_worker worker
    };
 
+   CarpaccioServer::CarpaccioServer()
+   {
+
+   }
+
    int launchServer()
    {
       auto const address = boost::asio::ip::make_address("127.0.0.1");
