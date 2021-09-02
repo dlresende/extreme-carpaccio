@@ -76,7 +76,7 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
       throw beast::system_error{ ec };
 
    EXPECT_EQ(1, 1);
-   thread.join();
+   thread.detach();
 }
 
 TEST(ExtremeCarpaccioClient, should_handle_order)
