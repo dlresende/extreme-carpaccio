@@ -45,3 +45,4 @@
 - We will add a Jira ticket to continue working on that
 - 07/15/2021
 09/02/2021
+- Option 1 : We can check what is the feedback from Morrigan on Extreme Carpaccio, and if we get good feedback, we continue investigating on c++ version
