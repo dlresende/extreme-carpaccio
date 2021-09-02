@@ -34,7 +34,7 @@
 - boost beast is a bit tricky to understand and troubleshoot
 - Example of server using boost library is not real good c++ !!
 09/02/2021
-- We had some issues with threads
+- We had some issues with threads. How can we stop server in a clean way ? How can we remove sleep ?
 
 ## Decide
 - We miss some libraries in boost cmake so we need to add tham to build simple http client with boost
