@@ -63,7 +63,7 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    http::read(stream, buffer, res);
 
    // Write the message to standard out
-   std::cout << res << std::endl;
+   std::cout << "Result : " << res << std::endl;
 
    // Gracefully close the socket
    beast::error_code ec;
