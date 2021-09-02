@@ -298,7 +298,7 @@ namespace extreme_carpaccio_client {
       worker.start();
 
       // TODO For tests. Should handle multiple requests later
-      ioc.run();
+      ioc.run_one();
 
       return EXIT_SUCCESS;
    }
