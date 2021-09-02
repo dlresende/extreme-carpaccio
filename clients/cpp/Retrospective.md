@@ -37,7 +37,7 @@
 09/02/2021
 - We had some issues with threads. How can we stop server in a clean way ? How can we remove sleep ?
 - It takes time to build this C++ implementation of Extreme Carpaccio client
-- It's not trivial to build http server in c++
+- It's not trivial to build http server in c++, and we are still not handling requests of the extreme carpaccio
 
 
 ## Decide
