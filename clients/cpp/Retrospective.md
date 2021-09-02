@@ -16,7 +16,7 @@
 - We change the allocator by using the default allocator, and it worked
 09/02/2021
 - We built a test on the client's http server using a get request
-- We started to create class structure of server to host ioc
+- We started to create class structure of server to host ioc, so that we can call start/stop on it
 
 ## What did we learn ?
 - Patrice learnt on client/server problematic and REST requests
