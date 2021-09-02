@@ -283,7 +283,7 @@ private:
 
 namespace extreme_carpaccio_client {
 
-   boost::asio::io_context launchServer()
+   int launchServer()
    {
       auto const address = boost::asio::ip::make_address("127.0.0.1");
       unsigned short port = static_cast<unsigned short>(std::atoi("8081"));
@@ -300,7 +300,7 @@ namespace extreme_carpaccio_client {
       // TODO For tests. Should handle multiple requests later
       ioc.run();
 
-      return ioc;
+      return EXIT_SUCCESS;
    }
 
 
