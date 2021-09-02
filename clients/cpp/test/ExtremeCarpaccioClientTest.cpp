@@ -61,9 +61,10 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
 
    // Receive the HTTP response
    http::read(stream, buffer, res);
+   EXPECT_EQ(http::status::ok, res.result());
 
    // Write the message to standard out
-   std::cout << "Response" << std::endl << res << std::endl;
+   //std::cout << "Response" << std::endl << res << std::endl;
 
    // Gracefully close the socket
    beast::error_code ec;
@@ -75,7 +76,6 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    if (ec && ec != beast::errc::not_connected)
       throw beast::system_error{ ec };
 
-   EXPECT_EQ(http::status::ok, res.result);
    thread.detach();
 }
 
