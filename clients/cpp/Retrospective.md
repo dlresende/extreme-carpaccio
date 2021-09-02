@@ -36,6 +36,8 @@
 - Example of server using boost library is not real good c++ !!
 09/02/2021
 - We had some issues with threads. How can we stop server in a clean way ? How can we remove sleep ?
+- It takes time to build this C++ implementation of Extreme Carpaccio client
+
 
 ## Decide
 - We miss some libraries in boost cmake so we need to add tham to build simple http client with boost
