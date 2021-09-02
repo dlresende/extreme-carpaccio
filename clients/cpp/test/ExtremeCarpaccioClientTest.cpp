@@ -26,7 +26,7 @@ using namespace extreme_carpaccio_client;
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
    std::thread thread(extreme_carpaccio_client::launchServer);
-   std::this_thread::sleep_for(std::chrono::seconds(1));
+   std::this_thread::sleep_for(std::chrono::seconds(5));
 
    std::string host = "localhost";
    std::string port = "8081";
