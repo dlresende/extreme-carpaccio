@@ -75,9 +75,8 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    if (ec && ec != beast::errc::not_connected)
       throw beast::system_error{ ec };
 
-
    EXPECT_EQ(1, 1);
-   thread.detach();
+   thread.join();
 }
 
 TEST(ExtremeCarpaccioClient, should_handle_order)
