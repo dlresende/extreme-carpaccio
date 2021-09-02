@@ -6,7 +6,7 @@
 - [X] Create a main exe that starts a server 
 - [X] Manual test that it can display a bmp, test it in the browser
 - [X] Update our test to check that client can get a file from the server
-- [ ] Deal with starting & stoping the server correctly in the test to avoid resource leaks
+- [ ] Deal with starting & stopping the server correctly in the test to avoid resource leaks
 - [ ] Implement the POST /order command
   - [ ] check what the request and answers should look like from the js versions
   - [ ] write a test to POST /order with a proper request
