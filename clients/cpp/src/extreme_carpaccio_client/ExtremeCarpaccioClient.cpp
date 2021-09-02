@@ -283,7 +283,7 @@ private:
 
 namespace extreme_carpaccio_client {
 
-   int launchServer()
+   boost::asio::io_context launchServer()
    {
       auto const address = boost::asio::ip::make_address("127.0.0.1");
       unsigned short port = static_cast<unsigned short>(std::atoi("8081"));
