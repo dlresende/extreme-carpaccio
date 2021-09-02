@@ -15,7 +15,7 @@
 - We changed our approach, we chose to get the full example code and tested it successfully
 - We change the allocator by using the default allocator, and it worked
 09/02/2021
-- We built a test on the client using a get request
+- We built a test on the clients http server using a get request
 - We started to create class structure of server
 
 ## What did we learn ?
