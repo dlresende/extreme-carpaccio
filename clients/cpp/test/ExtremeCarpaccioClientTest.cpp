@@ -75,11 +75,11 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    if (ec && ec != beast::errc::not_connected)
       throw beast::system_error{ ec };
 
-   EXPECT_EQ(1, 1);
+   EXPECT_EQ(http::status::ok, res.result);
    thread.detach();
 }
 
-TEST(ExtremeCarpaccioClient, should_handle_order)
+TEST(ExtremeCarpaccioClient, DISABLED_should_handle_order)
 {
    EXPECT_EQ(1, 1);
 }
