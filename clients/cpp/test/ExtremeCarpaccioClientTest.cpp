@@ -46,7 +46,7 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    stream.connect(results);
 
    // Set up an HTTP GET request message
-   http::request<http::string_body> req{ http::verb::post, target, version };
+   http::request<http::string_body> req{ http::verb::get, target, version };
    req.set(http::field::host, host);
    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
