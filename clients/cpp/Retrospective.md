@@ -17,6 +17,7 @@
 09/02/2021
 - We built a test on the client's http server using a get request
 - We started to create class structure of server to host ioc, so that we can call start/stop on it
+- 
 
 ## What did we learn ?
 - Patrice learnt on client/server problematic and REST requests
@@ -33,6 +34,7 @@
 - boost beast is a bit tricky to understand and troubleshoot
 - Example of server using boost library is not real good c++ !!
 09/02/2021
+- We had some issues with threads
 
 ## Decide
 - We miss some libraries in boost cmake so we need to add tham to build simple http client with boost
