@@ -285,6 +285,7 @@ namespace extreme_carpaccio_client {
 
    class CarpaccioServer
    {
+   public:
 
    private:
       boost::asio::io_context ioc;
