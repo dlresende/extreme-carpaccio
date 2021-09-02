@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <thread>
 
 namespace beast = boost::beast;     // from <boost/beast.hpp>
 namespace http = beast::http;       // from <boost/beast/http.hpp>
@@ -24,6 +25,7 @@ using namespace extreme_carpaccio_client;
 
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
+   std::thread thread(extreme_carpaccio_client::launchServer);
 
    std::string host = "localhost";
    std::string port = "8081";
