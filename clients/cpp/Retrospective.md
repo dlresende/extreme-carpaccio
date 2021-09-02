@@ -25,6 +25,7 @@
 - We learnt that folder and file need to exist to be able to retrieve them from the server
 - Starting with something that works and try to refactoring seems to be a good solution
 09/02/2021
+- We learnt how to build a thread in c++, we learnt about thread joining
 
 ## Puzzle
 - Dependencies handling in cpp is sport !
