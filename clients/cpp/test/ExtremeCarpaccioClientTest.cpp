@@ -61,10 +61,11 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
 
    // Receive the HTTP response
    http::read(stream, buffer, res);
-   EXPECT_EQ(http::status::ok, res.result());
+   
 
    // Write the message to standard out
-   //std::cout << "Response" << std::endl << res << std::endl;
+   std::cout << "Response" << std::endl << res << std::endl;
+   EXPECT_EQ(http::status::ok, res.result());
 
    // Gracefully close the socket
    beast::error_code ec;
