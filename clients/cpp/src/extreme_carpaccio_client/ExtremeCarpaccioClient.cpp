@@ -300,7 +300,7 @@ namespace extreme_carpaccio_client {
       // TODO For tests. Should handle multiple requests later
       ioc.run();
 
-      return EXIT_SUCCESS;
+      return ioc;
    }
 
 
