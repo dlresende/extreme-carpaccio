@@ -23,7 +23,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react": "^7.26.0",
     "eslint-plugin-standard": "^5.0.0",
     "jasmine-node": "^3.0.0",
     "supertest": "^6.1.3"
