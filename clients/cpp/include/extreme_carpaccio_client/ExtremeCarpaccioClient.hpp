@@ -1,9 +1,85 @@
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/version.hpp>
+#include <boost/asio.hpp>
 
 #include <extreme_carpaccio_client/config.hpp>
 
 #include <vector>
 
 namespace extreme_carpaccio_client {
-   EXTREME_CARPACCIO_CLIENT_API int launchServer();
+
+class http_worker
+{
+public:
+   http_worker(http_worker const&) = delete;
+   http_worker& operator=(http_worker const&) = delete;
+
+   http_worker(boost::asio::ip::tcp::acceptor& acceptor, const std::string& doc_root);
+
+   void start();
+
+private:
+   using alloc_t = std::allocator<char>;
+   //using request_body_t = http::basic_dynamic_body<beast::flat_static_buffer<1024 * 1024>>;
+   using request_body_t = boost::beast::http::string_body;
+
+   // The acceptor used to listen for incoming connections.
+   boost::asio::ip::tcp::acceptor& acceptor_;
+
+   // The path to the root of the document directory.
+   std::string doc_root_;
+
+   // The socket for the currently connected client.
+   boost::asio::ip::tcp::socket socket_{ acceptor_.get_executor() };
+
+   // The buffer for performing reads
+   boost::beast::flat_static_buffer<8192> buffer_;
+
+   // The allocator used for the fields in the request and reply.
+   alloc_t alloc_;
+
+   // The parser for reading the requests
+   boost::optional<boost::beast::http::request_parser<request_body_t, alloc_t>> parser_;
+
+   // The timer putting a time limit on requests.
+   boost::asio::steady_timer request_deadline_{
+       acceptor_.get_executor(), (std::chrono::steady_clock::time_point::max)() };
+
+   // The string-based response message.
+   boost::optional<boost::beast::http::response<boost::beast::http::string_body, boost::beast::http::basic_fields<alloc_t>>> string_response_;
+
+   // The file-based response message.
+   boost::optional<boost::beast::http::response<boost::beast::http::file_body, boost::beast::http::basic_fields<alloc_t>>> file_response_;
+
+   void accept();
+
+   void read_request();
+
+   void process_request(boost::beast::http::request<request_body_t, boost::beast::http::basic_fields<alloc_t>> const& req);
+
+   void send_bad_response(
+      boost::beast::http::status status,
+      std::string const& error);
+
+   void send_file(boost::beast::string_view target);
+
+   void check_deadline();
+};
+
+class CarpaccioServer
+{
+public:
+   CarpaccioServer();
+   void start();
+   void stop();
+
+private:
+   boost::asio::io_context ioc;
+   boost::asio::ip::tcp::acceptor acceptor;
+   http_worker worker;
+};
+
+EXTREME_CARPACCIO_CLIENT_API int launchServer();
 
 } // namespace extreme_carpaccio_client
