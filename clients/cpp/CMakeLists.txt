@@ -70,7 +70,8 @@ add_test(NAME ctest-Extreme-Carpaccio-Client COMMAND Extreme-Carpaccio-Client-te
 #Globals
 add_custom_target(Docs
     SOURCES
-        ../README.md)
+        ${CMAKE_CURRENT_SOURCE_DIR}/TODOLIST.md
+        ${CMAKE_CURRENT_SOURCE_DIR}/../README.md)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Extreme-Carpaccio-Client-test)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY XCODE_STARTUP_PROJECT Extreme-Carpaccio-Client-test)
