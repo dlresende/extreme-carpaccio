@@ -26,15 +26,13 @@ using namespace extreme_carpaccio_client;
 const char serverHost[] = "localhost";
 const unsigned short serverPort = 8081;
 
-TEST(ExtremeCarpaccioClient, should_handle_feedback)
+static http::response<http::dynamic_body> generateServerResponse(boost::beast::http::verb requestType, const std::string & target)
 {
    CarpaccioServer server(8081);
    std::thread thread(&CarpaccioServer::start, &server);
    std::this_thread::sleep_for(std::chrono::seconds(1));
 
    CarpaccioStream stream(serverHost, serverPort);
-
-   std::string target = "/toto.png";
 
    // Send the HTTP request to the remote host
    stream.write(http::verb::get, target);
@@ -44,14 +42,24 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
 
    // Receive the HTTP response
    auto res = stream.read(buffer);
-   
-   // Write the message to standard out
-   std::cout << "Response" << std::endl << res << std::endl;
-   EXPECT_EQ(http::status::ok, res.result());
 
    server.stop();
 
    thread.detach();
+
+   return res;
+}
+
+TEST(ExtremeCarpaccioClient, should_handle_feedback)
+{
+   std::string target = "/toto.png";
+
+   // Receive the HTTP response
+   auto res = generateServerResponse(http::verb::get, target);
+   
+   // Write the message to standard out
+   std::cout << "Response" << std::endl << res << std::endl;
+   EXPECT_EQ(http::status::ok, res.result());
 }
 
 TEST(ExtremeCarpaccioClient, should_handle_order)
