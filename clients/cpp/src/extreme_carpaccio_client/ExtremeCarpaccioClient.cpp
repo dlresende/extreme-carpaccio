@@ -18,6 +18,8 @@ namespace http = beast::http;           // from <boost/beast/http.hpp>
 namespace net = boost::asio;            // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
+const int version = 11;
+
 // Return a reasonable mime type based on the extension of a file.
 beast::string_view
 mime_type(beast::string_view path)
@@ -264,7 +266,8 @@ void http_worker::check_deadline()
    }
 
    CarpaccioStream::CarpaccioStream(const std::string & host, unsigned short port)
-      : m_ioContext()
+      : m_serverHost(host)
+      , m_ioContext()
       , m_resolver(m_ioContext) // These objects perform our I/O
       , m_resolverResults(m_resolver.resolve(host, std::to_string(port))) // Look up the domain name
       , m_stream(m_ioContext)
@@ -296,8 +299,13 @@ void http_worker::check_deadline()
       return response;
    }
 
-   void CarpaccioStream::write(const http::request<http::string_body> & request)
+   void CarpaccioStream::write(boost::beast::http::verb requestType, const std::string & target)
    {
+      // Set up an HTTP GET request message
+      http::request<http::string_body> request{ requestType, target, version };
+      request.set(http::field::host, m_serverHost);
+      request.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+
       // Send the HTTP request to the remote host
       http::write(m_stream, request);
    }

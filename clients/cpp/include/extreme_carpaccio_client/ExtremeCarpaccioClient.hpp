@@ -87,9 +87,10 @@ public:
    ~CarpaccioStream();
 
    boost::beast::http::response<boost::beast::http::dynamic_body> read(boost::beast::flat_buffer&);
-   void write(const boost::beast::http::request<boost::beast::http::string_body> & request);
+   void write(boost::beast::http::verb requestType, const std::string & target);
 
 private:
+   std::string m_serverHost;
    boost::asio::io_context m_ioContext;
    boost::asio::ip::tcp::resolver m_resolver;
    boost::asio::ip::tcp::resolver::results_type m_resolverResults;

@@ -25,7 +25,6 @@ using namespace extreme_carpaccio_client;
 
 const char serverHost[] = "localhost";
 const unsigned short serverPort = 8081;
-const int version = 11;
 
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
@@ -37,13 +36,8 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
 
    std::string target = "/toto.png";
 
-   // Set up an HTTP GET request message
-   http::request<http::string_body> req{ http::verb::get, target, version };
-   req.set(http::field::host, serverHost);
-   req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
-
    // Send the HTTP request to the remote host
-   stream.write(req);
+   stream.write(http::verb::get, target);
 
    // This buffer is used for reading and must be persisted
    beast::flat_buffer buffer;
