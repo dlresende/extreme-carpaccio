@@ -5,11 +5,11 @@
 
 #include <vector>
 
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-#include <boost/asio/connect.hpp>
-#include <boost/asio/ip/tcp.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -25,7 +25,8 @@ using namespace extreme_carpaccio_client;
 
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
-   std::thread thread(extreme_carpaccio_client::launchServer);
+   CarpaccioServer server;
+   std::thread thread(&CarpaccioServer::start, &server);
    std::this_thread::sleep_for(std::chrono::seconds(1));
 
    std::string host = "localhost";
@@ -66,6 +67,8 @@ TEST(ExtremeCarpaccioClient, should_handle_feedback)
    // Write the message to standard out
    std::cout << "Response" << std::endl << res << std::endl;
    EXPECT_EQ(http::status::ok, res.result());
+
+   server.stop();
 
    // Gracefully close the socket
    beast::error_code ec;
