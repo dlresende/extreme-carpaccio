@@ -25,7 +25,7 @@ using namespace extreme_carpaccio_client;
 
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
-   CarpaccioServer server;
+   CarpaccioServer server(8081);
    std::thread thread(&CarpaccioServer::start, &server);
    std::this_thread::sleep_for(std::chrono::seconds(1));
 

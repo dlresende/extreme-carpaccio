@@ -70,7 +70,7 @@ private:
 class EXTREME_CARPACCIO_CLIENT_API CarpaccioServer
 {
 public:
-   CarpaccioServer();
+   CarpaccioServer(unsigned short port);
    void start();
    void stop();
 
@@ -79,7 +79,5 @@ private:
    boost::asio::ip::tcp::acceptor acceptor;
    http_worker worker;
 };
-
-EXTREME_CARPACCIO_CLIENT_API int launchServer();
 
 } // namespace extreme_carpaccio_client

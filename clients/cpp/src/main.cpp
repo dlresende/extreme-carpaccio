@@ -3,5 +3,6 @@
 
 int main()
 {
-   extreme_carpaccio_client::launchServer();
+   extreme_carpaccio_client::CarpaccioServer server(8081);
+   server.start();
 }

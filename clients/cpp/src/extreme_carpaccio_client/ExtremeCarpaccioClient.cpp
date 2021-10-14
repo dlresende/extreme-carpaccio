@@ -1,10 +1,10 @@
 
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
 
+#include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
-#include <boost/asio.hpp>
 #include <chrono>
 #include <cstdlib>
 #include <cstring>
@@ -244,9 +244,9 @@ void http_worker::check_deadline()
    });
 }
 
-   CarpaccioServer::CarpaccioServer() : 
-      ioc(1), 
-      acceptor(ioc, {boost::asio::ip::make_address("127.0.0.1"), static_cast<unsigned short>(std::atoi("8081"))} ),
+   CarpaccioServer::CarpaccioServer(unsigned short port)
+      : ioc(1)
+      , acceptor(ioc, {boost::asio::ip::make_address("127.0.0.1"), port } ),
       worker(acceptor, "./feedback")
    {
       
@@ -263,14 +263,5 @@ void http_worker::check_deadline()
       ioc.stop();
    }
    
-   int launchServer()
-   {
-      CarpaccioServer server;
-
-      server.start();
-      return EXIT_SUCCESS;
-   }
-
-
 } // namespace extreme_carpaccio_client
 
