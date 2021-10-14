@@ -262,6 +262,45 @@ void http_worker::check_deadline()
    {
       ioc.stop();
    }
+
+   CarpaccioStream::CarpaccioStream(const std::string & host, unsigned short port)
+      : m_ioContext()
+      , m_resolver(m_ioContext) // These objects perform our I/O
+      , m_resolverResults(m_resolver.resolve(host, std::to_string(port))) // Look up the domain name
+      , m_stream(m_ioContext)
+   {
+      // Make the connection on the IP address we get from a lookup
+      m_stream.connect(m_resolverResults);
+   }
+
+   CarpaccioStream::~CarpaccioStream()
+   {
+      // Gracefully close the socket
+      beast::error_code ec;
+      m_stream.socket().shutdown(tcp::socket::shutdown_both, ec);
+
+      //// not_connected happens sometimes
+      //// so don't bother reporting it.
+      //if (ec && ec != beast::errc::not_connected)
+      //   throw beast::system_error{ ec };
+   }
+
+   http::response<http::dynamic_body> CarpaccioStream::read(beast::flat_buffer & buffer)
+   {
+      // Declare a container to hold the response
+      http::response<http::dynamic_body> response;
+
+      // Receive the HTTP response
+      http::read(m_stream, buffer, response);
+
+      return response;
+   }
+
+   void CarpaccioStream::write(const http::request<http::string_body> & request)
+   {
+      // Send the HTTP request to the remote host
+      http::write(m_stream, request);
+   }
    
 } // namespace extreme_carpaccio_client
 

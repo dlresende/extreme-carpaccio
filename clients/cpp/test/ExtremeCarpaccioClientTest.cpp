@@ -23,69 +23,53 @@ using tcp = net::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
 using namespace extreme_carpaccio_client;
 
+const char serverHost[] = "localhost";
+const unsigned short serverPort = 8081;
+const int version = 11;
+
 TEST(ExtremeCarpaccioClient, should_handle_feedback)
 {
    CarpaccioServer server(8081);
    std::thread thread(&CarpaccioServer::start, &server);
    std::this_thread::sleep_for(std::chrono::seconds(1));
 
-   std::string host = "localhost";
-   std::string port = "8081";
+   CarpaccioStream stream(serverHost, serverPort);
+
    std::string target = "/toto.png";
-   int version = 11;
-
-   net::io_context ioc;
-
-   // These objects perform our I/O
-   tcp::resolver resolver(ioc);
-   beast::tcp_stream stream(ioc);
-
-   // Look up the domain name
-   auto const results = resolver.resolve(host, port);
-
-   // Make the connection on the IP address we get from a lookup
-   stream.connect(results);
 
    // Set up an HTTP GET request message
    http::request<http::string_body> req{ http::verb::get, target, version };
-   req.set(http::field::host, host);
+   req.set(http::field::host, serverHost);
    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
    // Send the HTTP request to the remote host
-   http::write(stream, req);
+   stream.write(req);
 
    // This buffer is used for reading and must be persisted
    beast::flat_buffer buffer;
 
-   // Declare a container to hold the response
-   http::response<http::dynamic_body> res;
-
    // Receive the HTTP response
-   http::read(stream, buffer, res);
+   auto res = stream.read(buffer);
    
-
    // Write the message to standard out
    std::cout << "Response" << std::endl << res << std::endl;
    EXPECT_EQ(http::status::ok, res.result());
 
    server.stop();
 
-   // Gracefully close the socket
-   beast::error_code ec;
-   stream.socket().shutdown(tcp::socket::shutdown_both, ec);
-
-   // not_connected happens sometimes
-   // so don't bother reporting it.
-   //
-   if (ec && ec != beast::errc::not_connected)
-      throw beast::system_error{ ec };
-
    thread.detach();
 }
 
-TEST(ExtremeCarpaccioClient, DISABLED_should_handle_order)
+TEST(ExtremeCarpaccioClient, should_handle_order)
 {
+   CarpaccioServer server(serverPort);
+   std::thread thread(&CarpaccioServer::start, &server);
+   std::this_thread::sleep_for(std::chrono::seconds(1));
+
    EXPECT_EQ(1, 1);
+
+   server.stop();
+   thread.detach();
 }
 
 //it('should handle feedback', function(done) {
