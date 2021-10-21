@@ -8,9 +8,9 @@
 - [X] Update our test to check that client can get a file from the server
 - [X] Deal with starting & stopping the server correctly in the test to avoid resource leaks
 - [ ] Implement the POST /order command
-  - [ ] check what the request and answers should look like from the js versions
-  - [ ] write a test to POST /order with a proper request
-  - [ ] implement POST /order
+  - [X] check what the request and answers should look like from the js versions
+  - [X] write a test to POST /order with a proper request
+  - [X] implement POST /order
   - [ ] test our client with the real extreme carpaccio server
   - [ ] make sure we can easily build a json response (and play the game)
 - [ ] Implement the POST /feedback command
