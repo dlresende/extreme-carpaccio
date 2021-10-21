@@ -35,7 +35,7 @@ static http::response<http::dynamic_body> generateServerResponse(boost::beast::h
    CarpaccioStream stream(serverHost, serverPort);
 
    // Send the HTTP request to the remote host
-   stream.write(http::verb::get, target);
+   stream.write(requestType, target);
 
    // This buffer is used for reading and must be persisted
    beast::flat_buffer buffer;
