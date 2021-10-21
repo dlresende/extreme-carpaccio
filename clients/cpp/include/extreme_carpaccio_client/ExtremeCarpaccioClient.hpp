@@ -62,9 +62,9 @@ private:
       boost::beast::http::status status,
       std::string const& error);
 
-   void send_file(boost::beast::string_view target);
-
    void check_deadline();
+
+   bool handleRequest(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body);
 };
 
 class EXTREME_CARPACCIO_CLIENT_API CarpaccioServer
@@ -87,7 +87,7 @@ public:
    ~CarpaccioStream();
 
    boost::beast::http::response<boost::beast::http::dynamic_body> read(boost::beast::flat_buffer&);
-   void write(boost::beast::http::verb requestType, const std::string & target);
+   void write(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body);
 
 private:
    std::string m_serverHost;

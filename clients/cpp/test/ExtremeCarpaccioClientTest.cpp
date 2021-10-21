@@ -26,7 +26,7 @@ using namespace extreme_carpaccio_client;
 const char serverHost[] = "localhost";
 const unsigned short serverPort = 8081;
 
-static http::response<http::dynamic_body> generateServerResponse(boost::beast::http::verb requestType, const std::string & target)
+static http::response<http::dynamic_body> generateServerResponse(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType = "", const std::string & body = "")
 {
    CarpaccioServer server(8081);
    std::thread thread(&CarpaccioServer::start, &server);
@@ -35,7 +35,7 @@ static http::response<http::dynamic_body> generateServerResponse(boost::beast::h
    CarpaccioStream stream(serverHost, serverPort);
 
    // Send the HTTP request to the remote host
-   stream.write(requestType, target);
+   stream.write(requestType, target, contentType, body);
 
    // This buffer is used for reading and must be persisted
    beast::flat_buffer buffer;
@@ -50,28 +50,28 @@ static http::response<http::dynamic_body> generateServerResponse(boost::beast::h
    return res;
 }
 
-TEST(ExtremeCarpaccioClient, should_handle_feedback)
+TEST(ExtremeCarpaccioClient, should_answer_404_to_incorrect_request)
 {
-   std::string target = "/toto.png";
+   std::string target = "/je-suis-trop-fort";
 
    // Receive the HTTP response
    auto res = generateServerResponse(http::verb::get, target);
    
    // Write the message to standard out
    std::cout << "Response" << std::endl << res << std::endl;
-   EXPECT_EQ(http::status::ok, res.result());
+   EXPECT_EQ(http::status::not_found, res.result());
 }
 
 TEST(ExtremeCarpaccioClient, should_handle_order)
 {
-   CarpaccioServer server(serverPort);
-   std::thread thread(&CarpaccioServer::start, &server);
-   std::this_thread::sleep_for(std::chrono::seconds(1));
+   std::string target = "/order";
 
-   EXPECT_EQ(1, 1);
+   // Receive the HTTP response
+   auto res = generateServerResponse(http::verb::post, target, "application/json", "{prices: [], quantities: [], country: \"DE\", reduction: \"STANDARD\"}");
 
-   server.stop();
-   thread.detach();
+   // Write the message to standard out
+   std::cout << "Response" << std::endl << res << std::endl;
+   EXPECT_EQ(http::status::ok, res.result());
 }
 
 //it('should handle feedback', function(done) {

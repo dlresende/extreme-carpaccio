@@ -20,43 +20,6 @@ using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 const int version = 11;
 
-// Return a reasonable mime type based on the extension of a file.
-beast::string_view
-mime_type(beast::string_view path)
-{
-   using beast::iequals;
-   auto const ext = [&path]
-   {
-      auto const pos = path.rfind(".");
-      if (pos == beast::string_view::npos)
-         return beast::string_view{};
-      return path.substr(pos);
-   }();
-   if (iequals(ext, ".htm"))  return "text/html";
-   if (iequals(ext, ".html")) return "text/html";
-   if (iequals(ext, ".php"))  return "text/html";
-   if (iequals(ext, ".css"))  return "text/css";
-   if (iequals(ext, ".txt"))  return "text/plain";
-   if (iequals(ext, ".js"))   return "application/javascript";
-   if (iequals(ext, ".json")) return "application/json";
-   if (iequals(ext, ".xml"))  return "application/xml";
-   if (iequals(ext, ".swf"))  return "application/x-shockwave-flash";
-   if (iequals(ext, ".flv"))  return "video/x-flv";
-   if (iequals(ext, ".png"))  return "image/png";
-   if (iequals(ext, ".jpe"))  return "image/jpeg";
-   if (iequals(ext, ".jpeg")) return "image/jpeg";
-   if (iequals(ext, ".jpg"))  return "image/jpeg";
-   if (iequals(ext, ".gif"))  return "image/gif";
-   if (iequals(ext, ".bmp"))  return "image/bmp";
-   if (iequals(ext, ".ico"))  return "image/vnd.microsoft.icon";
-   if (iequals(ext, ".tiff")) return "image/tiff";
-   if (iequals(ext, ".tif"))  return "image/tiff";
-   if (iequals(ext, ".svg"))  return "image/svg+xml";
-   if (iequals(ext, ".svgz")) return "image/svg+xml";
-   return "application/text";
-}
-
-
 namespace extreme_carpaccio_client {
 
    http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
@@ -128,21 +91,30 @@ void http_worker::read_request()
    });
 }
 
+bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
+{
+   bool error = true;
+
+   if (requestType == http::verb::post && contentType == "application/json")
+   {
+      if (target == "/order")
+      {
+         send_bad_response(http::status::ok, "OUAIS !\r\n");
+         error = false;
+      }
+   }
+
+   return error;
+}
+
 void http_worker::process_request(http::request<request_body_t, http::basic_fields<alloc_t>> const& req)
 {
-   switch (req.method())
-   {
-   case http::verb::get:
-      send_file(req.target());
-      break;
+   const std::string contentType = req[http::field::content_type].to_string();
+   const std::string body = req[http::field::body].to_string();
 
-   default:
-      // We return responses indicating an error if
-      // we do not recognize the request method.
-      send_bad_response(
-         http::status::bad_request,
-         "Invalid request-method '" + std::string(req.method_string()) + "'\r\n");
-      break;
+   if (this->handleRequest(req.method(), req.target().to_string(), contentType, body))
+   {
+      this->send_bad_response(http::status::not_found, "HTTP code 404\r\n");
    }
 }
 
@@ -169,59 +141,6 @@ void http_worker::send_bad_response(
    {
       socket_.shutdown(tcp::socket::shutdown_send, ec);
       string_response_.reset();
-      accept();
-   });
-}
-
-void http_worker::send_file(beast::string_view target)
-{
-   // Request path must be absolute and not contain "..".
-   if (target.empty() || target[0] != '/' || target.find("..") != std::string::npos)
-   {
-      send_bad_response(
-         http::status::not_found,
-         "File not found\r\n");
-      return;
-   }
-
-   std::string full_path = doc_root_;
-   full_path.append(
-      target.data(),
-      target.size());
-
-   http::file_body::value_type file;
-   beast::error_code ec;
-   file.open(
-      full_path.c_str(),
-      beast::file_mode::read,
-      ec);
-   if (ec)
-   {
-      send_bad_response(
-         http::status::not_found,
-         "File not found\r\n");
-      return;
-   }
-
-   file_response_.emplace(
-      std::piecewise_construct,
-      std::make_tuple(),
-      std::make_tuple(alloc_));
-
-   file_response_->result(http::status::ok);
-   file_response_->keep_alive(false);
-   file_response_->set(http::field::server, "Beast");
-   file_response_->set(http::field::content_type, mime_type(std::string(target)));
-   file_response_->body() = std::move(file);
-   file_response_->prepare_payload();
-
-   http::async_write(
-      socket_,
-      *file_response_,
-      [this](beast::error_code ec, std::size_t)
-   {
-      socket_.shutdown(tcp::socket::shutdown_send, ec);
-      file_response_.reset();
       accept();
    });
 }
@@ -299,12 +218,14 @@ void http_worker::check_deadline()
       return response;
    }
 
-   void CarpaccioStream::write(boost::beast::http::verb requestType, const std::string & target)
+   void CarpaccioStream::write(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
    {
       // Set up an HTTP GET request message
       http::request<http::string_body> request{ requestType, target, version };
       request.set(http::field::host, m_serverHost);
       request.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+      request.set(http::field::content_type, contentType);
+      request.set(http::field::body, body);
 
       // Send the HTTP request to the remote host
       http::write(m_stream, request);
