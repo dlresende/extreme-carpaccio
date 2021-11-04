@@ -11,7 +11,7 @@
   - [X] check what the request and answers should look like from the js versions
   - [X] write a test to POST /order with a proper request
   - [X] implement POST /order
-  - [ ] test our client with the real extreme carpaccio server
+  - [X] test our client with the real extreme carpaccio server
   - [ ] make sure we can easily build a json response (and play the game)
 - [ ] Implement the POST /feedback command
   - [ ] check what the request, answers and behavior should look like from the js versions
