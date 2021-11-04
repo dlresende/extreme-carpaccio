@@ -12,6 +12,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <nlohmann/json.hpp>
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -91,6 +92,11 @@ void http_worker::read_request()
    });
 }
 
+double computeTotalAmount()
+{
+   return 0.0;
+}
+
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
    bool error = true;
@@ -99,7 +105,19 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
    {
       if (target == "/order")
       {
-         send_bad_response(http::status::ok, "OUAIS !\r\n");
+         try
+         {
+            auto requestJson = nlohmann::json::parse(body);
+         }
+         catch (nlohmann::json::exception& e)
+         {
+            return true;
+         }
+
+         nlohmann::json totalAmountJson;
+
+         totalAmountJson["total"] = computeTotalAmount();
+         send_bad_response(http::status::ok, totalAmountJson.dump());
          error = false;
       }
    }

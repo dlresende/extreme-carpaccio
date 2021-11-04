@@ -14,6 +14,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <nlohmann/json.hpp>
 
 namespace beast = boost::beast;     // from <boost/beast.hpp>
 namespace http = beast::http;       // from <boost/beast/http.hpp>
@@ -62,16 +63,25 @@ TEST(ExtremeCarpaccioClient, should_answer_404_to_incorrect_request)
    EXPECT_EQ(http::status::not_found, res.result());
 }
 
-TEST(ExtremeCarpaccioClient, should_handle_order)
+TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
 {
    std::string target = "/order";
 
    // Receive the HTTP response
-   auto res = generateServerResponse(http::verb::post, target, "application/json", "{prices: [], quantities: [], country: \"DE\", reduction: \"STANDARD\"}");
+   auto res = generateServerResponse(http::verb::post, target, "application/json", "{\"prices\": [], \"quantities\": [], \"country\": \"DE\", \"reduction\": \"STANDARD\"}");
 
-   // Write the message to standard out
-   std::cout << "Response" << std::endl << res << std::endl;
-   EXPECT_EQ(http::status::ok, res.result());
+   ASSERT_EQ(http::status::ok, res.result());
+
+   auto totalAmountJson = nlohmann::json::parse(boost::beast::buffers_to_string(res.body().data()));
+
+   EXPECT_NO_THROW(totalAmountJson["total"].get<double>());
+}
+
+TEST(ExtremeCarpaccioClient, parsing_json)
+{
+   auto totalAmountJson = nlohmann::json::parse("{\"total\":0.0}");
+
+   EXPECT_EQ(totalAmountJson["total"].get<double>(), 0.);
 }
 
 //it('should handle feedback', function(done) {
