@@ -77,13 +77,6 @@ TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
    EXPECT_NO_THROW(totalAmountJson["total"].get<double>());
 }
 
-TEST(ExtremeCarpaccioClient, parsing_json)
-{
-   auto totalAmountJson = nlohmann::json::parse("{\"total\":0.0}");
-
-   EXPECT_EQ(totalAmountJson["total"].get<double>(), 0.);
-}
-
 //it('should handle feedback', function(done) {
 //   var feedback = request('http://' + conf.host + ':' + conf.port + '/feedback', function(error, response) {
 //      expect(response.statusCode).toBe(204);
