@@ -37,7 +37,7 @@ target_include_directories(Extreme-Carpaccio-Client-shared
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-target_link_libraries(Extreme-Carpaccio-Client-shared PUBLIC Boost::boost)
+target_link_libraries(Extreme-Carpaccio-Client-shared PUBLIC Boost::boost PRIVATE nlohmann_json)
 
 # Client executable
 add_executable(Extreme-Carpaccio-Client)
@@ -63,7 +63,8 @@ target_link_libraries(Extreme-Carpaccio-Client-test
     PRIVATE
         Extreme-Carpaccio-Client-shared
         gtest_main
-		Boost::boost)
+		Boost::boost
+		nlohmann_json)
 
 add_test(NAME ctest-Extreme-Carpaccio-Client COMMAND Extreme-Carpaccio-Client-test)
 
