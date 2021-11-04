@@ -12,7 +12,14 @@
   - [X] write a test to POST /order with a proper request
   - [X] implement POST /order
   - [X] test our client with the real extreme carpaccio server
-  - [ ] make sure we can easily build a json response (and play the game)
+  - [ ] make sure we can parse the json order and build an order object
+    - [X] make sure we can parse the json order
+    - [ ] use correct field to pass the body of the request
+    - [ ] build an order object from the json (cf value_ field of the res object)
+  - [ ] Refactor handleRequest
+  - [X] Return total amount json
+  - [X] make sure we can easily build a json response (and play the game)
+  - [ ] By default return error 404 as answer to the request to be in line with other implementations
 - [ ] Implement the POST /feedback command
   - [ ] check what the request, answers and behavior should look like from the js versions
   - [ ] write a test to POST /feedback with a proper request
@@ -27,3 +34,4 @@
 - [ ] Ajouter dans le cmake le Json en thirdparty pour la solution VS
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
 - [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
+- [ ] Upgrade nlohman json version
