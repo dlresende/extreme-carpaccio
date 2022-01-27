@@ -62,7 +62,7 @@ target_sources(Extreme-Carpaccio-Client-test
 target_link_libraries(Extreme-Carpaccio-Client-test
     PRIVATE
         Extreme-Carpaccio-Client-shared
-        gtest_main
+        gmock_main
 		Boost::boost
 		nlohmann_json)
 
@@ -83,6 +83,6 @@ set_property(TARGET Extreme-Carpaccio-Client-test PROPERTY FOLDER "ExtremeCarpac
 set_property(TARGET Extreme-Carpaccio-Client PROPERTY FOLDER "ExtremeCarpaccioClient")
 set_property(TARGET Docs PROPERTY FOLDER "ExtremeCarpaccioClient")
 
-set_property(TARGET gtest gtest_main PROPERTY FOLDER "Third-Party/GoogleTest")
+set_property(TARGET gtest gmock_main PROPERTY FOLDER "Third-Party/GoogleTest")
 
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Generated")

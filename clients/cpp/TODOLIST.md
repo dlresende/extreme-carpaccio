@@ -14,7 +14,7 @@
   - [X] test our client with the real extreme carpaccio server
   - [ ] make sure we can parse the json order and build an order object
     - [X] make sure we can parse the json order
-    - [ ] use correct field to pass the body of the request
+    - [X] use correct field to pass the body of the request?
     - [ ] build an order object from the json (cf value_ field of the res object)
   - [ ] Refactor handleRequest
   - [X] Return total amount json

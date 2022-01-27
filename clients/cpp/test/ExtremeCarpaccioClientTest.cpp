@@ -1,6 +1,7 @@
 
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <vector>
@@ -21,6 +22,7 @@ namespace http = beast::http;       // from <boost/beast/http.hpp>
 namespace net = boost::asio;        // from <boost/asio.hpp>
 using tcp = net::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
+using testing::ElementsAre;
 
 using namespace extreme_carpaccio_client;
 
@@ -75,6 +77,19 @@ TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
    auto totalAmountJson = nlohmann::json::parse(boost::beast::buffers_to_string(res.body().data()));
 
    EXPECT_NO_THROW(totalAmountJson["total"].get<double>());
+}
+
+TEST(ExtremeCarpaccioClient, should_return_order_object_from_json_order)
+{
+   std::string orderRequest = "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}";
+
+   Order order = parseOrder(orderRequest);
+
+   EXPECT_EQ("DE", order.country);
+   EXPECT_EQ("STANDARD", order.reduction);
+
+   EXPECT_THAT(order.prices, ElementsAre(1, 1.5));
+   EXPECT_THAT(order.quantities, ElementsAre(100, 200));
 }
 
 //it('should handle feedback', function(done) {
