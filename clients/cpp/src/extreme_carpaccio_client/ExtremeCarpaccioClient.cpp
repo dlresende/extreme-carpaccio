@@ -92,17 +92,6 @@ void http_worker::read_request()
    });
 }
 
-double computeTotalAmount(Order order)
-{
-   double amount = 0.;
-
-   for (int priceIndex = 0; priceIndex < order.prices.size(); ++priceIndex)
-   {
-      amount += order.prices[priceIndex] * order.quantities[priceIndex];
-   }
-   return amount;
-}
-
 struct Feedback
 {
    std::string type;
@@ -119,6 +108,11 @@ static Feedback parseFeedback(const std::string& jsonFeedback)
    return feedback;
 }
 
+double computeTotalAmount(Order /*order*/)
+{
+   return 0.;
+}
+
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
    if (requestType == http::verb::post && contentType == "application/json")
@@ -126,11 +120,13 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
       if (target == "/order")
       {
          Order order = parseOrder(body);
-         nlohmann::json totalAmountJson;
+         
+         //TO IMPLEMENT
+         //nlohmann::json totalAmountJson;
 
-         totalAmountJson["total"] = computeTotalAmount(order);
-         send_response(http::status::ok, totalAmountJson.dump());
-         return false;
+         //totalAmountJson["total"] = computeTotalAmount(order);
+         //send_response(http::status::ok, totalAmountJson.dump());
+         return true;
       }
       else if (target == "/feedback")
       {

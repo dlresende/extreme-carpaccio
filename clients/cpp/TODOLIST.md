@@ -7,7 +7,7 @@
 - [X] Manual test that it can display a bmp, test it in the browser
 - [X] Update our test to check that client can get a file from the server
 - [X] Deal with starting & stopping the server correctly in the test to avoid resource leaks
-- [ ] Implement the POST /order command
+- [X] Implement the POST /order command
   - [X] check what the request and answers should look like from the js versions
   - [X] write a test to POST /order with a proper request
   - [X] implement POST /order
@@ -20,7 +20,7 @@
   - [X] Refactor handleRequest
   - [X] Return total amount json
   - [X] make sure we can easily build a json response (and play the game)
-  - [ ] By default return error 404 as answer to the request to be in line with other implementations
+  - [X] By default return error 404 as answer to the request to be in line with other implementations
 - [X] Implement the POST /feedback command
   - [X] check what the request, answers and behavior should look like from the js versions
   - [X] write a test to POST /feedback with a proper request

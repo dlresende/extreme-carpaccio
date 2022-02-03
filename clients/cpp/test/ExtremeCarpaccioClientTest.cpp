@@ -66,7 +66,7 @@ TEST(ExtremeCarpaccioClient, should_answer_404_to_incorrect_request)
    EXPECT_EQ(http::status::not_found, res.result());
 }
 
-TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
+TEST(ExtremeCarpaccioClient, DISABLED_should_return_valid_amount_on_order_request)
 {
    std::string target = "/order";
 
@@ -80,7 +80,7 @@ TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
    EXPECT_NO_THROW(totalAmountJson["total"].get<double>());
 }
 
-TEST(ExtremeCarpaccioClient, should_return_amount_computed_with_prices_and_quantities_only)
+TEST(ExtremeCarpaccioClient, DISABLED_should_return_amount_computed_with_prices_and_quantities_only)
 {
    std::string target = "/order";
 
