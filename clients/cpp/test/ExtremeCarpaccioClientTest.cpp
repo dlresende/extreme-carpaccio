@@ -4,6 +4,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <iostream>
 #include <vector>
 
 #include <boost/asio/connect.hpp>
@@ -105,20 +106,19 @@ TEST(ExtremeCarpaccioClient, should_return_order_object_from_json_order)
    EXPECT_THAT(order.quantities, ElementsAre(100, 200));
 }
 
-//it('should handle feedback', function(done) {
-//   var feedback = request('http://' + conf.host + ':' + conf.port + '/feedback', function(error, response) {
-//      expect(response.statusCode).toBe(204);
-//      done();
-//   });
-//   feedback.write('{type: "INFO", content: "this is my precious feedback"}');
-//});
-//
-//it('should handle order', function(done) {
-//   var order = request('http://' + conf.host + ':' + conf.port + '/order', function(error, response, body) {
-//      expect(response.statusCode).toBe(200);
-//      expect(body).toBe('{total:0}');
-//      done();
-//   });
-//   order.write('{prices: [], quantities: [], country: "DE", reduction: "STANDARD"}');
-//});
+TEST(ExtremeCarpaccioClient, should_handle_post_feedback)
+{
+   std::string target = "/feedback";
+   std::stringstream buffer;
+   // Save cout's buffer here
+   std::streambuf *sbuf = std::cout.rdbuf();
+   // Redirect cout to our stringstream buffer
+   std::cout.rdbuf(buffer.rdbuf());
 
+   auto res = generateServerResponse(http::verb::post, target, "application/json", "{\"type\": \"ERROR\", \"content\": \"Field total in response is missing\"}");
+
+   ASSERT_EQ(http::status::ok, res.result());
+   ASSERT_EQ("ERROR : Field total in response is missing\n", buffer.str());
+   // When done redirect cout to its old self
+   std::cout.rdbuf(sbuf);
+}

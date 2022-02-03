@@ -103,6 +103,22 @@ double computeTotalAmount(Order order)
    return amount;
 }
 
+struct Feedback
+{
+   std::string type;
+   std::string content;
+};
+
+static Feedback parseFeedback(const std::string& jsonFeedback)
+{
+   auto parsedFeedback = nlohmann::json::parse(jsonFeedback);
+   Feedback feedback = {};
+
+   feedback.type = parsedFeedback["type"].get<std::string>();
+   feedback.content = parsedFeedback["content"].get<std::string>();
+   return feedback;
+}
+
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
    if (requestType == http::verb::post && contentType == "application/json")
@@ -114,6 +130,14 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
 
          totalAmountJson["total"] = computeTotalAmount(order);
          send_response(http::status::ok, totalAmountJson.dump());
+         return false;
+      }
+      else if (target == "/feedback")
+      {
+         Feedback feedback = parseFeedback(body);
+
+         std::cout << feedback.type << " : " << feedback.content << std::endl;
+         send_response(http::status::ok, "Feedback received");
          return false;
       }
    }
