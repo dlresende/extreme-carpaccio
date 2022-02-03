@@ -1,5 +1,5 @@
-
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
+#include <extreme_carpaccio_client/Order.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

@@ -12,10 +12,11 @@
   - [X] write a test to POST /order with a proper request
   - [X] implement POST /order
   - [X] test our client with the real extreme carpaccio server
-  - [ ] make sure we can parse the json order and build an order object
+  - [X] make sure we can parse the json order and build an order object
     - [X] make sure we can parse the json order
     - [X] use correct field to pass the body of the request?
-    - [ ] build an order object from the json (cf value_ field of the res object)
+    - [X] build an order object from the json (cf value_ field of the res object)
+    - [X] Put the order object in a specific file
   - [ ] Refactor handleRequest
   - [X] Return total amount json
   - [X] make sure we can easily build a json response (and play the game)

@@ -6,7 +6,6 @@
 #include <extreme_carpaccio_client/config.hpp>
 
 #include <string>
-#include <vector>
 
 namespace extreme_carpaccio_client {
 
@@ -97,15 +96,5 @@ private:
    boost::asio::ip::tcp::resolver::results_type m_resolverResults;
    boost::beast::tcp_stream m_stream;
 };
-
-struct EXTREME_CARPACCIO_CLIENT_API Order
-{
-   std::vector<unsigned int> quantities;
-   std::vector<double> prices;
-   std::string country;
-   std::string reduction;
-};
-
-EXTREME_CARPACCIO_CLIENT_API Order parseOrder(const std::string& jsonOrder);
 
 } // namespace extreme_carpaccio_client
