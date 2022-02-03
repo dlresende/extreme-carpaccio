@@ -123,7 +123,7 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
 void http_worker::process_request(http::request<request_body_t, http::basic_fields<alloc_t>> const& req)
 {
    const std::string contentType = req[http::field::content_type].to_string();
-   const std::string body = req[http::field::body].to_string();
+   const std::string body = req.body();
 
    if (this->handleRequest(req.method(), req.target().to_string(), contentType, body))
    {
@@ -236,7 +236,8 @@ void http_worker::check_deadline()
       request.set(http::field::host, m_serverHost);
       request.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
       request.set(http::field::content_type, contentType);
-      request.set(http::field::body, body);
+      request.body() = body;
+      request.prepare_payload();
 
       // Send the HTTP request to the remote host
       http::write(m_stream, request);
