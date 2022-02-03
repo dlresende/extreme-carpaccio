@@ -21,11 +21,11 @@
   - [X] Return total amount json
   - [X] make sure we can easily build a json response (and play the game)
   - [ ] By default return error 404 as answer to the request to be in line with other implementations
-- [ ] Implement the POST /feedback command
-  - [ ] check what the request, answers and behavior should look like from the js versions
-  - [ ] write a test to POST /feedback with a proper request
-  - [ ] implement POST /feedback
-  - [ ] test our client can receive feedback form the real extreme carpaccio server
+- [X] Implement the POST /feedback command
+  - [X] check what the request, answers and behavior should look like from the js versions
+  - [X] write a test to POST /feedback with a proper request
+  - [X] implement POST /feedback
+  - [X] test our client can receive feedback form the real extreme carpaccio server
 - [ ] Add a configuration file for main options (ports and maybe others)
   - [ ] check the js client to see what options are available
   - [ ] create a config file of command line options to set these options
