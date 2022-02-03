@@ -79,6 +79,19 @@ TEST(ExtremeCarpaccioClient, should_return_valid_amount_on_order_request)
    EXPECT_NO_THROW(totalAmountJson["total"].get<double>());
 }
 
+TEST(ExtremeCarpaccioClient, should_return_amount_computed_with_prices_and_quantities_only)
+{
+   std::string target = "/order";
+
+   auto res = generateServerResponse(http::verb::post, target, "application/json", "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}");
+
+   ASSERT_EQ(http::status::ok, res.result());
+
+   auto totalAmountJson = nlohmann::json::parse(boost::beast::buffers_to_string(res.body().data()));
+
+   EXPECT_EQ(100 * 1 + 200 * 1.5, totalAmountJson["total"].get<double>());
+}
+
 TEST(ExtremeCarpaccioClient, should_return_order_object_from_json_order)
 {
    std::string orderRequest = "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}";

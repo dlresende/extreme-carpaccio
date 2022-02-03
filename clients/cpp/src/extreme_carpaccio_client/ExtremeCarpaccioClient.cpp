@@ -1,5 +1,5 @@
-
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
+#include <extreme_carpaccio_client/Order.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
@@ -92,37 +92,32 @@ void http_worker::read_request()
    });
 }
 
-double computeTotalAmount()
+double computeTotalAmount(Order order)
 {
-   return 0.0;
+   double amount = 0.;
+
+   for (int priceIndex = 0; priceIndex < order.prices.size(); ++priceIndex)
+   {
+      amount += order.prices[priceIndex] * order.quantities[priceIndex];
+   }
+   return amount;
 }
 
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
-   bool error = true;
-
    if (requestType == http::verb::post && contentType == "application/json")
    {
       if (target == "/order")
       {
-         try
-         {
-            auto requestJson = nlohmann::json::parse(body);
-         }
-         catch (nlohmann::json::exception& e)
-         {
-            return true;
-         }
-
+         Order order = parseOrder(body);
          nlohmann::json totalAmountJson;
 
-         totalAmountJson["total"] = computeTotalAmount();
-         send_bad_response(http::status::ok, totalAmountJson.dump());
-         error = false;
+         totalAmountJson["total"] = computeTotalAmount(order);
+         send_response(http::status::ok, totalAmountJson.dump());
+         return false;
       }
    }
-
-   return error;
+   return true;
 }
 
 void http_worker::process_request(http::request<request_body_t, http::basic_fields<alloc_t>> const& req)
@@ -132,13 +127,11 @@ void http_worker::process_request(http::request<request_body_t, http::basic_fiel
 
    if (this->handleRequest(req.method(), req.target().to_string(), contentType, body))
    {
-      this->send_bad_response(http::status::not_found, "HTTP code 404\r\n");
+      this->send_response(http::status::not_found, "HTTP code 404\r\n");
    }
 }
 
-void http_worker::send_bad_response(
-   http::status status,
-   std::string const& error)
+void http_worker::send_response(http::status status, std::string const& body)
 {
    string_response_.emplace(
       std::piecewise_construct,
@@ -149,7 +142,7 @@ void http_worker::send_bad_response(
    string_response_->keep_alive(false);
    string_response_->set(http::field::server, "Beast");
    string_response_->set(http::field::content_type, "text/plain");
-   string_response_->body() = error;
+   string_response_->body() = body;
    string_response_->prepare_payload();
 
    http::async_write(

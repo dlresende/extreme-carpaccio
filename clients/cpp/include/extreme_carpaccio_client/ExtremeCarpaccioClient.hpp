@@ -58,9 +58,7 @@ private:
 
    void process_request(boost::beast::http::request<request_body_t, boost::beast::http::basic_fields<alloc_t>> const& req);
 
-   void send_bad_response(
-      boost::beast::http::status status,
-      std::string const& error);
+   void send_response(boost::beast::http::status status, std::string const& body);
 
    void check_deadline();
 
