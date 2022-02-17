@@ -26,10 +26,12 @@
   - [X] write a test to POST /feedback with a proper request
   - [X] implement POST /feedback
   - [X] test our client can receive feedback form the real extreme carpaccio server
-- [ ] Add a configuration file for main options (ports and maybe others)
+- [] Add a configuration file for main options (ports and maybe others)
   - [ ] check the js client to see what options are available
   - [ ] create a config file of command line options to set these options
-
+- [] Move in a dedicated file the request handling part of the client code
+- [] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
+- [] Use a different port number for tests
 ## PARKING
 - [ ] Clean gitignore file in cpp
 - [ ] Ajouter dans le cmake le Json en thirdparty pour la solution VS
