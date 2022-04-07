@@ -120,7 +120,8 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
       if (target == "/order")
       {
          Order order = parseOrder(body);
-         
+         std::cout << "Order received: " << order << std::endl;
+
          //TO IMPLEMENT
          //nlohmann::json totalAmountJson;
 

@@ -26,19 +26,19 @@
   - [X] write a test to POST /feedback with a proper request
   - [X] implement POST /feedback
   - [X] test our client can receive feedback form the real extreme carpaccio server
-- [] Add a configuration file for main options (ports and maybe others)
+- [ ] Add a configuration file for main options (ports and maybe others)
   - [ ] check the js client to see what options are available
   - [ ] create a config file of command line options to set these options
 - [ ] Feedbacks from the session on extreme carpaccio with C++ client
-  - [ ] Display the order description in the code handling the order to have it in the console
+  - [x] Display the order description in the code handling the order to have it in the console
   - [ ] We need to initialize the http server with the hostname of the user launching it
   - [ ] Tests crashed when Mirna launched them on their machine
   - [ ] We need a specific test target for functional tests
   - [ ] Add guards in header files
   - [ ] Copying dll and binary to another directory was not easy
-- [] Move in a dedicated file the request handling part of the client code
-- [] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
-- [] Use a different port number for tests
+- [ ] Move in a dedicated file the request handling part of the client code
+- [ ] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
+- [ ] Use a different port number for tests
 ## PARKING
 - [ ] Clean gitignore file in cpp
 - [ ] Ajouter dans le cmake le Json en thirdparty pour la solution VS

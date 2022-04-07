@@ -14,5 +14,6 @@ struct EXTREME_CARPACCIO_CLIENT_API Order
 };
 
 EXTREME_CARPACCIO_CLIENT_API Order parseOrder(const std::string& jsonOrder);
+EXTREME_CARPACCIO_CLIENT_API std::ostream& operator<< (std::ostream& stream, const Order& order);
 
 } // namespace extreme_carpaccio_client

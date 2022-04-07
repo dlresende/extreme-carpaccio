@@ -122,3 +122,20 @@ TEST(ExtremeCarpaccioClient, should_handle_post_feedback)
    // When done redirect cout to its old self
    std::cout.rdbuf(sbuf);
 }
+
+TEST(ExtremeCarpaccioClient, should_trace_order_description)
+{
+	std::string target = "/order";
+	std::stringstream buffer;
+	// Save cout's buffer here
+	std::streambuf* sbuf = std::cout.rdbuf();
+	// Redirect cout to our stringstream buffer
+	std::cout.rdbuf(buffer.rdbuf());
+	
+	auto res = generateServerResponse(http::verb::post, target, "application/json", "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}");
+	
+	//ASSERT_EQ(http::status::ok, res.result());
+	ASSERT_EQ("Order received: Order{prices={1,1.5}, quantities={100,200}, country='DE', reduction='STANDARD'}\n", buffer.str());
+	// When done redirect cout to its old self
+	std::cout.rdbuf(sbuf);
+}
