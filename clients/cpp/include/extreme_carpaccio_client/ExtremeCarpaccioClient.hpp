@@ -69,6 +69,7 @@ class EXTREME_CARPACCIO_CLIENT_API CarpaccioServer
 {
 public:
    CarpaccioServer(unsigned short port);
+   CarpaccioServer();
    void start();
    void stop();
 

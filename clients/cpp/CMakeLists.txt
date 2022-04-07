@@ -26,6 +26,7 @@ target_sources(Extreme-Carpaccio-Client-shared
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/extreme_carpaccio_client/ExtremeCarpaccioClient.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/src/extreme_carpaccio_client/Order.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/src/extreme_carpaccio_client/HTTPConfig.hpp
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include/extreme_carpaccio_client/ExtremeCarpaccioClient.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/include/extreme_carpaccio_client/config.hpp

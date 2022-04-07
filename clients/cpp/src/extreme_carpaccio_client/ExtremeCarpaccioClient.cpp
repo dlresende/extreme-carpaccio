@@ -1,5 +1,6 @@
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
 #include <extreme_carpaccio_client/Order.hpp>
+#include <extreme_carpaccio_client/HTTPConfig.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
@@ -197,9 +198,14 @@ void http_worker::check_deadline()
    });
 }
 
+   CarpaccioServer::CarpaccioServer() : CarpaccioServer(HTTP_SERVER_PORT)
+   {
+	  
+   }
+
    CarpaccioServer::CarpaccioServer(unsigned short port)
       : ioc(1)
-      , acceptor(ioc, {boost::asio::ip::make_address("127.0.0.1"), port } ),
+      , acceptor(ioc, {boost::asio::ip::make_address(HTTP_SERVER_IP), port } ),
       worker(acceptor, "./feedback")
    {
       
