@@ -26,3 +26,5 @@ target_include_directories(Extreme-Carpaccio-Order-Management-shared
 target_link_libraries(Extreme-Carpaccio-Order-Management-shared PUBLIC Boost::boost PRIVATE nlohmann_json)
 
 set_property(TARGET Extreme-Carpaccio-Order-Management-shared PROPERTY FOLDER "OrderManagement")
+
+add_subdirectory(tests)

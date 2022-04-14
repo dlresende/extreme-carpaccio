@@ -112,11 +112,6 @@ static Feedback parseFeedback(const std::string& jsonFeedback)
    return feedback;
 }
 
-double computeTotalAmount(extreme_carpaccio::order_management::Order /*order*/)
-{
-   return 0.;
-}
-
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
    if (requestType == http::verb::post && contentType == "application/json")

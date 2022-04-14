@@ -94,19 +94,6 @@ TEST(ExtremeCarpaccioClient, DISABLED_should_return_amount_computed_with_prices_
    EXPECT_EQ(100 * 1 + 200 * 1.5, totalAmountJson["total"].get<double>());
 }
 
-TEST(ExtremeCarpaccioClient, should_return_order_object_from_json_order)
-{
-   std::string orderRequest = "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}";
-
-   extreme_carpaccio::order_management::Order order = extreme_carpaccio::order_management::parseOrder(orderRequest);
-
-   EXPECT_EQ("DE", order.country);
-   EXPECT_EQ("STANDARD", order.reduction);
-
-   EXPECT_THAT(order.prices, ElementsAre(1, 1.5));
-   EXPECT_THAT(order.quantities, ElementsAre(100, 200));
-}
-
 TEST(ExtremeCarpaccioClient, should_handle_post_feedback)
 {
    std::string target = "/feedback";

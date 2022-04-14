@@ -92,6 +92,6 @@ set_property(TARGET Extreme-Carpaccio-Client-test PROPERTY FOLDER "ExtremeCarpac
 set_property(TARGET Extreme-Carpaccio-Client PROPERTY FOLDER "ExtremeCarpaccioClient")
 set_property(TARGET Docs PROPERTY FOLDER "ExtremeCarpaccioClient")
 
-set_property(TARGET gtest gmock_main PROPERTY FOLDER "Third-Party/GoogleTest")
+set_property(TARGET gtest gtest_main gmock gmock_main PROPERTY FOLDER "Third-Party/GoogleTest")
 
 set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "CMake Generated")
