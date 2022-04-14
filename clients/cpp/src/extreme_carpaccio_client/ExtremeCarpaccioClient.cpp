@@ -1,6 +1,9 @@
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
-#include <extreme_carpaccio_client/Order.hpp>
 #include <extreme_carpaccio_client/HTTPConfig.hpp>
+
+#include <extreme_carpaccio/order_management/Order.hpp>
+#include <extreme_carpaccio/order_management/OrderParsing.hpp>
+#include <extreme_carpaccio/order_management/TotalAmount.hpp>
 
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
@@ -109,7 +112,7 @@ static Feedback parseFeedback(const std::string& jsonFeedback)
    return feedback;
 }
 
-double computeTotalAmount(Order /*order*/)
+double computeTotalAmount(extreme_carpaccio::order_management::Order /*order*/)
 {
    return 0.;
 }
@@ -120,7 +123,7 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
    {
       if (target == "/order")
       {
-         Order order = parseOrder(body);
+         extreme_carpaccio::order_management::Order order = extreme_carpaccio::order_management::parseOrder(body);
          std::cout << "Order received: " << order << std::endl;
 
          //TO IMPLEMENT

@@ -1,5 +1,6 @@
 #include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
-#include <extreme_carpaccio_client/Order.hpp>
+
+#include <extreme_carpaccio/order_management/OrderParsing.hpp>
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -97,7 +98,7 @@ TEST(ExtremeCarpaccioClient, should_return_order_object_from_json_order)
 {
    std::string orderRequest = "{\"prices\": [1,1.5], \"quantities\": [100, 200], \"country\": \"DE\", \"reduction\": \"STANDARD\"}";
 
-   Order order = parseOrder(orderRequest);
+   extreme_carpaccio::order_management::Order order = extreme_carpaccio::order_management::parseOrder(orderRequest);
 
    EXPECT_EQ("DE", order.country);
    EXPECT_EQ("STANDARD", order.reduction);
