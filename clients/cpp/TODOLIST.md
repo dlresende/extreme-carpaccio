@@ -32,10 +32,12 @@
 - [ ] Feedbacks from the session on extreme carpaccio with C++ client
   - [x] Display the order description in the code handling the order to have it in the console
   - [X] We need to initialize the http server with the hostname of the user launching it
-  - [ ] We need a specific test target for functional tests
+  - [X] We need a specific test target for functional tests
   - [ ] Add guards in header files
+  - [ ] Finish target restructuring
   - [ ] Copying dll and binary to another directory was not easy
-- [ ] Move in a dedicated file the request handling part of the client code
+- [X] Move in a dedicated file the request handling part of the client code
+- [ ] Use the computeTotalAmount in the client
 - [ ] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
 - [ ] Use a different port number for tests
 ## PARKING
