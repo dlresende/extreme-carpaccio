@@ -32,7 +32,6 @@
 - [ ] Feedbacks from the session on extreme carpaccio with C++ client
   - [x] Display the order description in the code handling the order to have it in the console
   - [X] We need to initialize the http server with the hostname of the user launching it
-  - [ ] Tests crashed when Mirna launched them on their machine
   - [ ] We need a specific test target for functional tests
   - [ ] Add guards in header files
   - [ ] Copying dll and binary to another directory was not easy
@@ -45,3 +44,4 @@
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
 - [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
 - [ ] Upgrade nlohman json version
+- [ ] Tests crashed when Mirna launched them on their machine
