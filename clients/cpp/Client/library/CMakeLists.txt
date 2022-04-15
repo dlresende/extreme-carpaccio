@@ -28,18 +28,19 @@ source_group(
 )
 
 target_include_directories(Client-shared
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/sources
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/includes
+   PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/sources
+   PUBLIC
+      ${CMAKE_CURRENT_SOURCE_DIR}/includes
 )
 
 target_link_libraries(Client-shared
-    PRIVATE
-        nlohmann_json
-    PUBLIC 
-        Boost::boost
-        Order-Management-shared
+   PRIVATE
+      nlohmann_json
+   PUBLIC
+      Threads::Threads
+      Boost::boost
+      Order-Management-shared
 )
 
 set_property(TARGET Client-shared PROPERTY FOLDER "Client")

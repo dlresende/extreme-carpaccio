@@ -17,6 +17,10 @@ include(cmake/FindGoogleTest.cmake)
 include(cmake/FindNlohmannJson.cmake)
 include(cmake/FindBoost.cmake)
 
+set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+find_package(Threads REQUIRED)
+
 add_subdirectory(OrderManagement)
 add_subdirectory(Client)
 
