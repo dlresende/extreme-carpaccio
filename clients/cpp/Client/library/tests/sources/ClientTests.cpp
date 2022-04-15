@@ -1,4 +1,4 @@
-#include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
+#include <extreme_carpaccio/client/Client.hpp>
 
 #include <extreme_carpaccio/order_management/OrderParsing.hpp>
 
@@ -26,10 +26,12 @@ using tcp = net::ip::tcp;           // from <boost/asio/ip/tcp.hpp>
 
 using testing::ElementsAre;
 
-using namespace extreme_carpaccio_client;
-
 const char serverHost[] = "localhost";
 const unsigned short serverPort = 8081;
+
+namespace extreme_carpaccio {
+namespace client {
+namespace test {
 
 static http::response<http::dynamic_body> generateServerResponse(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType = "", const std::string & body = "")
 {
@@ -127,3 +129,7 @@ TEST(ExtremeCarpaccioClient, should_trace_order_description)
 	// When done redirect cout to its old self
 	std::cout.rdbuf(sbuf);
 }
+
+} // namespace test
+} // namespace client
+} // namespace extreme_carpaccio

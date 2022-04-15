@@ -1,5 +1,5 @@
-#include <extreme_carpaccio_client/ExtremeCarpaccioClient.hpp>
-#include <extreme_carpaccio_client/HTTPConfig.hpp>
+#include <extreme_carpaccio/client/Client.hpp>
+#include <extreme_carpaccio/client/HttpConfig.hpp>
 
 #include <extreme_carpaccio/order_management/Order.hpp>
 #include <extreme_carpaccio/order_management/OrderParsing.hpp>
@@ -25,9 +25,10 @@ using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 const int version = 11;
 
-namespace extreme_carpaccio_client {
+namespace extreme_carpaccio {
+namespace client {
 
-   http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
+http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
    acceptor_(acceptor),
    doc_root_(doc_root)
 {
@@ -268,5 +269,5 @@ void http_worker::check_deadline()
       http::write(m_stream, request);
    }
    
-} // namespace extreme_carpaccio_client
-
+} // namespace client
+} // namespace extreme_carpaccio

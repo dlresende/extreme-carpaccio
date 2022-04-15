@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.19.3)
 
-project(Extreme-Carpaccio-Client CXX)
+project(Extreme-Carpaccio CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 enable_testing()
@@ -18,64 +18,7 @@ include(cmake/FindNlohmannJson.cmake)
 include(cmake/FindBoost.cmake)
 
 add_subdirectory(OrderManagement)
-
-#Shared library
-add_library(Extreme-Carpaccio-Client-shared SHARED)
-
-target_compile_definitions(Extreme-Carpaccio-Client-shared PRIVATE EXTREME_CARPACCIO_CLIENT_EXPORTS)
-
-target_sources(Extreme-Carpaccio-Client-shared
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/extreme_carpaccio_client/ExtremeCarpaccioClient.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/extreme_carpaccio_client/HTTPConfig.hpp
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/extreme_carpaccio_client/ExtremeCarpaccioClient.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/extreme_carpaccio_client/config.hpp
-)
-
-target_include_directories(Extreme-Carpaccio-Client-shared
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-target_link_libraries(Extreme-Carpaccio-Client-shared
-    PRIVATE
-        nlohmann_json
-    PUBLIC 
-        Boost::boost
-        Extreme-Carpaccio-Order-Management-shared
-)
-
-# Client executable
-add_executable(Extreme-Carpaccio-Client)
-
-target_sources(Extreme-Carpaccio-Client
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-)
-
-target_link_libraries(Extreme-Carpaccio-Client
-    PRIVATE
-        Extreme-Carpaccio-Client-shared)
-
-# Test executable
-add_executable(Extreme-Carpaccio-Client-test)
-
-target_sources(Extreme-Carpaccio-Client-test
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/test/ExtremeCarpaccioClientTest.cpp
-)
-
-target_link_libraries(Extreme-Carpaccio-Client-test
-    PRIVATE
-        Extreme-Carpaccio-Client-shared
-        gmock_main
-		Boost::boost
-		nlohmann_json)
-
-add_test(NAME ctest-Extreme-Carpaccio-Client COMMAND Extreme-Carpaccio-Client-test)
+add_subdirectory(Client)
 
 #Globals
 add_custom_target(Docs
@@ -84,13 +27,8 @@ add_custom_target(Docs
         ${CMAKE_CURRENT_SOURCE_DIR}/TODOLIST.md
         ${CMAKE_CURRENT_SOURCE_DIR}/../README.md)
 
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Extreme-Carpaccio-Client-test)
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY XCODE_STARTUP_PROJECT Extreme-Carpaccio-Client-test)
-
-set_property(TARGET Extreme-Carpaccio-Client-shared PROPERTY FOLDER "ExtremeCarpaccioClient")
-set_property(TARGET Extreme-Carpaccio-Client-test PROPERTY FOLDER "ExtremeCarpaccioClient")
-set_property(TARGET Extreme-Carpaccio-Client PROPERTY FOLDER "ExtremeCarpaccioClient")
-set_property(TARGET Docs PROPERTY FOLDER "ExtremeCarpaccioClient")
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Order-Management-tests)
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY XCODE_STARTUP_PROJECT Order-Management-tests)
 
 set_property(TARGET gtest gtest_main gmock gmock_main PROPERTY FOLDER "Third-Party/GoogleTest")
 

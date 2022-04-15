@@ -1,13 +1,18 @@
+
+#ifndef EXTREME_CARPACCIO_CLIENT_CLIENT_HPP
+#define EXTREME_CARPACCIO_CLIENT_CLIENT_HPP
+
+#include <extreme_carpaccio/client/config.hpp>
+
 #include <boost/asio.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
 
-#include <extreme_carpaccio_client/config.hpp>
-
 #include <string>
 
-namespace extreme_carpaccio_client {
+namespace extreme_carpaccio {
+namespace client {
 
 class http_worker
 {
@@ -96,4 +101,7 @@ private:
    boost::beast::tcp_stream m_stream;
 };
 
-} // namespace extreme_carpaccio_client
+} // namespace client
+} // namespace extreme_carpaccio
+
+#endif // EXTREME_CARPACCIO_CLIENT_CLIENT_HPP
