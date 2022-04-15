@@ -1,0 +1,44 @@
+name: C++
+
+on: 
+  push:
+    branches-ignore:
+      - '*-from-video'
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+
+jobs:
+  build-gcc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build & Test
+      uses: ashutoshvarma/action-cmake-build@master
+      with:
+        submodule-update: true
+        source-dir: ${{github.workspace}}/clients/cpp
+        build-dir: ${{github.workspace}}/clients/cpp/build
+        cc: gcc
+        cxx: g++
+        build-type: Release
+        run-test: true
+        ctest-options: "--output-on-failure"
+        install-build: false
+  build-clang:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build & Test
+      uses: ashutoshvarma/action-cmake-build@master
+      with:
+        submodule-update: true
+        source-dir: ${{github.workspace}}/clients/cpp
+        build-dir: ${{github.workspace}}/clients/cpp/build
+        cc: clang
+        cxx: clang++
+        build-type: Release
+        run-test: true
+        ctest-options: "--output-on-failure"
+        install-build: false
