@@ -18,15 +18,20 @@
 #include <string>
 #include <nlohmann/json.hpp>
 
-namespace beast = boost::beast;         // from <boost/beast.hpp>
-namespace http = beast::http;           // from <boost/beast/http.hpp>
-namespace net = boost::asio;            // from <boost/asio.hpp>
-using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
-
-const int version = 11;
 
 namespace extreme_carpaccio {
 namespace client {
+
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace net = boost::asio;
+using tcp = boost::asio::ip::tcp;
+
+namespace {
+
+const int version = 11;
+
+} // namespace
 
 http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
    acceptor_(acceptor),
@@ -115,19 +120,21 @@ static Feedback parseFeedback(const std::string& jsonFeedback)
 
 bool http_worker::handleRequest(http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body)
 {
-   if (requestType == http::verb::post && contentType == "application/json")
+   const bool error = (requestType != http::verb::post || contentType != "application/json");
+
+   if (!error)
    {
       if (target == "/order")
       {
-         extreme_carpaccio::order_management::Order order = extreme_carpaccio::order_management::parseOrder(body);
+         auto order = order_management::parseOrder(body);
          std::cout << "Order received: " << order << std::endl;
 
-         //TO IMPLEMENT
-         //nlohmann::json totalAmountJson;
+         auto totalAmountResponse = order_management::computeTotalAmount(body);
 
-         //totalAmountJson["total"] = computeTotalAmount(order);
-         //send_response(http::status::ok, totalAmountJson.dump());
-         return true;
+         nlohmann::json totalAmountJson;
+
+         totalAmountJson["total"] = totalAmountResponse.m_totalAmount;
+         send_response(totalAmountResponse.m_status, totalAmountJson.dump());
       }
       else if (target == "/feedback")
       {
@@ -135,10 +142,9 @@ bool http_worker::handleRequest(http::verb requestType, const std::string & targ
 
          std::cout << feedback.type << " : " << feedback.content << std::endl;
          send_response(http::status::ok, "Feedback received");
-         return false;
       }
    }
-   return true;
+   return error;
 }
 
 void http_worker::process_request(http::request<request_body_t, http::basic_fields<alloc_t>> const& req)

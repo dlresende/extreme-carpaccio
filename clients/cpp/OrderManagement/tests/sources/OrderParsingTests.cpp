@@ -7,11 +7,11 @@
 
 #include <string>
 
-using namespace testing;
-
 namespace extreme_carpaccio {
 namespace order_management {
 namespace test {
+
+using namespace testing;
 
 TEST(OrderParsing, should_return_order_object_from_json_order)
 {

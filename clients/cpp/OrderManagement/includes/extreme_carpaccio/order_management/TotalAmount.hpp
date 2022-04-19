@@ -12,7 +12,13 @@
 namespace extreme_carpaccio {
 namespace order_management {
 
-using TotalAmountResponse = std::pair<boost::beast::http::status, double>;
+struct EXTREME_CARPACCIO_ORDER_MANAGEMENT_API TotalAmountResponse
+{
+   TotalAmountResponse(boost::beast::http::status status, double totalAmount);
+
+   boost::beast::http::status m_status;
+   double m_totalAmount;
+};
 
 EXTREME_CARPACCIO_ORDER_MANAGEMENT_API TotalAmountResponse computeTotalAmount(const std::string & requestBody);
 
