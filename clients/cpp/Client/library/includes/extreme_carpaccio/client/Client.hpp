@@ -48,7 +48,7 @@ private:
    std::string m_doc_root;
 
    // The socket for the currently connected client.
-   boost::asio::ip::tcp::socket m_socket{ m_acceptor.get_executor() };
+   boost::asio::ip::tcp::socket m_socket;
 
    // The buffer for performing reads
    boost::beast::flat_static_buffer<8192> m_buffer;
@@ -60,8 +60,7 @@ private:
    boost::optional<boost::beast::http::request_parser<request_body_t, alloc_t>> m_parser;
 
    // The timer putting a time limit on requests.
-   boost::asio::steady_timer m_request_deadline{
-       m_acceptor.get_executor(), (std::chrono::steady_clock::time_point::max)() };
+   boost::asio::steady_timer m_request_deadline;
 
    // The string-based response message.
    boost::optional<boost::beast::http::response<boost::beast::http::string_body, boost::beast::http::basic_fields<alloc_t>>> m_string_response;

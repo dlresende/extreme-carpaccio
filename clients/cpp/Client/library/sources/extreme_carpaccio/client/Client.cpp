@@ -34,8 +34,15 @@ const int version = 11;
 } // namespace
 
 http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
-   m_acceptor(acceptor),
-   m_doc_root(doc_root)
+     m_acceptor(acceptor)
+   , m_doc_root(doc_root)
+   , m_socket{ m_acceptor.get_executor() }
+   , m_buffer()
+   , m_alloc()
+   , m_parser()
+   , m_request_deadline{ m_acceptor.get_executor(), (std::chrono::steady_clock::time_point::max)() }
+   , m_string_response()
+   , m_file_response()
 {
 }
 
