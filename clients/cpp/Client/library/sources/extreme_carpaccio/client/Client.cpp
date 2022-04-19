@@ -34,8 +34,8 @@ const int version = 11;
 } // namespace
 
 http_worker::http_worker(tcp::acceptor& acceptor, const std::string& doc_root) :
-   acceptor_(acceptor),
-   doc_root_(doc_root)
+   m_acceptor(acceptor),
+   m_doc_root(doc_root)
 {
 }
 
@@ -49,11 +49,11 @@ void http_worker::accept()
 {
    // Clean up any previous connection.
    beast::error_code ec;
-   socket_.close(ec);
-   buffer_.consume(buffer_.size());
+   m_socket.close(ec);
+   m_buffer.consume(m_buffer.size());
 
-   acceptor_.async_accept(
-      socket_,
+   m_acceptor.async_accept(
+      m_socket,
       [this](beast::error_code ec)
    {
       if (ec)
@@ -63,7 +63,7 @@ void http_worker::accept()
       else
       {
          // Request must be fully processed within 60 seconds.
-         request_deadline_.expires_after(
+         m_request_deadline.expires_after(
             std::chrono::seconds(60));
 
          read_request();
@@ -84,21 +84,21 @@ void http_worker::read_request()
    // We construct the dynamic body with a 1MB limit
    // to prevent vulnerability to buffer attacks.
    //
-   parser_.emplace(
+   m_parser.emplace(
       std::piecewise_construct,
       std::make_tuple(),
-      std::make_tuple(alloc_));
+      std::make_tuple(m_alloc));
 
    http::async_read(
-      socket_,
-      buffer_,
-      *parser_,
+      m_socket,
+      m_buffer,
+      *m_parser,
       [this](beast::error_code ec, std::size_t)
    {
       if (ec)
          accept();
       else
-         process_request(parser_->get());
+         process_request(m_parser->get());
    });
 }
 
@@ -160,25 +160,25 @@ void http_worker::process_request(http::request<request_body_t, http::basic_fiel
 
 void http_worker::send_response(http::status status, std::string const& body)
 {
-   string_response_.emplace(
+   m_string_response.emplace(
       std::piecewise_construct,
       std::make_tuple(),
-      std::make_tuple(alloc_));
+      std::make_tuple(m_alloc));
 
-   string_response_->result(status);
-   string_response_->keep_alive(false);
-   string_response_->set(http::field::server, "Beast");
-   string_response_->set(http::field::content_type, "text/plain");
-   string_response_->body() = body;
-   string_response_->prepare_payload();
+   m_string_response->result(status);
+   m_string_response->keep_alive(false);
+   m_string_response->set(http::field::server, "Beast");
+   m_string_response->set(http::field::content_type, "text/plain");
+   m_string_response->body() = body;
+   m_string_response->prepare_payload();
 
    http::async_write(
-      socket_,
-      *string_response_,
+      m_socket,
+      *m_string_response,
       [this](beast::error_code ec, std::size_t)
    {
-      socket_.shutdown(tcp::socket::shutdown_send, ec);
-      string_response_.reset();
+      m_socket.shutdown(tcp::socket::shutdown_send, ec);
+      m_string_response.reset();
       accept();
    });
 }
@@ -186,17 +186,17 @@ void http_worker::send_response(http::status status, std::string const& body)
 void http_worker::check_deadline()
 {
    // The deadline may have moved, so check it has really passed.
-   if (request_deadline_.expiry() <= std::chrono::steady_clock::now())
+   if (m_request_deadline.expiry() <= std::chrono::steady_clock::now())
    {
       // Close socket to cancel any outstanding operation.
-      socket_.close();
+      m_socket.close();
 
       // Sleep indefinitely until we're given a new deadline.
-      request_deadline_.expires_at(
+      m_request_deadline.expires_at(
          (std::chrono::steady_clock::time_point::max)());
    }
 
-   request_deadline_.async_wait(
+   m_request_deadline.async_wait(
       [this](beast::error_code)
    {
       check_deadline();
