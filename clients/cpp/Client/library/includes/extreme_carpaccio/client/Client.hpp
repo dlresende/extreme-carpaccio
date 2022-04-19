@@ -84,23 +84,6 @@ private:
    http_worker worker;
 };
 
-class EXTREME_CARPACCIO_CLIENT_API CarpaccioStream
-{
-public:
-   CarpaccioStream(const std::string & host, unsigned short port);
-   ~CarpaccioStream();
-
-   boost::beast::http::response<boost::beast::http::dynamic_body> read(boost::beast::flat_buffer&);
-   void write(boost::beast::http::verb requestType, const std::string & target, const std::string & contentType, const std::string & body);
-
-private:
-   std::string m_serverHost;
-   boost::asio::io_context m_ioContext;
-   boost::asio::ip::tcp::resolver m_resolver;
-   boost::asio::ip::tcp::resolver::results_type m_resolverResults;
-   boost::beast::tcp_stream m_stream;
-};
-
 } // namespace client
 } // namespace extreme_carpaccio
 
