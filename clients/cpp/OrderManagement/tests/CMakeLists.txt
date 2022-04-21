@@ -26,6 +26,8 @@ target_link_libraries(Order-Management-tests
       Order-Management-shared
       gmock_main)
 
+install(TARGETS Order-Management-tests)
+
 add_test(NAME ctest-Extreme-Carpaccio-Order-Management-tests COMMAND Order-Management-tests)
 
 set_property(TARGET Order-Management-tests PROPERTY FOLDER "Order Management")

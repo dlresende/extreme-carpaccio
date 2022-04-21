@@ -35,10 +35,10 @@
   - [X] We need a specific test target for functional tests
   - [X Add guards in header files
   - [X] Finish target restructuring
-  - [ ] [This can be addressed using CMake install] Copying dll and binary to another directory was not easy
+  - [X] [This can be addressed using CMake install] Copying dll and binary to another directory was not easy
 - [X] Move in a dedicated file the request handling part of the client code
 - [X] Use the computeTotalAmount in the client
-- [ ] [This can be addressed using CMake install] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
+- [X] [This can be addressed using CMake install] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
 - [ ] Use a different port number for tests
 ## PARKING
 - [X] Clean gitignore file in cpp
@@ -46,4 +46,4 @@
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
 - [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
 - [ ] Upgrade nlohman json version
-- [ ] Tests can crash randomly with a low frequency (this could be reproduced in Github Actions)
+- [ ] [This seems caused by a failure to connect to the server port] Tests can crash randomly with a low frequency (this could be reproduced in Github Actions)

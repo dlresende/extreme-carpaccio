@@ -33,6 +33,8 @@ target_link_libraries(Client-tests
       nlohmann_json
 )
 
+install(TARGETS Client-tests)
+
 add_test(NAME ctest-Extreme-Carpaccio-Client-tests COMMAND Client-tests)
 
 set_property(TARGET Client-tests PROPERTY FOLDER "Client")

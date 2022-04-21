@@ -40,6 +40,8 @@ target_include_directories(Order-Management-shared
 
 target_link_libraries(Order-Management-shared PUBLIC Boost::boost PRIVATE nlohmann_json)
 
+install(TARGETS Order-Management-shared)
+
 set_property(TARGET Order-Management-shared PROPERTY FOLDER "Order Management")
 
 add_subdirectory(tests)

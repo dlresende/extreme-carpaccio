@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.19.3)
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/../install CACHE PATH "Where the targets are installed by CMake.")
+
 project(Extreme-Carpaccio CXX)
 
 set(CMAKE_CXX_STANDARD 14)

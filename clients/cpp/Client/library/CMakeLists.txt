@@ -45,6 +45,8 @@ target_link_libraries(Client-shared
       Order-Management-shared
 )
 
+install(TARGETS Client-shared)
+
 set_property(TARGET Client-shared PROPERTY FOLDER "Client")
 
 add_subdirectory(tests)

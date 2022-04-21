@@ -18,8 +18,8 @@ namespace client {
 class EXTREME_CARPACCIO_CLIENT_API CarpaccioServer
 {
 public:
-   CarpaccioServer(unsigned short port);
    CarpaccioServer();
+   CarpaccioServer(unsigned short port);
    void start();
    void stop();
 

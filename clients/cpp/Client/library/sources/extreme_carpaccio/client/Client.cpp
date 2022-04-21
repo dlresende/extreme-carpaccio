@@ -7,9 +7,10 @@
 namespace extreme_carpaccio {
 namespace client {
 
-CarpaccioServer::CarpaccioServer() : CarpaccioServer(HTTP_SERVER_PORT)
+CarpaccioServer::CarpaccioServer()
+   : CarpaccioServer(HTTP_SERVER_PORT)
 {
-	  
+
 }
 
 CarpaccioServer::CarpaccioServer(unsigned short port)
@@ -17,7 +18,6 @@ CarpaccioServer::CarpaccioServer(unsigned short port)
    , acceptor(ioc, { boost::asio::ip::make_address(HTTP_SERVER_IP), port })
    , worker(acceptor, "./feedback")
 {
-      
 }
 
 void CarpaccioServer::start()

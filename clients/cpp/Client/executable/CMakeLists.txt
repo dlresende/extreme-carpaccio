@@ -18,6 +18,9 @@ source_group(
 
 target_link_libraries(Client-exe
     PRIVATE
-        Client-shared)
+        Client-shared
+)
+
+install(TARGETS Client-exe)
 
 set_property(TARGET Client-exe PROPERTY FOLDER "Client")
