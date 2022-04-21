@@ -26,24 +26,24 @@
   - [X] write a test to POST /feedback with a proper request
   - [X] implement POST /feedback
   - [X] test our client can receive feedback form the real extreme carpaccio server
-- [ ] Add a configuration file for main options (ports and maybe others)
-  - [ ] check the js client to see what options are available
+- [X] Add a configuration file for main options (ports and maybe others)
+  - [X] check the js client to see what options are available
   - [ ] create a config file of command line options to set these options
 - [ ] Feedbacks from the session on extreme carpaccio with C++ client
   - [x] Display the order description in the code handling the order to have it in the console
   - [X] We need to initialize the http server with the hostname of the user launching it
   - [X] We need a specific test target for functional tests
-  - [ ] Add guards in header files
-  - [ ] Finish target restructuring
-  - [ ] Copying dll and binary to another directory was not easy
+  - [X Add guards in header files
+  - [X] Finish target restructuring
+  - [ ] [This can be addressed using CMake install] Copying dll and binary to another directory was not easy
 - [X] Move in a dedicated file the request handling part of the client code
-- [ ] Use the computeTotalAmount in the client
-- [ ] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
+- [X] Use the computeTotalAmount in the client
+- [ ] [This can be addressed using CMake install] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
 - [ ] Use a different port number for tests
 ## PARKING
-- [ ] Clean gitignore file in cpp
-- [ ] Ajouter dans le cmake le Json en thirdparty pour la solution VS
+- [X] Clean gitignore file in cpp
+  - [X] [Cannot be done, header only library] Ajouter dans le cmake le Json en thirdparty pour la solution VS
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
 - [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
 - [ ] Upgrade nlohman json version
-- [ ] Tests crashed when Mirna launched them on their machine
+- [ ] Tests can crash randomly with a low frequency (this could be reproduced in Github Actions)
