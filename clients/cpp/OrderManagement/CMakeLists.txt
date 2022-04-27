@@ -38,7 +38,7 @@ target_include_directories(Order-Management-shared
         ${CMAKE_CURRENT_SOURCE_DIR}/includes
 )
 
-target_link_libraries(Order-Management-shared PUBLIC Boost::boost PRIVATE nlohmann_json)
+target_link_libraries(Order-Management-shared PUBLIC Boost::boost PRIVATE nlohmann_json::nlohmann_json)
 
 install(TARGETS Order-Management-shared)
 

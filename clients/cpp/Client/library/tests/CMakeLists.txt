@@ -30,7 +30,7 @@ target_link_libraries(Client-tests
       Client-shared
       gmock_main
       Boost::boost
-      nlohmann_json
+      nlohmann_json::nlohmann_json
 )
 
 install(TARGETS Client-tests)

@@ -38,7 +38,7 @@ target_include_directories(Client-shared
 
 target_link_libraries(Client-shared
    PRIVATE
-      nlohmann_json
+      nlohmann_json::nlohmann_json
    PUBLIC
       Threads::Threads
       Boost::boost
