@@ -6,13 +6,13 @@ target_compile_definitions(Client-shared PRIVATE EXTREME_CARPACCIO_CLIENT_EXPORT
 set(CLIENT_SHARED_PRIVATE_SOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/sources/extreme_carpaccio/client/CarpaccioHttpWorker.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/sources/extreme_carpaccio/client/Client.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/sources/extreme_carpaccio/client/HttpConfig.hpp
 )
 
 set(CLIENT_SHARED_PUBLIC_SOURCES
    ${CMAKE_CURRENT_SOURCE_DIR}/includes/extreme_carpaccio/client/CarpaccioHttpWorker.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/includes/extreme_carpaccio/client/Client.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/includes/extreme_carpaccio/client/config.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/includes/extreme_carpaccio/client/HttpConfig.hpp
 )
 
 target_sources(Client-shared

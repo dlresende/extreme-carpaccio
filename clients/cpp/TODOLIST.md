@@ -39,7 +39,7 @@
 - [X] Move in a dedicated file the request handling part of the client code
 - [X] Use the computeTotalAmount in the client
 - [X] [This can be addressed using CMake install] Find a way to test code while the client is running (copy dll, use a static library, edit and continue ???)
-- [ ] Use a different port number for tests
+- [X] Use a different port number for tests
 ## PARKING
 - [X] Clean gitignore file in cpp
   - [X] [Cannot be done, header only library] Ajouter dans le cmake le Json en thirdparty pour la solution VS

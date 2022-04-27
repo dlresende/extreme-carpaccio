@@ -6,6 +6,8 @@
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
 
+#include <iostream>
+
 namespace extreme_carpaccio {
 namespace client {
 namespace test {
@@ -30,7 +32,13 @@ CarpaccioStream::CarpaccioStream(const std::string & host, unsigned short port)
    , m_stream(m_ioContext)
 {
    // Make the connection on the IP address we get from a lookup
-   m_stream.connect(m_resolverResults);
+   try {
+      m_stream.connect(m_resolverResults);
+   }
+   catch (...)
+   {
+      std::cerr << "Unknown error when attempting to connect to the Carpaccio server!";
+   }
 }
 
 CarpaccioStream::~CarpaccioStream()
