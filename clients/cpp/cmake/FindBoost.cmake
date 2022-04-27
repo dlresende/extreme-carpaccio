@@ -1,5 +1,7 @@
 # Fetch Boost
 
+set(BOOST_LOCALE_ENABLE_ICU_BACKEND OFF)
+
 CPMAddPackage("gh:Orphis/boost-cmake#7f97a08b64bd5d2e53e932ddf80c40544cf45edf@1.71.0")
 
 #CPMFindPackage(

@@ -31,6 +31,10 @@ add_custom_target(Docs
     SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/Retrospective.md
         ${CMAKE_CURRENT_SOURCE_DIR}/TODOLIST.md
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBoost.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGoogleTest.cmake
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindNlohmannJson.cmake
         ${CMAKE_CURRENT_SOURCE_DIR}/../README.md)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Order-Management-tests)

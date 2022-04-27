@@ -44,6 +44,6 @@
 - [X] Clean gitignore file in cpp
   - [X] [Cannot be done, header only library] Ajouter dans le cmake le Json en thirdparty pour la solution VS
 - [ ] Add dependencies on sub boost headers only libraries (beast), instead on depending on full boost
-- [ ] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
+- [X] Fix that : Failed to find all ICU components (missing: ICU_INCLUDE_DIR _ICU_REQUIRED_LIBS_FOUND)
 - [ ] Upgrade nlohman json version
 - [ ] [This seems caused by a failure to connect to the server port] Tests can crash randomly with a low frequency (this could be reproduced in Github Actions)
