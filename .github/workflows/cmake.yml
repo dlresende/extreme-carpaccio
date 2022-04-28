@@ -25,7 +25,7 @@ jobs:
         build-type: Release
         run-test: true
         ctest-options: "--output-on-failure"
-        install-build: false
+        install-build: true
   build-clang:
     runs-on: ubuntu-latest
     steps:
@@ -41,4 +41,4 @@ jobs:
         build-type: Release
         run-test: true
         ctest-options: "--output-on-failure"
-        install-build: false
+        install-build: true
