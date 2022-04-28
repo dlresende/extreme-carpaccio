@@ -27,7 +27,7 @@ using tcp = boost::asio::ip::tcp;
 namespace {
 
 const char serverHost[] = "localhost";
-const unsigned short testServerPort = HTTP_SERVER_PORT + 1;
+const unsigned short testServerPort = DEFAULT_HTTP_SERVER_PORT + 1;
 
 } // namespace
 
@@ -38,7 +38,7 @@ boost::beast::http::response<boost::beast::http::dynamic_body> generateServerRes
    , const std::string & body
 )
 {
-   CarpaccioServer server(testServerPort);
+   CarpaccioServer server(DEFAULT_HTTP_SERVER_IP, testServerPort);
    std::thread thread(&CarpaccioServer::start, &server);
    std::this_thread::sleep_for(std::chrono::seconds(1));
 
