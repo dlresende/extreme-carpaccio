@@ -4,7 +4,7 @@ set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/../install CACHE PATH "Where the ta
 
 project(Extreme-Carpaccio CXX)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 enable_testing()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
