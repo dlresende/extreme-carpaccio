@@ -29,8 +29,6 @@ add_subdirectory(Client)
 #Globals
 add_custom_target(Docs
     SOURCES
-        ${CMAKE_CURRENT_SOURCE_DIR}/Retrospective.md
-        ${CMAKE_CURRENT_SOURCE_DIR}/TODOLIST.md
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CPM.cmake
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindBoost.cmake
         ${CMAKE_CURRENT_SOURCE_DIR}/cmake/FindGoogleTest.cmake
