@@ -1,6 +1,6 @@
 # Extreme Carpaccio C++ starting code
 
-By default, the kata's CMake file is referencing C++ version 14.
+By default, the kata's CMake file is referencing C++ version 17.
 
 
 ## Getting ready
@@ -28,4 +28,7 @@ This setup script does the following:
 
 ## Project organization
 
-C++ HTTP client is implemented in Client folder. Order management code has to be modidied.
+C++ HTTP client is implemented in "Client" folder. HTTP client executable, once built, can be found under build\bin folder.
+
+Order handling related code is under "Order Management" folder.
+
