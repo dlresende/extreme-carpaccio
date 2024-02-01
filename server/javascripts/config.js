@@ -1,7 +1,7 @@
 var fs = require('fs')
 var utils = require('../javascripts/utils')
 var _ = require('lodash')
-var colors = require('colors')
+var chalk = require('chalk')
 
 var Configuration = function (filepath) {
   this.filepath = filepath
@@ -10,7 +10,7 @@ var Configuration = function (filepath) {
 
 Configuration.prototype = (function () {
   function loadFile (self, callback) {
-    console.info(colors.red('Reloading ' + self.filepath))
+    console.info(chalk.red('Reloading ' + self.filepath))
 
     fs.readFile(self.filepath, function (err, data) {
       if (err) {
