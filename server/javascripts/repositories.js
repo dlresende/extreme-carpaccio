@@ -1,7 +1,7 @@
 'use strict'
 
 var _ = require('lodash')
-var colors = require('colors')
+var chalk = require('chalk')
 
 var Sellers = function () {
   var sellersMap = {}
@@ -161,7 +161,7 @@ Countries.prototype = (function () {
 
     var def = conf.taxes[country]
     if (_.isNumber(def)) {
-      console.info(colors.blue('Tax rule for country ' + country + ' changed to scale factor ' + def))
+      console.info(chalk.blue('Tax rule for country ' + country + ' changed to scale factor ' + def))
       return scale(def)
     }
 
@@ -169,14 +169,14 @@ Countries.prototype = (function () {
       try {
         var taxRule = customEval(def)
         if (_.isFunction(taxRule)) {
-          console.info(colors.blue('Tax rule for country ' + country + ' changed to function ' + def))
+          console.info(chalk.blue('Tax rule for country ' + country + ' changed to function ' + def))
           return taxRule
         } else {
-          console.error(colors.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', result is not a function'))
+          console.error(chalk.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', result is not a function'))
           return null
         }
       } catch (e) {
-        console.error(colors.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', got: ' + e))
+        console.error(chalk.red('Failed to evaluate tax rule for country ' + country + ' from ' + def + ', got: ' + e))
         return null
       }
     }
@@ -199,7 +199,7 @@ Countries.prototype = (function () {
       try {
         return newRule([sum])
       } catch (e) {
-        console.error(colors.red('Failed to evaluate tax rule for country ' + this.name + ' falling back to original value, got:' + e))
+        console.error(chalk.red('Failed to evaluate tax rule for country ' + this.name + ' falling back to original value, got:' + e))
         return this.taxRule([sum])
       }
     }

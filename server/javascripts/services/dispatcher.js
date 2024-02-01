@@ -1,7 +1,7 @@
 var _ = require('lodash')
 var Reduction = require('./reduction')
 var utils = require('../utils')
-var colors = require('colors')
+var chalk = require('chalk')
 
 var BadRequest = function (_configuration) {
   this.configuration = _configuration
@@ -21,7 +21,7 @@ BadRequest.prototype = (function () {
       var mode = _.sample(getConfiguration(this).modes)
       var copy = _.clone(order)
 
-      console.info(colors.blue('corrupt mode ' + mode))
+      console.info(chalk.blue('corrupt mode ' + mode))
 
       switch (mode) {
         case 0:
@@ -99,7 +99,7 @@ SellerCashUpdater.prototype = (function () {
           })
 
           response.on('data', function (sellerResponse) {
-            console.info(colors.grey(seller.name + ' replied "' + sellerResponse + '"'))
+            console.info(chalk.grey(seller.name + ' replied "' + sellerResponse + '"'))
 
             try {
               var actualBill = utils.jsonify(sellerResponse)
@@ -111,7 +111,7 @@ SellerCashUpdater.prototype = (function () {
           })
         } else if (response.statusCode === 404) {
           self.sellerService.setOnline(seller)
-          console.info(colors.grey(seller.name + ' replied 404. Everything is fine.'))
+          console.info(chalk.grey(seller.name + ' replied 404. Everything is fine.'))
         } else {
           self.sellerService.setOnline(seller)
           self.sellerService.updateCash(seller, expectedBill, undefined, currentIteration)
@@ -133,11 +133,11 @@ var Dispatcher = function (_sellerService, _orderService, _configuration) {
 Dispatcher.prototype = (function () {
   function putSellerOffline (self, seller, currentIteration) {
     return function () {
-      console.error(colors.red('Could not reach seller ' + utils.stringify(seller)))
+      console.error(chalk.red('Could not reach seller ' + utils.stringify(seller)))
       var offlinePenalty = getConfiguration(self).offlinePenalty
 
       if (!_.isNumber(offlinePenalty)) {
-        console.warn(colors.yellow('Offline penalty is missing or is not a number. Using 0.'))
+        console.warn(chalk.yellow('Offline penalty is missing or is not a number. Using 0.'))
         offlinePenalty = 0
       }
 
@@ -160,7 +160,7 @@ Dispatcher.prototype = (function () {
     }
 
     if (reductionStrategy !== 'STANDARD') {
-      console.warn(colors.yellow('Unknown reduction strategy ' + reductionStrategy + '. Using STANDARD.'))
+      console.warn(chalk.yellow('Unknown reduction strategy ' + reductionStrategy + '. Using STANDARD.'))
     }
 
     return new Period(Reduction.STANDARD, 5000)
@@ -218,11 +218,11 @@ Dispatcher.prototype = (function () {
       }
 
       if (shouldSendOrders(this)) {
-        console.info(colors.green(message))
+        console.info(chalk.green(message))
         this.sendOrderToSellers(period.reduction, iteration, badRequest)
       } else {
         nextIteration = iteration
-        console.info(colors.red('Order dispatching disabled'))
+        console.info(chalk.red('Order dispatching disabled'))
       }
 
       scheduleNextIteration(this, nextIteration, period.shoppingIntervalInMillis)
