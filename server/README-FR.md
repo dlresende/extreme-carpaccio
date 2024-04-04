@@ -1,5 +1,3 @@
-[![build status](https://travis-ci.org/dlresende/extreme-carpaccio.svg?branch=master)]()
-
 # Instructions pour les facilitateurs
 
 Version anglaise [ici](./README.md).
