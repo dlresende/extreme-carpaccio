@@ -24,7 +24,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.34.1",
-    "jasmine-node": "^1.16.2",
+    "jasmine-node": "^3.0.0",
     "supertest": "^6.3.4"
   }
 }
