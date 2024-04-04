@@ -5,6 +5,7 @@ updates:
   schedule:
     interval: daily
   open-pull-requests-limit: 10
+  versioning-strategy: increase-if-necessary
   ignore:
   - dependency-name: eslint-plugin-promise
     versions:

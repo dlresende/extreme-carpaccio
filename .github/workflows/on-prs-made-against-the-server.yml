@@ -1,0 +1,12 @@
+on:
+  pull_request:
+    paths:
+      - server/**
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: npm install && npm test
+      working-directory: server
