@@ -1,10 +1,20 @@
+name: Tests
+
 on:
   pull_request:
     paths:
       - server/**
 
 jobs:
-  run-tests:
+  run-tests-on-windows:
+    name: on windows
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: npm install && npm test
+      working-directory: server
+  run-tests-on-linux:
+    name: on linux
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

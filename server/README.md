@@ -1,4 +1,4 @@
-[![build status](https://travis-ci.org/dlresende/extreme-carpaccio.svg?branch=master)]()
+![build status](https://github.com/dlresende/extreme-carpaccio/actions/workflows/on-prs-made-against-the-server.yml/badge.svg)
 
 # Instructions for Facilitators
 
