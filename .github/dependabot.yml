@@ -11,3 +11,5 @@ updates:
   - dependency-name: eslint-plugin-promise
     versions:
     - 4.3.0
+  commit-message:
+    prefix: "chore"
