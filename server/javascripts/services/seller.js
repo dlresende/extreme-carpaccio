@@ -56,6 +56,9 @@ service.isAuthorized = function (name, password) {
 }
 
 service.register = function (sellerUrl, name, password) {
+  if (!this.isAuthorized(name, password)) {
+    throw new Error('Unauthorized: invalid name or password')
+  }
   var parsedUrl = new url.URL(sellerUrl)
   var seller = {
     name: name,
