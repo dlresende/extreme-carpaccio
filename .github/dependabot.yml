@@ -3,7 +3,7 @@ updates:
 - package-ecosystem: npm
   directory: "/server"
   schedule:
-    interval: weekly
+    interval: monthly
   open-pull-requests-limit: 10
   versioning-strategy: increase-if-necessary
   ignore:
@@ -19,7 +19,7 @@ updates:
 - package-ecosystem: npm
   directory: "/clients/javascript/express"
   schedule:
-    interval: weekly
+    interval: monthly
   open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
@@ -27,7 +27,7 @@ updates:
 - package-ecosystem: npm
   directory: "/clients/javascript/node-plain"
   schedule:
-    interval: weekly
+    interval: monthly
   open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
@@ -35,7 +35,7 @@ updates:
 - package-ecosystem: npm
   directory: "/clients/typescript"
   schedule:
-    interval: weekly
+    interval: monthly
   open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
