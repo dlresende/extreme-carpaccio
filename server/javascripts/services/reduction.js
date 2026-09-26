@@ -1,4 +1,4 @@
-var _ = require('lodash')
+const _ = require('lodash')
 
 function PayThePriceReduction () {
   this.name = 'PAY THE PRICE'
@@ -21,7 +21,7 @@ function ReductionStep (sum, reduction) {
 
 function StandardReduction (sum, reduction) {
   this.name = 'STANDARD'
-  var reductions = [
+  const reductions = [
     new ReductionStep(50000, 0.15),
     new ReductionStep(10000, 0.10),
     new ReductionStep(7000, 0.07),
@@ -33,7 +33,7 @@ function StandardReduction (sum, reduction) {
     return amount * (1 - this.reductionFor(amount))
   }
   this.reductionFor = function (total) {
-    var reduction = _.result(_.find(reductions, function (reduc) { return reduc.sum <= total }), 'reduction')
+    const reduction = _.result(_.find(reductions, function (reduc) { return reduc.sum <= total }), 'reduction')
     if (reduction === undefined) {
       return 0
     }

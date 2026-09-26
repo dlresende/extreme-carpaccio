@@ -1,8 +1,8 @@
 'use strict'
 
-var http = require('http')
+const http = require('http')
 
-var Utils = function (_http) {
+const Utils = function (_http) {
   this.http = _http || http
 }
 
@@ -24,10 +24,10 @@ Utils.prototype = {
   },
 
   post: function (hostname, port, path, body, onSuccess, onError) {
-    var bodyStringified = this.stringify(body)
-    var options = {
-      hostname: hostname,
-      port: port,
+    const bodyStringified = this.stringify(body)
+    const options = {
+      hostname,
+      port,
       path: (path || '').replace('//', '/'),
       method: 'POST',
       headers: {
@@ -36,7 +36,7 @@ Utils.prototype = {
         'Content-Length': bodyStringified.length
       }
     }
-    var request = this.http.request(options, onSuccess)
+    const request = this.http.request(options, onSuccess)
     request.on('error', onError || function () {})
     request.write(bodyStringified)
     request.end()

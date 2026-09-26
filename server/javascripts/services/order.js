@@ -1,7 +1,7 @@
-var repositories = require('../repositories')
-var _ = require('lodash')
-var utils = require('../utils')
-var chalk = require('chalk')
+const repositories = require('../repositories')
+const _ = require('lodash')
+const utils = require('../utils')
+const chalk = require('chalk')
 
 function OrderService (configuration) {
   this.countries = new repositories.Countries(configuration)
@@ -9,7 +9,7 @@ function OrderService (configuration) {
 
 module.exports = OrderService
 
-var service = OrderService.prototype
+const service = OrderService.prototype
 
 service.sendOrder = function (seller, order, cashUpdater, logError) {
   console.info(chalk.grey('Sending order ' + utils.stringify(order) + ' to seller ' + utils.stringify(seller)))
@@ -17,33 +17,33 @@ service.sendOrder = function (seller, order, cashUpdater, logError) {
 }
 
 service.createOrder = function (reduction) {
-  var items = _.random(1, 10)
-  var prices = new Array(items)
-  var quantities = new Array(items)
-  var country = this.countries.randomOne()
+  const items = _.random(1, 10)
+  const prices = new Array(items)
+  const quantities = new Array(items)
+  const country = this.countries.randomOne()
 
-  for (var item = 0; item < items; item++) {
-    var price = _.random(1, 100, true)
+  for (let item = 0; item < items; item++) {
+    const price = _.random(1, 100, true)
     prices[item] = utils.fixPrecision(price, 2)
     quantities[item] = _.random(1, 10)
   }
 
   return {
-    prices: prices,
-    quantities: quantities,
-    country: country,
+    prices,
+    quantities,
+    country,
     reduction: reduction.name
   }
 }
 
 service.bill = function (order, reduction) {
-  var prices = order.prices
-  var quantities = order.quantities
-  var sum = quantities
+  const prices = order.prices
+  const quantities = order.quantities
+  let sum = quantities
     .map(function (q, i) { return q * prices[i] })
     .reduce(function (sum, current) { return sum + current }, 0)
 
-  var taxRule = this.countries.taxRule(order.country)
+  const taxRule = this.countries.taxRule(order.country)
   sum = taxRule.applyTax(sum)
   sum = reduction.apply(sum)
   return { total: sum }

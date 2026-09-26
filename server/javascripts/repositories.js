@@ -1,16 +1,16 @@
 'use strict'
 
-var _ = require('lodash')
-var chalk = require('chalk')
+const _ = require('lodash')
+const chalk = require('chalk')
 
-var Sellers = function () {
-  var sellersMap = {}
-  var cashHistory = {}
+const Sellers = function () {
+  const sellersMap = {}
+  const cashHistory = {}
 
   this.cashHistory = cashHistory
 
   this.all = function () {
-    var sellers = _.map(sellersMap, function (seller) {
+    const sellers = _.map(sellersMap, function (seller) {
       return seller
     })
     return _.sortBy(sellers, function (seller) { return -seller.cash })
@@ -33,7 +33,7 @@ var Sellers = function () {
     cashHistory[seller.name] = []
   }
   function update (seller) {
-    var previousCash = sellersMap[seller.name].cash
+    const previousCash = sellersMap[seller.name].cash
     sellersMap[seller.name] = seller
     sellersMap[seller.name].cash = previousCash
   }
@@ -41,7 +41,7 @@ var Sellers = function () {
 
 Sellers.prototype = (function () {
   function getLastRecordedCashAmount (currentSellersCashHistory, lastRecordedIteration) {
-    var lastRecordedValue = currentSellersCashHistory[lastRecordedIteration - 1]
+    let lastRecordedValue = currentSellersCashHistory[lastRecordedIteration - 1]
 
     if (lastRecordedValue === undefined) {
       lastRecordedValue = 0
@@ -51,26 +51,26 @@ Sellers.prototype = (function () {
   }
 
   function enlargeHistory (newSize, oldHistory) {
-    var newHistory = new Array(newSize)
+    const newHistory = new Array(newSize)
     newHistory.push.apply(newHistory, oldHistory)
     return newHistory
   }
 
   function fillMissingIterations (currentIteration, currentSellersCashHistory) {
-    var lastRecordedIteration = currentSellersCashHistory.length
+    const lastRecordedIteration = currentSellersCashHistory.length
 
     if (lastRecordedIteration >= currentIteration) {
       return currentSellersCashHistory
     }
 
-    var newSellersCashHistory = enlargeHistory(currentIteration, currentSellersCashHistory)
-    var lastRecordedValue = getLastRecordedCashAmount(currentSellersCashHistory, lastRecordedIteration)
+    const newSellersCashHistory = enlargeHistory(currentIteration, currentSellersCashHistory)
+    const lastRecordedValue = getLastRecordedCashAmount(currentSellersCashHistory, lastRecordedIteration)
     return _.fill(newSellersCashHistory, lastRecordedValue, lastRecordedIteration, currentIteration)
   }
 
   function updateCashHistory (self, seller, currentIteration) {
-    var currentSellersCashHistory = self.cashHistory[seller.name]
-    var newSellersCashHistory = fillMissingIterations(currentIteration, currentSellersCashHistory)
+    const currentSellersCashHistory = self.cashHistory[seller.name]
+    const newSellersCashHistory = fillMissingIterations(currentIteration, currentSellersCashHistory)
     newSellersCashHistory[currentIteration] = seller.cash
     self.cashHistory[seller.name] = newSellersCashHistory
   }
@@ -85,7 +85,7 @@ Sellers.prototype = (function () {
     },
 
     updateCash: function (sellerName, amount, currentIteration) {
-      var seller = this.get(sellerName)
+      const seller = this.get(sellerName)
       seller.cash += parseFloat(amount)
       updateCashHistory(this, seller, currentIteration)
     },
@@ -100,12 +100,12 @@ Sellers.prototype = (function () {
   }
 })()
 
-var Countries = function (configuration) {
+const Countries = function (configuration) {
   this.configuration = configuration
 }
 
 Countries.prototype = (function () {
-  var europeanCountries = {
+  const europeanCountries = {
     DE: [1.2, 190995],
     UK: [1.21, 152741],
     FR: [1.2, 151381],
@@ -144,7 +144,7 @@ Countries.prototype = (function () {
     return scale(europeanCountries[name][0])
   }
 
-  var Country = function (name, taxRule) {
+  const Country = function (name, taxRule) {
     this.name = name
     this.taxRule = taxRule
   }
@@ -154,12 +154,12 @@ Countries.prototype = (function () {
   }
 
   function lookupForOverridenDefinition (configuration, country) {
-    var conf = configuration.all()
+    const conf = configuration.all()
     if (!conf.taxes || !conf.taxes[country]) {
       return null
     }
 
-    var def = conf.taxes[country]
+    const def = conf.taxes[country]
     if (_.isNumber(def)) {
       console.info(chalk.blue('Tax rule for country ' + country + ' changed to scale factor ' + def))
       return scale(def)
@@ -167,7 +167,7 @@ Countries.prototype = (function () {
 
     if (_.isString(def)) {
       try {
-        var taxRule = customEval(def)
+        const taxRule = customEval(def)
         if (_.isFunction(taxRule)) {
           console.info(chalk.blue('Tax rule for country ' + country + ' changed to function ' + def))
           return taxRule
@@ -190,7 +190,7 @@ Countries.prototype = (function () {
       return this
     },
     applyTax: function (sum) {
-      var newRule = lookupForOverridenDefinition(this.configuration, this.name)
+      const newRule = lookupForOverridenDefinition(this.configuration, this.name)
 
       if (newRule == null) {
         return this.taxRule([sum])
@@ -205,8 +205,8 @@ Countries.prototype = (function () {
     }
   }
 
-  var countryDistributionByWeight = _.reduce(europeanCountries, function (distrib, infos, country) {
-    var i
+  const countryDistributionByWeight = _.reduce(europeanCountries, function (distrib, infos, country) {
+    let i
     for (i = 0; i < infos[1]; i++) {
       distrib.push(country)
     }
@@ -214,7 +214,7 @@ Countries.prototype = (function () {
   }, [])
   _.shuffle(countryDistributionByWeight)
 
-  var countryMap = _.reduce(europeanCountries, function (map, infos, country) {
+  const countryMap = _.reduce(europeanCountries, function (map, infos, country) {
     map[country] = new Country(country, defaultTaxRule(country))
     return map
   }, {})
@@ -227,7 +227,7 @@ Countries.prototype = (function () {
     },
 
     taxRule: function (countryName) {
-      var country = countryMap[countryName]
+      const country = countryMap[countryName]
       return country.withConfiguration(this.configuration)
     },
 
@@ -238,6 +238,6 @@ Countries.prototype = (function () {
 })()
 
 module.exports = {
-  Sellers: Sellers,
-  Countries: Countries
+  Sellers,
+  Countries
 }

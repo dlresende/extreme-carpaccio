@@ -1,9 +1,9 @@
-var fs = require('fs')
-var utils = require('../javascripts/utils')
-var _ = require('lodash')
-var chalk = require('chalk')
+const fs = require('fs')
+const utils = require('../javascripts/utils')
+const _ = require('lodash')
+const chalk = require('chalk')
 
-var Configuration = function (filepath) {
+const Configuration = function (filepath) {
   this.filepath = filepath
   this.props = {}
 }
@@ -31,7 +31,7 @@ Configuration.prototype = (function () {
 
   function readContent (self) {
     console.info('Reading %s.', self.filepath)
-    var fileContent = fs.readFileSync(self.filepath)
+    const fileContent = fs.readFileSync(self.filepath)
     return utils.jsonify(fileContent)
   }
 
@@ -41,7 +41,7 @@ Configuration.prototype = (function () {
     },
 
     all: function () {
-      var self = this
+      const self = this
 
       if (_.isEmpty(self.props)) {
         self.props = readContent(self)
@@ -51,14 +51,15 @@ Configuration.prototype = (function () {
     },
 
     watch: function (callback, watchOnce, interval) {
-      var self = this
+      const self = this
 
-      fs.watchFile(self.filepath, { persistent: !watchOnce, interval: interval }, function (curr, prev) {
+      fs.watchFile(self.filepath, { persistent: !watchOnce, interval }, function (curr, prev) {
         self.load(callback)
       })
     }
   }
 })()
 
-var exports = module.exports
-exports.Configuration = Configuration
+module.exports = {
+  Configuration
+}

@@ -1,7 +1,7 @@
-var url = require('url')
-var utils = require('../utils')
-var UrlAssembler = require('url-assembler')
-var _ = require('lodash')
+const url = require('url')
+const utils = require('../utils')
+const UrlAssembler = require('url-assembler')
+const _ = require('lodash')
 
 function SellerService (_sellers, _configuration) {
   this.sellers = _sellers
@@ -9,7 +9,7 @@ function SellerService (_sellers, _configuration) {
 }
 module.exports = SellerService
 
-var service = SellerService.prototype
+const service = SellerService.prototype
 
 service.addCash = function (seller, amount, currentIteration) {
   this.sellers.updateCash(seller.name, amount, currentIteration)
@@ -20,15 +20,15 @@ service.deductCash = function (seller, amount, currentIteration) {
 }
 
 service.getCashHistory = function (chunk) {
-  var cashHistory = this.sellers.cashHistory
-  var cashHistoryReduced = {}
-  var lastIteration
+  const cashHistory = this.sellers.cashHistory
+  const cashHistoryReduced = {}
+  let lastIteration
 
-  var seller
+  let seller
   for (seller in cashHistory) {
     cashHistoryReduced[seller] = []
 
-    var i = 0
+    let i = 0
     for (; i < cashHistory[seller].length; i++) {
       if ((i + 1) % chunk === 0) {
         cashHistoryReduced[seller].push(cashHistory[seller][i])
@@ -42,13 +42,13 @@ service.getCashHistory = function (chunk) {
     lastIteration = i
   }
 
-  return { history: cashHistoryReduced, lastIteration: lastIteration }
+  return { history: cashHistoryReduced, lastIteration }
 }
 
 service.isAuthorized = function (name, password) {
-  var seller = this.sellers.get(name)
+  const seller = this.sellers.get(name)
   if (seller) {
-    var samePwd = (seller.password === password)
+    const samePwd = (seller.password === password)
     console.info('Attempt to re-register %s, same password %j', name, samePwd)
     return samePwd
   }
@@ -56,10 +56,10 @@ service.isAuthorized = function (name, password) {
 }
 
 service.register = function (sellerUrl, name, password) {
-  var parsedUrl = new url.URL(sellerUrl)
-  var seller = {
-    name: name,
-    password: password,
+  const parsedUrl = new url.URL(sellerUrl)
+  const seller = {
+    name,
+    password,
     hostname: parsedUrl.hostname,
     port: parsedUrl.port,
     path: parsedUrl.pathname,
@@ -81,9 +81,9 @@ service.updateCash = function (seller, expectedBill, actualBill, currentIteratio
     return
   }
   try {
-    var totalExpectedBill = utils.fixPrecision(expectedBill.total, 2)
-    var message
-    var loss
+    const totalExpectedBill = utils.fixPrecision(expectedBill.total, 2)
+    let message
+    let loss
 
     if (_.isEmpty(actualBill)) {
       loss = utils.fixPrecision(totalExpectedBill * 0.5, 2)
@@ -91,7 +91,7 @@ service.updateCash = function (seller, expectedBill, actualBill, currentIteratio
       message = 'Goddamn, ' + seller.name + ' has neither sent us a valid bill nor responded 404. ' + loss + ' will be charged.'
       this.notify(seller, { type: 'ERROR', content: message })
     } else {
-      var totalActualBill = utils.fixPrecision(actualBill.total, 2)
+      const totalActualBill = utils.fixPrecision(actualBill.total, 2)
 
       if (actualBill && totalExpectedBill === totalActualBill) {
         this.addCash(seller, totalExpectedBill, currentIteration)
