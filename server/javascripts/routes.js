@@ -31,6 +31,8 @@ module.exports = function (sellerService, dispatcher) {
 
     if (_.isEmpty(sellerName) || _.isEmpty(sellerUrl) || _.isEmpty(sellerPwd)) {
       response.status(BAD_REQUEST).send({ message: 'missing name, password or url' })
+    } else if (!sellerService.isUrlValid(sellerUrl)) {
+      response.status(BAD_REQUEST).send({ message: 'invalid url' })
     } else if (sellerService.isAuthorized(sellerName, sellerPwd)) {
       sellerService.register(sellerUrl, sellerName, sellerPwd)
       response.status(OK).end()

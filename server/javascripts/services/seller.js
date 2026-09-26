@@ -55,7 +55,19 @@ service.isAuthorized = function (name, password) {
   return true
 }
 
+service.isUrlValid = function (sellerUrl) {
+  try {
+    const parsed = new url.URL(sellerUrl)
+    return (parsed.protocol === 'http:' || parsed.protocol === 'https:') && !!parsed.hostname
+  } catch (e) {
+    return false
+  }
+}
+
 service.register = function (sellerUrl, name, password) {
+  if (!this.isUrlValid(sellerUrl)) {
+    throw new Error('Invalid seller url: ' + sellerUrl)
+  }
   const parsedUrl = new url.URL(sellerUrl)
   const seller = {
     name,
