@@ -1,30 +1,24 @@
-#Flask python Client server
+# Extreme Carpaccio - Python Flask Client
 
-The server is developed with Flask (http://flask.pocoo.org/).
-To run the test you need at least python 2.7.8.
+Minimalistic Flask starter client for Extreme Carpaccio.
 
-## How to Install
-```
-pip install Flask
-```
+## Prerequisites
+- [Python](https://www.python.org/) (>= 3.8)
 
-## How to run the server
-
-The server runs by defaut on port 5000 and listens to any open interface.
-
-### Console
-You can run it with python console :
-
-```
-import client
-client.start_server()
+## Install & Run
+```bash
+pip install -r requirements.txt
+python3 __main__.py
 ```
 
-### Python call
-Calling python . in the project directory :
+## Endpoints
+- `POST /ping`: Responds with `pong`
 
-```
-python .
+```bash
+curl -X POST http://localhost:3000/ping
 ```
 
-Or use your favorite IDE.
+## Tests
+```bash
+python3 -m unittest discover -s tests
+```
