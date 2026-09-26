@@ -1,5 +1,3 @@
-![build status](https://github.com/dlresende/extreme-carpaccio/actions/workflows/on-prs-made-against-the-server.yml/badge.svg)
-
 # Instructions for Facilitators
 
 French version [here](./README-FR.md).
