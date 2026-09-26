@@ -1,6 +1,6 @@
-# Extreme Carpaccio - Node Plain Client
+# Extreme Carpaccio - TypeScript Client
 
-Minimalistic plain Node.js starter client (no web framework) for Extreme Carpaccio.
+Minimalistic TypeScript starter client for Extreme Carpaccio.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/)

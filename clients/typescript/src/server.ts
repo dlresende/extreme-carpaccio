@@ -1,27 +1,16 @@
-import * as Koa from 'koa';
-import * as Router from 'koa-router';
-import bodyParser = require("koa-bodyparser");
-import { sayHello } from './calc';
+import express from 'express'
 
-const app = new Koa();
-app.use(bodyParser());
-const router = new Router();
+export const app = express()
+app.use(express.json())
 
-router.get('/*', async (ctx) => {
-    ctx.body = sayHello();
-});
+app.post('/ping', (_req, res) => {
+  res.send('pong')
+})
 
-router.post('/feedback', async (ctx) => {
-    console.log('Feedback received', ctx.request.body);
-});
+const port = process.env.PORT || 3000
 
-router.post('/order', async (ctx) => {
-    // your code here
-});
-
-app.use(router.routes());
-
-app.listen(8080);
-
-console.log('Server running on port 8080');
-
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`TypeScript client listening on port ${port}`)
+  })
+}
