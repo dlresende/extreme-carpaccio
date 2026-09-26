@@ -20,7 +20,7 @@ DEBUG=xcarpaccio:server npm start
 ## Test the network
 During the workshop, HTTP packages will be exchanged between participant's computers and the server. Although, many networks block incoming connections using firewalls, which will prevent the server from reaching participants.
 
-Before you start an Extreme Carpaccio workshop, it is strongly recommended that you test if the network you will playing with accepts incoming connections. Follow the instructions bellow.
+Before you start an Extreme Carpaccio workshop, it is strongly recommended that you test if the network you will be playing with accepts incoming connections. Follow the instructions below.
 
 1. Connect a first computer in the network
 1. In that computer run: `$ echo "Hello Extreme Carpaccio" | nc -l 3000`
@@ -42,7 +42,7 @@ You can do this this way:
 1. Make everyone register
 1. Thanks to the ``cashFreeze`` parameter, everyone's cash stays at 0.
 1. Wait until every team is registered **and marked online**. This means the game is setup for everyone.
-1. Say '*Looks like that everyone is ready. Then I will start the game in 5 seconds.*' 
+1. Say '*Looks like everyone is ready. Then I will start the game in 5 seconds.*' 
 1. Open ``configuration.json`` file 
 1. Replace ``"cashFreeze": true,`` with ``"cashFreeze": false,`` and save
 1. Player's cash is now evaluated. The game starts!
@@ -60,6 +60,6 @@ During the session, the facilitator can activate some "constraints" via the [con
 
 At the end, when the facilitator decides to stop the implementation session and the winner becomes known, he/she takes some time at to exchange with participants about the exercise: what worked well, what could be improved, feedbacks, learnings, etc.
 
-I strongly encourage people facilitating or playing Extreme Carpaccio to tweet using the hashtag [#ExtremeCarpaccio](https://twitter.com/search?vertical=default&q=%22extreme%20carpaccio%22%20OR%20%22Xtreme%20carpaccio%22%20OR%20%23ExtremeCarpaccio&src=typd) with their impressions, feelings, feedbacks, etc. Needless to say, but just in case, feel free to fork, hack, make pull requests, talk about, blog, run the exercise on meetups, conferences, compagnies, etc.
+I strongly encourage people facilitating or playing Extreme Carpaccio to tweet using the hashtag [#ExtremeCarpaccio](https://twitter.com/search?vertical=default&q=%22extreme%20carpaccio%22%20OR%20%22Xtreme%20carpaccio%22%20OR%20%23ExtremeCarpaccio&src=typd) with their impressions, feelings, feedbacks, etc. Needless to say, but just in case, feel free to fork, hack, make pull requests, talk about, blog, run the exercise on meetups, conferences, companies, etc.
 
 More details about the exercise [here](https://diegolemos.net/2016/01/07/extreme-carpaccio/).
