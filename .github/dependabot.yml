@@ -35,3 +35,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: pip
+  directory: "/clients/python/flask-server"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"

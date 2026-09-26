@@ -5,6 +5,7 @@ on:
     paths:
       - 'clients/javascript/**'
       - 'clients/typescript/**'
+      - 'clients/python/**'
       - '.github/workflows/on-prs-made-against-clients.yml'
 
 jobs:
@@ -46,3 +47,26 @@ jobs:
           cache-dependency-path: clients/typescript/package-lock.json
       - run: npm install && npm test
         working-directory: clients/typescript
+
+  test-python-flask:
+    name: Python Flask Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - run: pip install -r requirements.txt && python -m unittest discover -s tests
+        working-directory: clients/python/flask-server
+
+  test-python-simple:
+    name: Python Simple Client
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python -m unittest discover -s tests
+        working-directory: clients/python/simple-server

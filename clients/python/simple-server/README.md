@@ -1,22 +1,25 @@
-# Python Client server
+# Extreme Carpaccio - Python Simple Client
 
-The server is developed with python 3.4
+Minimalistic plain Python starter client (no external dependencies, built-in `http.server`) for Extreme Carpaccio.
 
-## How to run the server
+## Prerequisites
+- [Python](https://www.python.org/) (>= 3.8)
 
-### Console
-You can run it with python console 
+## Install & Run
+No dependencies to install!
 
-```
-import client
-client.start_server()
-```
-
-### Python call
-Calling python . in the project directory
-
-```
-python .
+```bash
+python3 server.py
 ```
 
-Or use your favorite IDE
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
+```bash
+curl -X POST http://localhost:3000/ping
+```
+
+## Tests
+```bash
+python3 -m unittest discover -s tests
+```

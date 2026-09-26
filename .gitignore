@@ -30,3 +30,5 @@ server/public/components
 .DS_Store
 *.tmp
 *.swp
+__pycache__/
+*.pyc
