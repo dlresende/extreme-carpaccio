@@ -4,7 +4,7 @@ Version anglaise [ici](./README.md).
 
 ## Dépendances
 
-- [nodejs](https://nodejs.org/en/) (>= 18)
+- [nodejs](https://nodejs.org/en/)
 
 ## Installer et lancer
 

@@ -3,7 +3,7 @@
 French version [here](./README-FR.md).
 
 ## Requirements
-- [nodejs](https://nodejs.org/en/) (>= 18)
+- [nodejs](https://nodejs.org/en/)
 
 ## Install & Run
 
