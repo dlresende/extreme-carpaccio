@@ -4,7 +4,6 @@ updates:
   directory: "/server"
   schedule:
     interval: monthly
-  open-pull-requests-limit: 10
   versioning-strategy: increase-if-necessary
   ignore:
   - dependency-name: chalk
@@ -20,7 +19,6 @@ updates:
   directory: "/clients/javascript/express"
   schedule:
     interval: monthly
-  open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
 
@@ -28,7 +26,6 @@ updates:
   directory: "/clients/javascript/node-plain"
   schedule:
     interval: monthly
-  open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
 
@@ -36,6 +33,5 @@ updates:
   directory: "/clients/typescript"
   schedule:
     interval: monthly
-  open-pull-requests-limit: 10
   commit-message:
     prefix: "chore"
