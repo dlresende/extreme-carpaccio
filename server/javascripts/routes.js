@@ -1,15 +1,15 @@
-var express = require('express')
-var _ = require('lodash')
+const express = require('express')
+const _ = require('lodash')
 
 module.exports = function (sellerService, dispatcher) {
-  var router = express.Router()
-  var OK = 200
-  var BAD_REQUEST = 400
-  var UNAUTHORIZED = 401
+  const router = express.Router()
+  const OK = 200
+  const BAD_REQUEST = 400
+  const UNAUTHORIZED = 401
 
   router.get('/sellers', function (request, response) {
     // seller view is returned, to prevent any confidential information leaks
-    var sellerViews = _.map(sellerService.allSellers(), function (seller) {
+    const sellerViews = _.map(sellerService.allSellers(), function (seller) {
       return {
         cash: seller.cash,
         name: seller.name,
@@ -20,14 +20,14 @@ module.exports = function (sellerService, dispatcher) {
   })
 
   router.get('/sellers/history', function (request, response) {
-    var chunk = request.query.chunk || 10
+    const chunk = request.query.chunk || 10
     response.status(OK).send(sellerService.getCashHistory(chunk))
   })
 
   router.post('/seller', function (request, response) {
-    var sellerName = request.body.name
-    var sellerUrl = request.body.url
-    var sellerPwd = request.body.password
+    const sellerName = request.body.name
+    const sellerUrl = request.body.url
+    const sellerPwd = request.body.password
 
     if (_.isEmpty(sellerName) || _.isEmpty(sellerUrl) || _.isEmpty(sellerPwd)) {
       response.status(BAD_REQUEST).send({ message: 'missing name, password or url' })

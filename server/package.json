@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node bin/www",
     "test": "jasmine-node .",
-    "lint": "eslint javascripts/",
+    "lint": "eslint --max-warnings 0 javascripts/",
     "postinstall": "bower install"
   },
   "dependencies": {

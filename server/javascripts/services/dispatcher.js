@@ -1,9 +1,9 @@
-var _ = require('lodash')
-var Reduction = require('./reduction')
-var utils = require('../utils')
-var chalk = require('chalk')
+const _ = require('lodash')
+const Reduction = require('./reduction')
+const utils = require('../utils')
+const chalk = require('chalk')
 
-var BadRequest = function (_configuration) {
+const BadRequest = function (_configuration) {
   this.configuration = _configuration
 }
 
@@ -18,8 +18,8 @@ BadRequest.prototype = (function () {
     },
 
     corruptOrder: function (order) {
-      var mode = _.sample(getConfiguration(this).modes)
-      var copy = _.clone(order)
+      const mode = _.sample(getConfiguration(this).modes)
+      const copy = _.clone(order)
 
       console.info(chalk.blue('corrupt mode ' + mode))
 
@@ -62,12 +62,12 @@ BadRequest.prototype = (function () {
 
     updateSellersCash: function (self, seller, expectedBill, currentIteration) {
       return function (response) {
-        var amount = expectedBill.total
-        var sellerService = self.sellerService
-        var message
+        const amount = expectedBill.total
+        const sellerService = self.sellerService
+        let message
 
         if (response.statusCode !== 400) {
-          var loss = amount * 0.5
+          const loss = amount * 0.5
           message = 'Hey, ' + seller.name + ' lose ' + loss + ' because he/she does not know how to handle correctly a bad request'
           sellerService.deductCash(seller, loss, currentIteration)
           sellerService.notify(seller, { type: 'ERROR', content: message })
@@ -81,7 +81,7 @@ BadRequest.prototype = (function () {
   }
 })()
 
-var SellerCashUpdater = function (_sellerService, _orderService) {
+const SellerCashUpdater = function (_sellerService, _orderService) {
   this.sellerService = _sellerService
   this.orderService = _orderService
 }
@@ -89,7 +89,7 @@ var SellerCashUpdater = function (_sellerService, _orderService) {
 SellerCashUpdater.prototype = (function () {
   return {
     doUpdate: function (seller, expectedBill, currentIteration) {
-      var self = this
+      const self = this
       return function (response) {
         if (response.statusCode === 200) {
           self.sellerService.setOnline(seller)
@@ -102,7 +102,7 @@ SellerCashUpdater.prototype = (function () {
             console.info(chalk.grey(seller.name + ' replied "' + sellerResponse + '"'))
 
             try {
-              var actualBill = utils.jsonify(sellerResponse)
+              const actualBill = utils.jsonify(sellerResponse)
               self.orderService.validateBill(actualBill)
               self.sellerService.updateCash(seller, expectedBill, actualBill, currentIteration)
             } catch (exception) {
@@ -121,7 +121,7 @@ SellerCashUpdater.prototype = (function () {
   }
 })()
 
-var Dispatcher = function (_sellerService, _orderService, _configuration) {
+const Dispatcher = function (_sellerService, _orderService, _configuration) {
   this.sellerService = _sellerService
   this.orderService = _orderService
   this.configuration = _configuration
@@ -134,7 +134,7 @@ Dispatcher.prototype = (function () {
   function putSellerOffline (self, seller, currentIteration) {
     return function () {
       console.error(chalk.red('Could not reach seller ' + utils.stringify(seller)))
-      var offlinePenalty = getConfiguration(self).offlinePenalty
+      let offlinePenalty = getConfiguration(self).offlinePenalty
 
       if (!_.isNumber(offlinePenalty)) {
         console.warn(chalk.yellow('Offline penalty is missing or is not a number. Using 0.'))
@@ -145,7 +145,7 @@ Dispatcher.prototype = (function () {
     }
   }
 
-  var Period = function (reduction, shoppingIntervalInMillis) {
+  const Period = function (reduction, shoppingIntervalInMillis) {
     this.reduction = reduction
     this.shoppingIntervalInMillis = shoppingIntervalInMillis
   }
@@ -183,9 +183,9 @@ Dispatcher.prototype = (function () {
 
   return {
     sendOrderToSellers: function (reduction, currentIteration, badRequest) {
-      var self = this
-      var order = self.orderService.createOrder(reduction)
-      var expectedBill = self.orderService.bill(order, reduction)
+      const self = this
+      let order = self.orderService.createOrder(reduction)
+      const expectedBill = self.orderService.bill(order, reduction)
 
       if (badRequest) {
         order = self.badRequest.corruptOrder(order)
@@ -193,7 +193,7 @@ Dispatcher.prototype = (function () {
 
       _.forEach(self.sellerService.allSellers(), function (seller) {
         self.sellerService.addCash(seller, 0, currentIteration)
-        var cashUpdater
+        let cashUpdater
 
         if (badRequest) {
           cashUpdater = self.badRequest.updateSellersCash(self, seller, expectedBill, currentIteration)
@@ -201,17 +201,17 @@ Dispatcher.prototype = (function () {
           cashUpdater = self.sellerCashUpdater.doUpdate(seller, expectedBill, currentIteration)
         }
 
-        var errorCallback = putSellerOffline(self, seller, currentIteration)
+        const errorCallback = putSellerOffline(self, seller, currentIteration)
         self.orderService.sendOrder(seller, order, cashUpdater, errorCallback)
       })
     },
 
     startBuying: function (iteration) {
-      var reductionStrategy = getConfiguration(this).reduction
-      var period = getReductionPeriodFor(reductionStrategy)
-      var badRequest = this.badRequest.shouldSendBadRequest(iteration)
-      var message = '>>> Shopping iteration ' + iteration
-      var nextIteration = iteration + 1
+      const reductionStrategy = getConfiguration(this).reduction
+      const period = getReductionPeriodFor(reductionStrategy)
+      const badRequest = this.badRequest.shouldSendBadRequest(iteration)
+      let message = '>>> Shopping iteration ' + iteration
+      let nextIteration = iteration + 1
 
       if (badRequest) {
         message = message + ' (bad request)'
@@ -232,7 +232,7 @@ Dispatcher.prototype = (function () {
 })()
 
 module.exports = {
-  Dispatcher: Dispatcher,
-  BadRequest: BadRequest,
-  SellerCashUpdater: SellerCashUpdater
+  Dispatcher,
+  BadRequest,
+  SellerCashUpdater
 }
