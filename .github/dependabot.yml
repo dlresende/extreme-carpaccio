@@ -8,8 +8,10 @@ updates:
   versioning-strategy: increase-if-necessary
   ignore:
   - dependency-name: chalk
+    update-types: ["version-update:semver-major"]
+  - dependency-name: eslint
+    update-types: ["version-update:semver-major"]
   - dependency-name: eslint-plugin-promise
-    versions:
-    - 4.3.0
+    update-types: ["version-update:semver-major"]
   commit-message:
     prefix: "chore"

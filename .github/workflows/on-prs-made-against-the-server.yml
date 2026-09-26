@@ -3,20 +3,31 @@ name: Tests
 on:
   pull_request:
     paths:
-      - server/**
+      - 'server/**'
+      - '.github/workflows/on-prs-made-against-the-server.yml'
 
 jobs:
   run-tests-on-windows:
     name: on windows
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v3
-    - run: npm install && npm test
-      working-directory: server
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - run: npm install && npm run lint && npm test
+        working-directory: server
   run-tests-on-linux:
     name: on linux
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - run: npm install && npm test
-      working-directory: server
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - run: npm install && npm run lint && npm test
+        working-directory: server
