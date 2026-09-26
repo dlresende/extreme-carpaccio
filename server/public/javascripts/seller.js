@@ -11,6 +11,17 @@ var SellerForm = React.createClass({
 			return;
 		}
 
+		try {
+			var parsed = new URL(url);
+			if ((parsed.protocol !== 'http:' && parsed.protocol !== 'https:') || !parsed.hostname) {
+				alert('Please enter a valid HTTP or HTTPS URL (e.g. http://192.168.1.1:3000)');
+				return;
+			}
+		} catch (err) {
+			alert('Please enter a valid HTTP or HTTPS URL (e.g. http://192.168.1.1:3000)');
+			return;
+		}
+
 		this.props.onSellerSubmit({name:name, password:password, url:url});
 
 		this.refs.name.getDOMNode().value= '';
@@ -36,7 +47,7 @@ var SellerForm = React.createClass({
 					</div>
 					<div className='form-group'>
 						<label htmlFor='url' className='sr-only'>URL</label>
-                        <input type='text' placeholder='http://192.168.1.1:3000' className='form-control' ref='url'
+                        <input type='url' placeholder='http://192.168.1.1:3000' className='form-control' ref='url'
                                data-toggle='tooltip' data-placement='bottom' title='Base url of your own client' />
 					</div>
 					<button type='submit' className='btn btn-success'>Register</button>

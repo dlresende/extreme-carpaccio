@@ -153,6 +153,21 @@ describe('Seller Service', function() {
         expect(sellerService.isAuthorized('travis', 'pacman')).toEqual(true);
         expect(sellerService.isAuthorized('travis', 'vlad')).toEqual(false);
     });
+
+    it('should validate seller url format', function() {
+        expect(sellerService.isUrlValid('http://localhost:6000')).toEqual(true);
+        expect(sellerService.isUrlValid('https://example.com/seller')).toEqual(true);
+        expect(sellerService.isUrlValid('http://192.168.1.1:3000')).toEqual(true);
+        expect(sellerService.isUrlValid('invalid-url')).toEqual(false);
+        expect(sellerService.isUrlValid('ftp://localhost:6000')).toEqual(false);
+        expect(sellerService.isUrlValid('')).toEqual(false);
+    });
+
+    it('should throw an error when registering seller with invalid url', function() {
+        expect(function() {
+            sellerService.register('invalid-url', 'john', 'doe');
+        }).toThrow(new Error('Invalid seller url: invalid-url'));
+    });
 });
 
 describe('Order Service', function() {

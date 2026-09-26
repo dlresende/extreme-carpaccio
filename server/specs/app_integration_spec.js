@@ -96,4 +96,36 @@ describe('Route', function () {
             expect(error).toBeNull();
         });
     });
+
+    it('should reject seller registration with invalid url', function () {
+        runs(function () {
+            request(app)
+                .post('/seller')
+                .send({name: 'john', password: 'doe', url: 'invalid-url'})
+                .expect(400)
+                .end(grabError);
+        });
+
+        waitsFor(isDone, "route should be resolved", 1750);
+
+        runs(function() {
+            expect(error).toBeNull();
+        });
+    });
+
+    it('should reject seller registration with non-http url', function () {
+        runs(function () {
+            request(app)
+                .post('/seller')
+                .send({name: 'john', password: 'doe', url: 'ftp://localhost:6000'})
+                .expect(400)
+                .end(grabError);
+        });
+
+        waitsFor(isDone, "route should be resolved", 1750);
+
+        runs(function() {
+            expect(error).toBeNull();
+        });
+    });
 });
