@@ -11,6 +11,13 @@ npm install
 npm start
 ```
 
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
+```bash
+curl -X POST http://localhost:3000/ping
+```
+
 ## Tests
 ```bash
 npm test
