@@ -1,16 +1,24 @@
-# Run
+# Extreme Carpaccio - Node Plain Client
 
-```
+Minimalistic plain Node.js starter client (no web framework) for Extreme Carpaccio.
+
+## Prerequisites
+- [Node.js](https://nodejs.org/)
+
+## Install & Run
+```bash
+npm install
 npm start
 ```
 
-# Test
+## Endpoints
+- `POST /ping`: Responds with `pong`
 
+```bash
+curl -X POST http://localhost:3000/ping
 ```
+
+## Tests
+```bash
 npm test
 ```
-
-# Resources
-
-* [Simplified HTTP request client](https://github.com/request/request)
-* [Using Jasmine-Node to Test Your Node Server](http://randomjavascript.blogspot.fr/2012/12/using-jasmine-node-to-test-your-node.html)

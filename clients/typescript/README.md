@@ -1,6 +1,6 @@
-# Extreme Carpaccio - Express Client
+# Extreme Carpaccio - TypeScript Client
 
-Minimalistic Express starter client for Extreme Carpaccio.
+Minimalistic TypeScript starter client for Extreme Carpaccio.
 
 ## Prerequisites
 - [Node.js](https://nodejs.org/)
