@@ -256,6 +256,21 @@ jobs:
       - run: composer test
         working-directory: clients/php
 
+  client-clojure:
+    name: Client Clojure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - run: lein test
+        working-directory: clients/clojure
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -280,6 +295,7 @@ jobs:
       - client-ruby-rails
       - client-ruby-sinatra
       - client-php
+      - client-clojure
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -303,7 +319,8 @@ jobs:
              [ "${{ needs.client-fsharp.result }}" != "success" ] || \
              [ "${{ needs.client-ruby-rails.result }}" != "success" ] || \
              [ "${{ needs.client-ruby-sinatra.result }}" != "success" ] || \
-             [ "${{ needs.client-php.result }}" != "success" ]; then
+             [ "${{ needs.client-php.result }}" != "success" ] || \
+             [ "${{ needs.client-clojure.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
