@@ -1,6 +1,6 @@
 -module(xcarpaccio_webhandler).
 
--export([init/3, handle/2]).
+-export([init/2, handle/2]).
 -export([reply/2]).
 
 %% ===================================================================
