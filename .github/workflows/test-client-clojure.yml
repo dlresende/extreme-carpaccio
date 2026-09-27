@@ -1,0 +1,26 @@
+name: Client Clojure
+
+on:
+  pull_request:
+    paths:
+      - 'clients/clojure/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-clojure:
+    name: Client Clojure
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+    - name: Install Leiningen
+      run: |
+        curl -fsSL -o /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+        chmod +x /usr/local/bin/lein
+        lein version
+    - run: lein test
+      working-directory: clients/clojure

@@ -1,0 +1,20 @@
+name: Client F#
+
+on:
+  pull_request:
+    paths:
+      - 'clients/f#/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-fsharp:
+    name: Client F#
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - run: dotnet test extreme-carpaccio-client-fsharp.sln
+      working-directory: clients/f#
