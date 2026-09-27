@@ -2,17 +2,17 @@ module app;
 
 import vibe.d;
 
-/// HTTP status and body for a request, kept free of vibe.d response types so
-/// the routing rules can be tested without starting a server.
+/// HTTP status and body for a request, so the routing rules can be exercised
+/// without starting a server.
 struct Reply
 {
 	int status;
 	string body;
 }
 
-Reply handleRequest(string method, string path)
+Reply handleRequest(HTTPMethod method, string path)
 {
-	if (method == "POST" && path == "/ping")
+	if (method == HTTPMethod.post && path == "/ping")
 		return Reply(200, "pong");
 
 	return Reply(404, "Not Found");
@@ -22,7 +22,7 @@ void handlePing(HTTPServerRequest req, HTTPServerResponse res)
 {
 	auto reply = handleRequest(req.method, req.path);
 	res.statusCode = reply.status;
-	res.body = reply.body;
+	res.writeBody(reply.body, "text/plain; charset=utf-8");
 }
 
 void startServer(string address)
