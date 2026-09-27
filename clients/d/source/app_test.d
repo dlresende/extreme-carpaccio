@@ -1,7 +1,5 @@
 module app_test;
 
-import std.exception : assert;
-
 import app;
 
 unittest
