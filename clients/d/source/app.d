@@ -25,12 +25,12 @@ void handlePing(HTTPServerRequest req, HTTPServerResponse res)
 	res.body = reply.body;
 }
 
-void main()
+void startServer(string address)
 {
 	auto router = new URLRouter();
 	router.post("/ping", &handlePing);
 
-	auto settings = new HTTPServerSettings("0.0.0.0:3000");
+	auto settings = new HTTPServerSettings(address);
 	listenHTTP(settings, router);
 	runApplication();
 }
