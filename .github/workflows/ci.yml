@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  server-linux:
+    name: Server (Linux)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - run: npm install && npm run lint && npm test
+        working-directory: server
+
+  server-windows:
+    name: Server (Windows)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: server/package-lock.json
+      - run: npm install && npm run lint && npm test
+        working-directory: server
+
+  client-js-express:
+    name: Client JS (Express)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: clients/javascript/express/package-lock.json
+      - run: npm install && npm test
+        working-directory: clients/javascript/express
+
+  client-js-node-plain:
+    name: Client JS (Node Plain)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: clients/javascript/node-plain/package-lock.json
+      - run: npm install && npm test
+        working-directory: clients/javascript/node-plain
+
+  client-ts:
+    name: Client TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: clients/typescript/package-lock.json
+      - run: npm install && npm test
+        working-directory: clients/typescript
+
+  client-python-flask:
+    name: Client Python (Flask)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          cache: 'pip'
+      - run: pip install -r requirements.txt && python -m unittest discover -s tests
+        working-directory: clients/python/flask-server
+
+  client-python-simple:
+    name: Client Python (Simple)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python -m unittest discover -s tests
+        working-directory: clients/python/simple-server
+
+  ci-gate:
+    name: All Tests Passed
+    runs-on: ubuntu-latest
+    needs:
+      - server-linux
+      - server-windows
+      - client-js-express
+      - client-js-node-plain
+      - client-ts
+      - client-python-flask
+      - client-python-simple
+    if: always()
+    steps:
+      - name: Verify all required test jobs succeeded
+        run: |
+          if [ "${{ needs.server-linux.result }}" != "success" ] || \
+             [ "${{ needs.server-windows.result }}" != "success" ] || \
+             [ "${{ needs.client-js-express.result }}" != "success" ] || \
+             [ "${{ needs.client-js-node-plain.result }}" != "success" ] || \
+             [ "${{ needs.client-ts.result }}" != "success" ] || \
+             [ "${{ needs.client-python-flask.result }}" != "success" ] || \
+             [ "${{ needs.client-python-simple.result }}" != "success" ]; then
+            echo "One or more test jobs failed."
+            exit 1
+          fi
+          echo "All test jobs passed successfully!"
