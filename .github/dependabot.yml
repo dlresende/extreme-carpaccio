@@ -107,3 +107,10 @@ updates:
     update-types: ["version-update:semver-major"]
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: nuget
+  directory: "/clients/c#"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
