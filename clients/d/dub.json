@@ -6,5 +6,17 @@
 	"license": "MIT",
 	"dependencies": {
 		"vibe-d": "~>0.10.3"
-	}
+	},
+	"configurations": [
+		{
+			"name": "application",
+			"targetType": "executable",
+			"sourcePaths": ["source", "executable"]
+		},
+		{
+			"name": "unittest",
+			"targetType": "library",
+			"sourcePaths": ["source"]
+		}
+	]
 }
