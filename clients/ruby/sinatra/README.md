@@ -11,8 +11,9 @@ bundle install
 bundle exec rackup -p 3000
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```

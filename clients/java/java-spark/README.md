@@ -11,8 +11,9 @@ Minimal Java starter using Spark Java.
 mvn compile exec:java -Dexec.mainClass=extremecarpaccio.HttpServer
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```

@@ -16,8 +16,9 @@ defeats the exercise. Every client therefore meets the same contract:
 - No `/order` and no `/feedback` route.
 - No leftover models, serializers, controllers or routes for those endpoints.
 - A package manager and lock file, so `install` and `test` are reproducible.
-- A README with the sections `Prerequisites`, `Install & Run`, `Endpoint` and `Tests`,
-  where `Endpoint` shows the `curl -X POST http://localhost:3000/ping` call.
+- A README with the sections `Prerequisites`, `Install & Run`, `Endpoints` and `Tests`,
+  where `Endpoints` lists each route and shows the `curl -X POST http://localhost:3000/ping`
+  call.
 - A `.gitignore` covering the build output of that ecosystem.
 
 Where a client is a single implementation it lives directly in `clients/<language>/`. Where

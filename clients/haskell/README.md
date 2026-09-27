@@ -11,8 +11,9 @@ Minimal Haskell starter using WAI and Warp, with no web framework.
 cabal run
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```
