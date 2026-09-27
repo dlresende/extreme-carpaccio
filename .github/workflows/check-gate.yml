@@ -1,0 +1,48 @@
+name: CI Status
+
+on:
+  pull_request:
+
+permissions:
+  checks: read
+  pull-requests: read
+  contents: read
+
+jobs:
+  gatekeeper:
+    name: All Checks Passed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify all PR checks pass
+        run: |
+          SELF="All Checks Passed"
+          SHA="${{ github.event.pull_request.head.sha }}"
+          REPO="${{ github.repository }}"
+
+          echo "Waiting for all check runs on commit $SHA to complete..."
+          sleep 10
+
+          for i in {1..60}; do
+            CHECKS=$(gh api "repos/$REPO/commits/$SHA/check-runs" --jq ".check_runs[] | select(.name != \"$SELF\")")
+            PENDING=$(echo "$CHECKS" | jq -r 'select(.status != "completed") | .name')
+
+            if [ -n "$PENDING" ]; then
+              echo "Waiting on: $PENDING"
+              sleep 5
+              continue
+            fi
+
+            FAILED=$(echo "$CHECKS" | jq -r 'select(.conclusion != null and .conclusion != "success" and .conclusion != "skipped" and .conclusion != "neutral") | .name')
+            if [ -n "$FAILED" ]; then
+              echo "The following checks failed: $FAILED"
+              exit 1
+            fi
+
+            echo "All checks completed successfully!"
+            exit 0
+          done
+
+          echo "Timed out waiting for checks to complete."
+          exit 1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
