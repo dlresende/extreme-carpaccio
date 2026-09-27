@@ -113,6 +113,48 @@ jobs:
       - run: cargo test
         working-directory: clients/rust
 
+  client-java-httpserver:
+    name: Client Java (JDK HTTP Server)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: clients/java/java-httpserver/pom.xml
+      - run: mvn test
+        working-directory: clients/java/java-httpserver
+
+  client-java-spark:
+    name: Client Java (Spark)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: clients/java/java-spark/pom.xml
+      - run: mvn test
+        working-directory: clients/java/java-spark
+
+  client-java-springboot:
+    name: Client Java (Spring Boot)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+          cache-dependency-path: clients/java/java-springboot/pom.xml
+      - run: mvn test
+        working-directory: clients/java/java-springboot
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -126,6 +168,9 @@ jobs:
       - client-python-simple
       - client-go
       - client-rust
+      - client-java-httpserver
+      - client-java-spark
+      - client-java-springboot
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -138,7 +183,10 @@ jobs:
              [ "${{ needs.client-python-flask.result }}" != "success" ] || \
              [ "${{ needs.client-python-simple.result }}" != "success" ] || \
              [ "${{ needs.client-go.result }}" != "success" ] || \
-             [ "${{ needs.client-rust.result }}" != "success" ]; then
+             [ "${{ needs.client-rust.result }}" != "success" ] || \
+             [ "${{ needs.client-java-httpserver.result }}" != "success" ] || \
+             [ "${{ needs.client-java-spark.result }}" != "success" ] || \
+             [ "${{ needs.client-java-springboot.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi

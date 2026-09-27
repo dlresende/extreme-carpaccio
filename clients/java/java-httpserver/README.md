@@ -1,21 +1,24 @@
-A Java client to with a simple com.sun.net.httpserver.HttpServer implementation.
+# Extreme Carpaccio - Java JDK HTTP Server Client
 
-## Dependencies
-- maven 3
-- JDK 8
+Minimal Java starter using the JDK HTTP server, with no runtime dependencies.
 
-## Install
-- `mvn clean install`
+## Prerequisites
+- JDK 17+
+- Maven
 
-## Code
-The game server will post orders on `/order` endpoint.
-`OrderHttpHandler` inner class inside `MyHttpServer.java` file will handle this so this is where to start coding.
+## Install & Run
+```bash
+mvn package
+java -cp target/classes xcarpaccio.MyHttpServer
+```
 
-## Run
-You don't need any application server. No Tomcat, no WAR to deploy. The server is embedded.
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
+```
 
-- `PORT=9000 java -jar target/extreme-carpaccio-java-httpserver-1.0-SNAPSHOT-jar-with-dependencies.jar`
-
-In the example above the server listens on port 9000: [http://localhost:9000/ping](http://localhost:9000/ping)
-
-You can also launch the server with your IDE. You just have to launch `MyHttpServer` class. It has a `main` method.
+## Tests
+```bash
+mvn test
+```

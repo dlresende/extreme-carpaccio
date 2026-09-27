@@ -1,62 +1,34 @@
 package extremecarpaccio;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-import static extremecarpaccio.Strings.stringify;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HttpServerTest {
+class HttpServerTest {
+    private static final int TEST_PORT = 1338;
 
-    private static final String UTF_8 = "utf-8";
-
-    @Rule
-    public HttpServerResource resource = new HttpServerResource(1338);
+    @AfterEach
+    void stopServer() {
+        HttpServer.stopServer();
+    }
 
     @Test
-    public void should_respond_pong_on_get_ping() throws IOException {
-        assertThat(get("/ping")).isEqualTo("pong");
-    }
+    void postPingReturnsPong() throws Exception {
+        HttpServer.start(TEST_PORT);
+        HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + TEST_PORT + "/ping"))
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
 
-    protected String get(String path) throws IOException {
-        return get(path, null);
-    }
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
 
-    protected String get(String path, String query) throws IOException {
-        HttpURLConnection connection = null;
-        try {
-            String queryPart = (query != null ? ("?" + query) : "");
-            URL url = new URL(resource.baseURL() + path + queryPart);
-            connection = (HttpURLConnection) url.openConnection();
-            return stringify(connection.getInputStream(), UTF_8);
-        } finally {
-            if (connection != null)
-                connection.disconnect();
-        }
+        assertEquals(200, response.statusCode());
+        assertEquals("pong", response.body());
     }
-
-    protected String post(String path, String body) throws IOException {
-        URL url = new URL(path);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setInstanceFollowRedirects(false);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setRequestProperty("charset", UTF_8);
-        connection.setRequestProperty("Content-Length", Integer.toString(body.length()));
-        connection.setUseCaches(false);
-        try( DataOutputStream wr = new DataOutputStream( connection.getOutputStream())) {
-            wr.write( body.getBytes(UTF_8) );
-            return stringify(connection.getInputStream(), UTF_8);
-        } finally {
-            connection.disconnect();
-        }
-    }
-
 }

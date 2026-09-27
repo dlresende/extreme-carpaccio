@@ -17,6 +17,7 @@ lib-cov
 [Rr]elease
 *.suo
 **/packages/*
+**/target/
 pids
 logs
 results
