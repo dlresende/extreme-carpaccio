@@ -1,6 +1,6 @@
-# Extreme Carpaccio - Java Spark Client
+# Extreme Carpaccio - Java Spring Boot Client
 
-Minimal Java starter using Spark Java.
+Minimal Java starter using Spring Boot.
 
 ## Prerequisites
 - JDK 17+
@@ -8,7 +8,7 @@ Minimal Java starter using Spark Java.
 
 ## Install & Run
 ```bash
-mvn compile exec:java -Dexec.mainClass=extremecarpaccio.HttpServer
+mvn spring-boot:run
 ```
 
 ## Endpoint

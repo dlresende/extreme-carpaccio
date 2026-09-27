@@ -59,3 +59,24 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: maven
+  directory: "/clients/java/java-httpserver"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
+
+- package-ecosystem: maven
+  directory: "/clients/java/java-spark"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
+
+- package-ecosystem: maven
+  directory: "/clients/java/java-springboot"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
