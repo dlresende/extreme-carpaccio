@@ -1,35 +1,23 @@
-# Extreme Carpaccio Clojure starting code
+# Extreme Carpaccio - Clojure Client
+
+Minimal Clojure starter using Compojure and Ring, served by Jetty.
 
 ## Prerequisites
+- [Leiningen](https://leiningen.org/) (>= 2.0)
+- JDK (>= 17)
 
-You will need **Leiningen 2.0.0** or above installed.
-
-https://leiningen.org/#install
-
-## Development
-1. Fire up a REPL
-2. Hack away, redefine functions they will be hot reloaded, live coding FTW!
-3. Beat the shit out of those crappy java servers :)
-
-## Run test
-To start a web server and run tests for the application, run:
-
-```
-lein midje
+## Install & Run
+```bash
+lein run
 ```
 
-Tests can be run in watch mode like this
-
-```
-lein midje :autotest
-```
-
-
-## Running in "production"
-To start a web server for the application, listening on <port>, type:
-
-
-```
-lein ring server [port]
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
 ```
 
+## Tests
+```bash
+lein test
+```
