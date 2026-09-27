@@ -11,8 +11,9 @@ bundle install
 bin/rails server
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```

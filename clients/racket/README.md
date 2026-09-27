@@ -10,8 +10,9 @@ Minimal Racket starter using the built-in web server, with no external packages.
 racket -t main.rkt -- --port 3000
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```

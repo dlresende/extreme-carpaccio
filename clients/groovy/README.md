@@ -10,8 +10,9 @@ Minimal Groovy starter using the JDK HTTP server, with no external runtime depen
 ./gradlew run
 ```
 
-## Endpoint
-`POST /ping` responds with `pong`:
+## Endpoints
+- `POST /ping`: Responds with `pong`
+
 ```bash
 curl -X POST http://localhost:3000/ping
 ```
