@@ -28,9 +28,9 @@ a language has more than one flavour, each variant is a subdirectory, as with
 
 1. Create `clients/<language>/` with the implementation, its one test, and a README
    following the shape above.
-2. Add a test workflow at `.github/workflows/test-client-<language>.yml`. It must run only
-   on pull requests, and its `paths` filter must list the client folder plus
-   `.github/workflows/**` and `.github/actions/**`.
+2. Add a job to `.github/workflows/test.yml` that runs the client's test command in its
+   folder, and add that job to the `ci-gate` job's `needs` list. The gate fails unless
+   every job it depends on succeeded, so a job left out of `needs` is silently unchecked.
 3. Register the language in `.github/dependabot.yml`.
 
 Editor and IDE files must not be committed. Participants bring their own editor, and
@@ -38,19 +38,18 @@ Editor and IDE files must not be committed. Participants bring their own editor,
 
 ## Continuous integration
 
-Each test target is its own workflow, filtered with GitHub's built-in
-`on.pull_request.paths`, so a pull request runs only the workflows whose folders it
-touched. A change to `.github/workflows/**` runs all of them.
+All tests run from a single workflow, `.github/workflows/test.yml`, on pull requests only.
+It holds one job per client and per server platform, plus an `All Tests Passed` gate that
+fails unless every one of those jobs succeeded.
 
-There is no aggregate job. A workflow cannot declare `needs` on a job in a different
-workflow, so a gate could not survive the split. Branch protection requires no status
-checks, which means a green pull request is not evidence that the whole repository is
-healthy: a change to one client folder runs only that client's workflow, and a change
-matching no filter runs none at all. Review the diff and the checks that did run.
+The gate is why the suite lives in one workflow. A workflow can only depend on jobs inside
+itself, and `workflow_run` fires once per completed workflow, so a single aggregate check
+cannot be built across separate per-folder workflows. The cost is that a pull request waits
+for the slowest job, currently the Haskell build at around six minutes.
 
-Workflow files must sit directly in `.github/workflows/`. GitHub does not discover
-workflows in subdirectories, so a workflow placed under a folder is silently ignored and
-never runs. File names follow `test-server.yml` and `test-client-<language>.yml`.
+Because the gate covers every job, a green pull request is meaningful: all of them ran and
+passed. Branch protection currently requires no status checks, so nothing blocks a merge on
+that basis — the gate is there to be read, not enforced.
 
 ## Dependencies
 
