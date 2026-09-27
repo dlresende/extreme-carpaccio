@@ -294,6 +294,16 @@ jobs:
       - run: rebar3 eunit
         working-directory: clients/erlang
 
+  client-racket:
+    name: Client Racket
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Racket
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends racket
+      - run: raco test tests/
+        working-directory: clients/racket
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -321,6 +331,7 @@ jobs:
       - client-clojure
       - client-haskell
       - client-erlang
+      - client-racket
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -347,7 +358,8 @@ jobs:
              [ "${{ needs.client-php.result }}" != "success" ] || \
              [ "${{ needs.client-clojure.result }}" != "success" ] || \
              [ "${{ needs.client-haskell.result }}" != "success" ] || \
-             [ "${{ needs.client-erlang.result }}" != "success" ]; then
+             [ "${{ needs.client-erlang.result }}" != "success" ] || \
+             [ "${{ needs.client-racket.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
