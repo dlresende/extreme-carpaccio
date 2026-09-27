@@ -1,9 +1,23 @@
-# Extreme Carpaccio Spray Scala starting code
+# Extreme Carpaccio - Scala Client
+
+Minimal Scala starter using http4s.
 
 ## Prerequisites
+- JDK 17+
+- [sbt](https://www.scala-sbt.org/)
 
-You will need SBT
+## Install & Run
+```bash
+sbt run
+```
 
-## Running in "production"
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
+```
 
-```sbt run```
+## Tests
+```bash
+sbt test
+```
