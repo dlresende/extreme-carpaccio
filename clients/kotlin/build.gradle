@@ -11,10 +11,10 @@ group = 'extreme-carpaccio'
 version = '1.0.0'
 
 dependencies {
-    implementation 'io.ktor:ktor-server-core-jvm:3.2.3'
-    implementation 'io.ktor:ktor-server-netty-jvm:3.2.3'
+    implementation 'io.ktor:ktor-server-core-jvm:3.6.0'
+    implementation 'io.ktor:ktor-server-netty-jvm:3.6.0'
 
-    testImplementation 'io.ktor:ktor-server-test-host-jvm:3.2.3'
+    testImplementation 'io.ktor:ktor-server-test-host-jvm:3.6.0'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
