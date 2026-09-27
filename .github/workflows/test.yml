@@ -290,6 +290,7 @@ jobs:
       - uses: erlef/setup-beam@v1
         with:
           otp-version: '27'
+          rebar3-version: '3.27.1'
       - run: rebar3 eunit
         working-directory: clients/erlang
 
