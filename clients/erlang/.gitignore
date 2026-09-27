@@ -1,5 +1,6 @@
 .eunit
 .rebar/
+_build/
 deps/
 ebin/
 erl_crash.dump

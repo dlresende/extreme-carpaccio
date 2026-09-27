@@ -2,24 +2,19 @@
 
 -behaviour(application).
 
-%% Application callbacks
 -export([start/2, stop/1]).
-
--define(C_ACCEPTORS,  100).
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    Routes    = routes(),
-    Dispatch  = cowboy_router:compile(Routes),
-    Port      = port(),
-    TransOpts = [{port, Port}],
-    ProtoOpts = [{env, [{dispatch, Dispatch}]}],
-    HttpStart = cowboy:start_http(http, ?C_ACCEPTORS, TransOpts, ProtoOpts),
-    io:format("cowboy:start_http (on port ~p): ~p~n", [Port, HttpStart]),
-    {ok, _}   = HttpStart.
+    Port = port(),
+    Dispatch = cowboy_router:compile(routes()),
+    {ok, _} = cowboy:start_clear(xcarpaccio_http,
+                                 [{port, Port}],
+                                 #{env => #{dispatch => Dispatch}}),
+    io:format("Listening on http://0.0.0.0:~p~n", [Port]).
 
 stop(_State) ->
     ok.
@@ -28,28 +23,16 @@ stop(_State) ->
 %% Internal functions
 %% ===================================================================
 
-%%
-%% Cowboy routes mapping -
-%% route does not support HTTP Method constraint
-%%   https://groups.google.com/forum/#!topic/erlang-programming/-v2sBGxhDMY
-%%
-%% To prevent path duplication, dispatching is done in the handler itself
-%%
 routes() ->
-    [
-     {'_', [
-            {"/[...]", xcarpaccio_webhandler, []}
-           ]}
-    ].
+    [{'_', [{"/ping", xcarpaccio_webhandler, #{method => <<"POST">>}, []}]}].
 
 %%
-%% Retrieve the PORT either from an os environment variable
-%% e.g. in Heroku environment, or from the application conf.
+%% Retrieve the PORT from the environment, falling back to the app env.
 %%
 port() ->
     case os:getenv("PORT") of
         false ->
-            {ok, Port} = application:get_env(http_port),
+            {ok, Port} = application:get_env(xcarpaccio, http_port),
             Port;
         Other ->
             list_to_integer(Other)
