@@ -1,25 +1,31 @@
 package xcarpaccio;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class WebControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
+    @LocalServerPort
+    private int port;
 
     @Test
     void postPingRespondsWithPong() throws Exception {
-        mockMvc.perform(post("/ping"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("pong"));
+        HttpRequest request = HttpRequest.newBuilder(URI.create("http://localhost:" + port + "/ping"))
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(200, response.statusCode());
+        assertEquals("pong", response.body());
     }
 }
