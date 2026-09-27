@@ -12,7 +12,7 @@ struct Reply
 
 Reply handleRequest(HTTPMethod method, string path)
 {
-	if (method == HTTPMethod.post && path == "/ping")
+	if (method == HTTPMethod.POST && path == "/ping")
 		return Reply(200, "pong");
 
 	return Reply(404, "Not Found");

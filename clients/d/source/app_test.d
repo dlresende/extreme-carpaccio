@@ -6,7 +6,7 @@ import app;
 
 unittest
 {
-	auto reply = handleRequest(HTTPMethod.post, "/ping");
+	auto reply = handleRequest(HTTPMethod.POST, "/ping");
 	assert(reply.status == 200);
 	assert(reply.body == "pong");
 }
