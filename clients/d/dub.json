@@ -1,12 +1,10 @@
 {
-	"authors": [
-		"Diego Lemos", "rgeorges"
-	],
-	"copyright": " ",
+	"name": "extreme-carpaccio-client",
+	"description": "Minimal D client for the Extreme Carpaccio kata",
+	"authors": ["Diego Lemos"],
+	"copyright": "Copyright 2026",
+	"license": "MIT",
 	"dependencies": {
-		"vibe-d": "~>0.8.6-rc.1"
-	},
-	"description": "extreme-carpaccio D language client.",
-	"license": "public",
-	"name": "extreme-carpaccio-server"
+		"vibe-d": "~>0.10.3"
+	}
 }
