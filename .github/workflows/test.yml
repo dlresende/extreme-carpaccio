@@ -225,6 +225,7 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
+          working-directory: clients/ruby/ruby-rails
       - run: bin/rails test
         working-directory: clients/ruby/ruby-rails
 
@@ -237,6 +238,7 @@ jobs:
         with:
           ruby-version: '3.4'
           bundler-cache: true
+          working-directory: clients/ruby/sinatra
       - run: bundle exec rake test
         working-directory: clients/ruby/sinatra
 
