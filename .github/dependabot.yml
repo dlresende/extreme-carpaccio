@@ -99,5 +99,11 @@ updates:
   directory: "/clients/groovy"
   schedule:
     interval: monthly
+  ignore:
+  # Spock has no variant published for these Groovy majors yet
+  - dependency-name: org.apache.groovy:groovy
+    update-types: ["version-update:semver-major"]
+  - dependency-name: org.spockframework:spock-core
+    update-types: ["version-update:semver-major"]
   commit-message:
     prefix: "chore"
