@@ -1,4 +1,4 @@
-name: Server (Linux)
+name: Server
 
 on:
   pull_request:
