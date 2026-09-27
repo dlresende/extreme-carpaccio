@@ -87,3 +87,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: sbt
+  directory: "/clients/scala"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"

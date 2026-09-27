@@ -1,13 +1,14 @@
-import Dependencies._
+ThisBuild / scalaVersion := "3.3.7"
+ThisBuild / version      := "1.0.0"
 
-lazy val root = (project in file(".")).
-  settings(
-    inThisBuild(List(
-      scalaVersion := "2.12.2",
-      version      := "1.0"
-    )),
-    name := "scala",
-    libraryDependencies += `akka-http`,
-    libraryDependencies += `akka-http-circe`,
-    libraryDependencies += `circe-generic`
+lazy val root = (project in file("."))
+  .settings(
+    name := "extreme-carpaccio-client-scala",
+    libraryDependencies ++= Seq(
+      "org.http4s"    %% "http4s-ember-server" % "0.23.37",
+      "org.http4s"    %% "http4s-dsl"          % "0.23.37",
+      "org.scalameta" %% "munit"               % "1.3.6" % Test,
+      "org.typelevel" %% "munit-cats-effect"   % "2.2.1" % Test
+    ),
+    testFrameworks += new TestFramework("munit.Framework")
   )

@@ -168,6 +168,19 @@ jobs:
       - run: ./gradlew test
         working-directory: clients/kotlin
 
+  client-scala:
+    name: Client Scala
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: sbt/setup-sbt@v1
+      - run: sbt test
+        working-directory: clients/scala
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -185,6 +198,7 @@ jobs:
       - client-java-spark
       - client-java-springboot
       - client-kotlin
+      - client-scala
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -201,7 +215,8 @@ jobs:
              [ "${{ needs.client-java-httpserver.result }}" != "success" ] || \
              [ "${{ needs.client-java-spark.result }}" != "success" ] || \
              [ "${{ needs.client-java-springboot.result }}" != "success" ] || \
-             [ "${{ needs.client-kotlin.result }}" != "success" ]; then
+             [ "${{ needs.client-kotlin.result }}" != "success" ] || \
+             [ "${{ needs.client-scala.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
