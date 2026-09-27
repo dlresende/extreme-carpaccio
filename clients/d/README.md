@@ -1,22 +1,22 @@
-D language client for extreme-carpaccio game
-============================================
+# Extreme Carpaccio - D Client
 
-This implementation is based on [vibe-d 0.8.6](http://vibed.org/docs). It provides basic routing and models for the following routes:
-- POST `/order` (returns 404 by default)
-- POST `/feedback` (returns 404 by default)
+Minimal D starter using vibe.d.
 
-The default port is `9000`. You can pass a specific ip and port to the `HTTPServerSettings` object in `app.d` with the following syntax :
+## Prerequisites
+- [DMD](https://dlang.org/download.html) and [DUB](https://dub.pm/)
 
-```d
-auto settings = HTTPServerSettings("0.0.0.0:1337");
+## Install & Run
+```bash
+dub run
 ```
 
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
+```
 
-How to use this client
-================
-
-Install the [dub package manager](http://code.dlang.org/download) and a [D compiler](https://dlang.org/download.html) (dmd is the best option in this context).
-
-Clone this repository and type `dub` in current directory.
-
-Have fun!
+## Tests
+```bash
+dub test
+```

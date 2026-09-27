@@ -1,42 +1,36 @@
+module app;
+
 import vibe.d;
 
-import models.order;
-import models.feedback;
-
-import utils;
-
-void main()
+/// HTTP status and body for a request, so the routing rules can be exercised
+/// without starting a server.
+struct Reply
 {
-    auto router = new URLRouter();
-    router.post("/order", &handleOrder);
-    router.post("/feedback", &handleFeedback);
-
-    auto settings = new HTTPServerSettings(":9000");
-
-    // Starting the server
-    listenHTTP(settings, router);
-    runApplication();
+	int status;
+	string body;
 }
 
-/**
- * Handling POST /order request.
- */
-void handleOrder(HTTPServerRequest request, HTTPServerResponse response)
+Reply handleRequest(HTTPMethod method, string path)
 {
-    info("\n");
-    info("Received order JSON: %s", request.json);
+	if (method == HTTPMethod.POST && path == "/ping")
+		return Reply(200, "pong");
 
-    auto order = deserializeJson!Order(request.json);
-
-    throwHTTPError(HTTPStatus.notFound);
+	return Reply(404, "Not Found");
 }
 
-/**
- * Handling POST /feedback request.
- */
-void handleFeedback(HTTPServerRequest request, HTTPServerResponse response)
+void handlePing(HTTPServerRequest req, HTTPServerResponse res)
 {
-    auto feedback = deserializeJson!Feedback(request.json);
+	auto reply = handleRequest(req.method, req.path);
+	res.statusCode = reply.status;
+	res.writeBody(reply.body, "text/plain; charset=utf-8");
+}
 
-    error("Received feedback %s: %s", feedback.type, feedback.content);
+void startServer(string address)
+{
+	auto router = new URLRouter();
+	router.post("/ping", &handlePing);
+
+	auto settings = new HTTPServerSettings(address);
+	listenHTTP(settings, router);
+	runApplication();
 }
