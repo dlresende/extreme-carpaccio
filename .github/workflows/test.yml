@@ -205,6 +205,17 @@ jobs:
       - run: dotnet test extreme-carpaccio-client-csharp.sln
         working-directory: clients/c#
 
+  client-fsharp:
+    name: Client F#
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - run: dotnet test extreme-carpaccio-client-fsharp.sln
+        working-directory: clients/f#
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -225,6 +236,7 @@ jobs:
       - client-scala
       - client-groovy
       - client-csharp
+      - client-fsharp
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -244,7 +256,8 @@ jobs:
              [ "${{ needs.client-kotlin.result }}" != "success" ] || \
              [ "${{ needs.client-scala.result }}" != "success" ] || \
              [ "${{ needs.client-groovy.result }}" != "success" ] || \
-             [ "${{ needs.client-csharp.result }}" != "success" ]; then
+             [ "${{ needs.client-csharp.result }}" != "success" ] || \
+             [ "${{ needs.client-fsharp.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
