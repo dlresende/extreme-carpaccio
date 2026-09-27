@@ -92,6 +92,18 @@ jobs:
       - run: python -m unittest discover -s tests
         working-directory: clients/python/simple-server
 
+  client-go:
+    name: Client Go
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: 'clients/go/go.mod'
+          cache-dependency-path: clients/go/go.mod
+      - run: go test -v ./...
+        working-directory: clients/go
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -103,6 +115,7 @@ jobs:
       - client-ts
       - client-python-flask
       - client-python-simple
+      - client-go
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -113,7 +126,8 @@ jobs:
              [ "${{ needs.client-js-node-plain.result }}" != "success" ] || \
              [ "${{ needs.client-ts.result }}" != "success" ] || \
              [ "${{ needs.client-python-flask.result }}" != "success" ] || \
-             [ "${{ needs.client-python-simple.result }}" != "success" ]; then
+             [ "${{ needs.client-python-simple.result }}" != "success" ] || \
+             [ "${{ needs.client-go.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi

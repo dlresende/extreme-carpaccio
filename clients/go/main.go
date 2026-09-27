@@ -1,74 +1,39 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
-
-	"fmt"
 )
 
-type Order struct {
-	Prices     []float32
-	Quantities []int
-	Country    string
-	Reduction  string
-}
-
-type Reply struct {
-	Total float32 `json:"total"`
-}
-
-func main() {
-	http.HandleFunc("/order", handler)
-	http.HandleFunc("/feedback", func(rw http.ResponseWriter, req *http.Request) {
-		defer req.Body.Close()
-
-		body, err := ioutil.ReadAll(req.Body)
-		if err != nil {
-			fmt.Printf("error reading body: %v\n", err)
-			rw.WriteHeader(204)
+func setupMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-
-		fmt.Printf("Feedback: %s\n", body)
-
-		rw.WriteHeader(200)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("pong"))
 	})
-
-	err := http.ListenAndServe(fmt.Sprintf(":%s", getPort()), nil)
-	if err != nil {
-		log.Fatal("Listen and serve:", err)
-	}
-}
-
-func handler(rw http.ResponseWriter, req *http.Request) {
-	defer req.Body.Close()
-
-	body, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		fmt.Printf("error reading body: %v\n", err)
-		rw.WriteHeader(204)
-		return
-	}
-
-	var order Order
-	json.Unmarshal(body, &order)
-
-	fmt.Printf("Got order: %#v\n", order)
-
-	rw.Header().Add("Content-Type", "application/json")
-	rw.WriteHeader(200)
-	//	encoder := json.NewEncoder(rw)
-	//	encoder.Encode(Reply{0})
+	return mux
 }
 
 func getPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
-		return "9000"
+		return "3000"
 	}
 	return port
+}
+
+func main() {
+	port := getPort()
+	mux := setupMux()
+	log.Printf("Go client listening on port %s", port)
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", port), mux); err != nil {
+		log.Fatalf("Server failed: %v", err)
+	}
 }
