@@ -273,6 +273,15 @@ jobs:
       - run: lein test
         working-directory: clients/clojure
 
+  client-haskell:
+    name: Client Haskell
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: haskell-actions/setup@v2
+      - run: cabal test
+        working-directory: clients/haskell
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -298,6 +307,7 @@ jobs:
       - client-ruby-sinatra
       - client-php
       - client-clojure
+      - client-haskell
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -322,7 +332,8 @@ jobs:
              [ "${{ needs.client-ruby-rails.result }}" != "success" ] || \
              [ "${{ needs.client-ruby-sinatra.result }}" != "success" ] || \
              [ "${{ needs.client-php.result }}" != "success" ] || \
-             [ "${{ needs.client-clojure.result }}" != "success" ]; then
+             [ "${{ needs.client-clojure.result }}" != "success" ] || \
+             [ "${{ needs.client-haskell.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi

@@ -1,38 +1,23 @@
-# Extreme Carpaccio Haskell starting code
+# Extreme Carpaccio - Haskell Client
+
+Minimal Haskell starter using WAI and Warp, with no web framework.
 
 ## Prerequisites
+- [GHC](https://www.haskell.org/ghc/) (>= 8.10)
+- [Cabal](https://cabal.readthedocs.io/) (>= 3.0)
 
-You will need [Haskell](https://www.haskell.org/) installed with `ghc`
-and `cabal` available.
+## Install & Run
+```bash
+cabal run
+```
 
-The application is based on the
-[Scotty](https://github.com/scotty-web/scotty) web framework (a Ruby
-Sinatra clone).
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
+```
 
-## Build
-
-To build the application:
-
-    $ cabal install
-    $ cabal sandbox init
-    $ cabal build
-
-Launch it:
-
-    $ .cabal-sandbox/bin/carpaccio
-
-To run unit-tests:
-
-    $ cabal install --only-dependencies --enable-tests
-    $ cabal test
-
-## Test Driven Development
-
-Code your algorithm using TDD:
-
-1. Launch the `tdd.sh` script
-2. From now, as soon you modify a source file, it will build and test
-   it.
-3. `ctrl-c` to exit
-
-Happy coding!
+## Tests
+```bash
+cabal test
+```
