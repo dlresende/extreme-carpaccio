@@ -11,7 +11,7 @@ group = 'extreme-carpaccio'
 version = '1.0.0'
 
 dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.27'
+    implementation 'org.apache.groovy:groovy:6.0.0'
 
     testImplementation 'org.spockframework:spock-core:2.4-groovy-4.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
