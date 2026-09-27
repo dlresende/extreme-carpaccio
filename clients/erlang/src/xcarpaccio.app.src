@@ -1,13 +1,13 @@
 {application, xcarpaccio,
  [
-  {description, ""},
-  {vsn, "1"},
+  {description, "Minimal Erlang client for the Extreme Carpaccio kata"},
+  {vsn, "0.1.0"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib,
                   cowboy
                  ]},
-  {mod, { xcarpaccio_app, []}},
-  {env, [{http_port, 1337}]}
+  {mod, {xcarpaccio_app, []}},
+  {env, [{http_port, 3000}]}
  ]}.

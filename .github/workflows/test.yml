@@ -282,6 +282,17 @@ jobs:
       - run: cabal test
         working-directory: clients/haskell
 
+  client-erlang:
+    name: Client Erlang
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '27'
+      - run: rebar3 eunit
+        working-directory: clients/erlang
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -308,6 +319,7 @@ jobs:
       - client-php
       - client-clojure
       - client-haskell
+      - client-erlang
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -333,7 +345,8 @@ jobs:
              [ "${{ needs.client-ruby-sinatra.result }}" != "success" ] || \
              [ "${{ needs.client-php.result }}" != "success" ] || \
              [ "${{ needs.client-clojure.result }}" != "success" ] || \
-             [ "${{ needs.client-haskell.result }}" != "success" ]; then
+             [ "${{ needs.client-haskell.result }}" != "success" ] || \
+             [ "${{ needs.client-erlang.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
