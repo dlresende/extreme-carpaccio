@@ -94,3 +94,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: gradle
+  directory: "/clients/groovy"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
