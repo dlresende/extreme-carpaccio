@@ -1,23 +1,23 @@
-A ruby client based on [http://www.sinatrarb.com/](Sinatra)
+# Extreme Carpaccio - Sinatra Client
 
-## Dependencies
-- Ruby v2.0+
-- Ruby gem
+Minimal Ruby starter using Sinatra.
 
-## Install
-```
-    gem install sinatra sinatra-reloader json rack-test
-```
+## Prerequisites
+- [Ruby](https://www.ruby-lang.org/) (>= 3.2)
 
-## Start
-```
-    ruby lib/extreme-carpaccio.rb
+## Install & Run
+```bash
+bundle install
+bundle exec rackup -p 3000
 ```
 
-The server listens on port 9000: (http://localhost:4567/ping)[http://localhot:4567]
-
-## Test
-
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
 ```
-    rake test
+
+## Tests
+```bash
+bundle exec rake test
 ```

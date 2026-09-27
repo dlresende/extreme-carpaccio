@@ -1,17 +1,23 @@
-## Dependencies
-- Ruby v2.0+
-- Ruby gem
+# Extreme Carpaccio - Rails Client
 
-## Install
-```
-gem install bundler
+Minimal Ruby starter using Rails in API-only mode.
+
+## Prerequisites
+- [Ruby](https://www.ruby-lang.org/) (>= 3.2)
+
+## Install & Run
+```bash
 bundle install
+bin/rails server
 ```
 
-## Start
-```
-bundle exec rails s -p8888 -b0.0.0.0
-# -b0.0.0.0 Is to allow access from LAN or else only localhost can access
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
 ```
 
-The server listens on port 8888: [http://localhost:8888](http://localhot:8888)
+## Tests
+```bash
+bin/rails test
+```

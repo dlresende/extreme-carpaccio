@@ -121,3 +121,17 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: bundler
+  directory: "/clients/ruby/ruby-rails"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
+
+- package-ecosystem: bundler
+  directory: "/clients/ruby/sinatra"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
