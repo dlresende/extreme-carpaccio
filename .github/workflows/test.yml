@@ -118,10 +118,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: java-version
+        env:
+          POM: clients/java/java-httpserver/pom.xml
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          import xml.etree.ElementTree as ET
+
+          properties = ET.parse(os.environ["POM"]).getroot().find("{http://maven.apache.org/POM/4.0.0}properties")
+          values = {element.tag.split("}")[-1]: (element.text or "").strip() for element in properties}
+          version = values.get("java.version") or values.get("maven.compiler.release")
+          if not version:
+              raise SystemExit("No Java version declared in POM properties")
+          print(f"java-version={version}")
+          PY
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: ${{ steps.java-version.outputs.java-version }}
           cache: maven
           cache-dependency-path: clients/java/java-httpserver/pom.xml
       - run: mvn test
@@ -132,10 +147,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: java-version
+        env:
+          POM: clients/java/java-spark/pom.xml
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          import xml.etree.ElementTree as ET
+
+          properties = ET.parse(os.environ["POM"]).getroot().find("{http://maven.apache.org/POM/4.0.0}properties")
+          values = {element.tag.split("}")[-1]: (element.text or "").strip() for element in properties}
+          version = values.get("java.version") or values.get("maven.compiler.release")
+          if not version:
+              raise SystemExit("No Java version declared in POM properties")
+          print(f"java-version={version}")
+          PY
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: ${{ steps.java-version.outputs.java-version }}
           cache: maven
           cache-dependency-path: clients/java/java-spark/pom.xml
       - run: mvn test
@@ -146,10 +176,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - id: java-version
+        env:
+          POM: clients/java/java-springboot/pom.xml
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import os
+          import xml.etree.ElementTree as ET
+
+          properties = ET.parse(os.environ["POM"]).getroot().find("{http://maven.apache.org/POM/4.0.0}properties")
+          values = {element.tag.split("}")[-1]: (element.text or "").strip() for element in properties}
+          version = values.get("java.version") or values.get("maven.compiler.release")
+          if not version:
+              raise SystemExit("No Java version declared in POM properties")
+          print(f"java-version={version}")
+          PY
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: ${{ steps.java-version.outputs.java-version }}
           cache: maven
           cache-dependency-path: clients/java/java-springboot/pom.xml
       - run: mvn test
