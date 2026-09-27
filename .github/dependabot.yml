@@ -52,3 +52,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: cargo
+  directory: "/clients/rust"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"

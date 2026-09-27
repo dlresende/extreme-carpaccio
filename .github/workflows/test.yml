@@ -104,6 +104,15 @@ jobs:
       - run: go test -v ./...
         working-directory: clients/go
 
+  client-rust:
+    name: Client Rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo test
+        working-directory: clients/rust
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -116,6 +125,7 @@ jobs:
       - client-python-flask
       - client-python-simple
       - client-go
+      - client-rust
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -127,7 +137,8 @@ jobs:
              [ "${{ needs.client-ts.result }}" != "success" ] || \
              [ "${{ needs.client-python-flask.result }}" != "success" ] || \
              [ "${{ needs.client-python-simple.result }}" != "success" ] || \
-             [ "${{ needs.client-go.result }}" != "success" ]; then
+             [ "${{ needs.client-go.result }}" != "success" ] || \
+             [ "${{ needs.client-rust.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
