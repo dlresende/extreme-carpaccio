@@ -242,6 +242,20 @@ jobs:
       - run: bundle exec rake test
         working-directory: clients/ruby/sinatra
 
+  client-php:
+    name: Client PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - run: composer install --no-interaction --no-progress
+        working-directory: clients/php
+      - run: composer test
+        working-directory: clients/php
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -265,6 +279,7 @@ jobs:
       - client-fsharp
       - client-ruby-rails
       - client-ruby-sinatra
+      - client-php
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -287,7 +302,8 @@ jobs:
              [ "${{ needs.client-csharp.result }}" != "success" ] || \
              [ "${{ needs.client-fsharp.result }}" != "success" ] || \
              [ "${{ needs.client-ruby-rails.result }}" != "success" ] || \
-             [ "${{ needs.client-ruby-sinatra.result }}" != "success" ]; then
+             [ "${{ needs.client-ruby-sinatra.result }}" != "success" ] || \
+             [ "${{ needs.client-php.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
