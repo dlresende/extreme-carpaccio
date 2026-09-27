@@ -1,0 +1,22 @@
+name: Client JS (Node Plain)
+
+on:
+  pull_request:
+    paths:
+      - 'clients/javascript/node-plain/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-js-node-plain:
+    name: Client JS (Node Plain)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: npm
+        cache-dependency-path: clients/javascript/node-plain/package-lock.json
+    - run: npm install && npm test
+      working-directory: clients/javascript/node-plain

@@ -1,0 +1,20 @@
+name: Client Python (Simple)
+
+on:
+  pull_request:
+    paths:
+      - 'clients/python/simple-server/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-python-simple:
+    name: Client Python (Simple)
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: 3.x
+    - run: python -m unittest discover -s tests
+      working-directory: clients/python/simple-server

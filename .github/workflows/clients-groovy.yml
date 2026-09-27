@@ -1,0 +1,22 @@
+name: Client Groovy
+
+on:
+  pull_request:
+    paths:
+      - 'clients/groovy/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-groovy:
+    name: Client Groovy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+    - uses: gradle/actions/setup-gradle@v4
+    - run: "./gradlew test"
+      working-directory: clients/groovy

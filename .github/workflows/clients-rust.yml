@@ -1,0 +1,18 @@
+name: Client Rust
+
+on:
+  pull_request:
+    paths:
+      - 'clients/rust/**'
+      - '.github/workflows/**'
+      - '.github/actions/**'
+
+jobs:
+  client-rust:
+    name: Client Rust
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo test
+      working-directory: clients/rust
