@@ -80,3 +80,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: gradle
+  directory: "/clients/kotlin"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
