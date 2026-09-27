@@ -135,3 +135,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: composer
+  directory: "/clients/php"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
