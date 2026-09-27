@@ -1,0 +1,31 @@
+plugins {
+    id 'groovy'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = 'extreme-carpaccio'
+version = '1.0.0'
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.27'
+
+    testImplementation 'org.spockframework:spock-core:2.4-groovy-4.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+application {
+    mainClass = 'Server'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+test {
+    useJUnitPlatform()
+}
