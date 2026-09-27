@@ -216,6 +216,32 @@ jobs:
       - run: dotnet test extreme-carpaccio-client-fsharp.sln
         working-directory: clients/f#
 
+  client-ruby-rails:
+    name: Client Ruby (Rails)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: clients/ruby/ruby-rails
+      - run: bin/rails test
+        working-directory: clients/ruby/ruby-rails
+
+  client-ruby-sinatra:
+    name: Client Ruby (Sinatra)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.4'
+          bundler-cache: true
+          working-directory: clients/ruby/sinatra
+      - run: bundle exec rake test
+        working-directory: clients/ruby/sinatra
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -237,6 +263,8 @@ jobs:
       - client-groovy
       - client-csharp
       - client-fsharp
+      - client-ruby-rails
+      - client-ruby-sinatra
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -257,7 +285,9 @@ jobs:
              [ "${{ needs.client-scala.result }}" != "success" ] || \
              [ "${{ needs.client-groovy.result }}" != "success" ] || \
              [ "${{ needs.client-csharp.result }}" != "success" ] || \
-             [ "${{ needs.client-fsharp.result }}" != "success" ]; then
+             [ "${{ needs.client-fsharp.result }}" != "success" ] || \
+             [ "${{ needs.client-ruby-rails.result }}" != "success" ] || \
+             [ "${{ needs.client-ruby-sinatra.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
