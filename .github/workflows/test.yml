@@ -310,7 +310,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install D
-        run: curl -fsSL https://dlang.org/install.sh | bash -s dmd
+        run: |
+          curl -fsSL https://dlang.org/install.sh | bash -s dmd
+          echo "$(dirname "$(find "$HOME/dlang" -type f -name dub -perm -u+x | head -n 1)")" >> "$GITHUB_PATH"
       - run: dub test
         working-directory: clients/d
 
