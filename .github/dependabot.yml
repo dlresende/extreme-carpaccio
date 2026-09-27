@@ -45,3 +45,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: gomod
+  directory: "/clients/go"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
