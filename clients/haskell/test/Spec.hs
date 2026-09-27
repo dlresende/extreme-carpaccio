@@ -1,14 +1,22 @@
-module Main where
+{-# LANGUAGE OverloadedStrings #-}
 
+module Main (main) where
+
+import Control.Monad.IO.Class (liftIO)
+import Network.HTTP.Types (status200)
+import Network.Wai (Request (pathInfo, requestMethod))
+import Network.Wai.Test
 import Test.Hspec
-import Model
+
+import App (app)
 
 main :: IO ()
-main = hspec $ do
+main = hspec spec
 
-  describe "computeTotal" $ do
-
-    -- Replace this test with a relevant ones
-    it "should give the dummy value of 1000" $ do
-      let order = Order [3.14] [42] "WHATEVER" "WHATEVER"
-       in computeTotal order `shouldBe` Quantity 1000.0
+spec :: Spec
+spec = describe "POST /ping" $
+  it "responds with pong" $ do
+    let pingRequest = defaultRequest {requestMethod = "POST", pathInfo = ["ping"]}
+    response <- liftIO $ runSession (request pingRequest) app
+    simpleStatus response `shouldBe` status200
+    simpleBody response `shouldBe` "pong"
