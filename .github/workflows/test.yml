@@ -194,6 +194,17 @@ jobs:
       - run: ./gradlew test
         working-directory: clients/groovy
 
+  client-csharp:
+    name: Client C#
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - run: dotnet test extreme-carpaccio-client-csharp.sln
+        working-directory: clients/c#
+
   ci-gate:
     name: All Tests Passed
     runs-on: ubuntu-latest
@@ -213,6 +224,7 @@ jobs:
       - client-kotlin
       - client-scala
       - client-groovy
+      - client-csharp
     if: always()
     steps:
       - name: Verify all required test jobs succeeded
@@ -231,7 +243,8 @@ jobs:
              [ "${{ needs.client-java-springboot.result }}" != "success" ] || \
              [ "${{ needs.client-kotlin.result }}" != "success" ] || \
              [ "${{ needs.client-scala.result }}" != "success" ] || \
-             [ "${{ needs.client-groovy.result }}" != "success" ]; then
+             [ "${{ needs.client-groovy.result }}" != "success" ] || \
+             [ "${{ needs.client-csharp.result }}" != "success" ]; then
             echo "One or more test jobs failed."
             exit 1
           fi
