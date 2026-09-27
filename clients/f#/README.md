@@ -1,11 +1,22 @@
-Suave is a simple web development F# library providing a lightweight web server and a set of combinators to manipulate route flow and task composition.
+# Extreme Carpaccio - F# Client
 
-This project has been created with Fsharp yeoman [generator](https://github.com/fsprojects/generator-fsharp).
-It uses [Fake](http://fsharp.github.io/FAKE/) and [Paket](https://fsprojects.github.io/Paket/).
+Minimal F# starter using ASP.NET Core minimal APIs.
 
+## Prerequisites
+- [.NET SDK](https://dotnet.microsoft.com/download) (>= 9.0)
 
-It can now run without Visual studio as well and on other platform using Mono.
+## Install & Run
+```bash
+dotnet run
+```
 
-You just need to run build.sh or build.cmd depending on your platform.
+## Endpoint
+`POST /ping` responds with `pong`:
+```bash
+curl -X POST http://localhost:3000/ping
+```
 
-Good luck !
+## Tests
+```bash
+dotnet test extreme-carpaccio-client-fsharp.sln
+```

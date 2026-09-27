@@ -114,3 +114,10 @@ updates:
     interval: monthly
   commit-message:
     prefix: "chore"
+
+- package-ecosystem: nuget
+  directory: "/clients/f#"
+  schedule:
+    interval: monthly
+  commit-message:
+    prefix: "chore"
