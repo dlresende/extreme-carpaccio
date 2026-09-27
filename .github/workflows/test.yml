@@ -265,9 +265,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 'lts/*'
+      - name: Install Leiningen
+        run: |
+          curl -fsSL -o /usr/local/bin/lein https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+          chmod +x /usr/local/bin/lein
+          lein version
       - run: lein test
         working-directory: clients/clojure
 
