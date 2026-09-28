@@ -53,4 +53,23 @@ describe('Configuration', function(){
             expect(properties).toEqual({reduction: 'HALF PIPE'});
         });
     });
+
+    it('should keep serving the last loaded configuration when the file disappears', function() {
+        fs.writeFileSync(configFilepath, '{"reduction": "STANDARD"}');
+        expect(config.all()).toEqual({reduction: 'STANDARD'});
+
+        fs.unlinkSync(configFilepath);
+
+        expect(config.all()).toEqual({reduction: 'STANDARD'});
+    });
+
+    it('should not re-read the file for an empty configuration', function() {
+        fs.writeFileSync(configFilepath, '{}');
+        expect(config.all()).toEqual({});
+
+        var readFileSync = spyOn(fs, 'readFileSync').andCallThrough();
+        expect(config.all()).toEqual({});
+
+        expect(readFileSync).not.toHaveBeenCalled();
+    });
 });

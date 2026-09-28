@@ -55,7 +55,9 @@ function normalizePort(val) {
 
 function onError(error) {
   if (error.syscall !== 'listen') {
-    throw error;
+    // The server keeps serving existing connections, so do not throw.
+    console.error('Server error: ' + (error.stack || error));
+    return;
   }
 
   var bind = typeof port === 'string'
@@ -88,3 +90,15 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+// Last resort, for errors from outside a request or the dispatch loop.
+// Swallowing them can leave state inconsistent, but a facilitator cannot
+// restart the server mid-session.
+
+process.on('uncaughtException', function (error) {
+  console.error('Uncaught exception: ' + (error && (error.stack || error.message) || error));
+});
+
+process.on('unhandledRejection', function (reason) {
+  console.error('Unhandled promise rejection: ' + (reason && (reason.stack || reason.message) || reason));
+});

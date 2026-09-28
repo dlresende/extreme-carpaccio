@@ -262,6 +262,8 @@ describe('Dispatcher', function() {
         sellerService = new SellerService();
         orderService = new OrderService(configuration);
         dispatcher = new Dispatcher(sellerService, orderService, configuration);
+        // Without this a timer outlives the suite and reschedules itself forever.
+        spyOn(global, 'setTimeout').andCallFake(function() { return 0; });
     });
 
     it('should not send request to sellers when active config is set to false', function() {
@@ -324,6 +326,23 @@ describe('Dispatcher', function() {
         expect(orderService.createOrder).toHaveBeenCalledWith(Reduction.STANDARD);
         expect(orderService.sendOrder).toHaveBeenCalledWith(alice, order, jasmine.any(Function), jasmine.any(Function));
         expect(orderService.sendOrder).toHaveBeenCalledWith(bob, order, jasmine.any(Function), jasmine.any(Function));
+    });
+
+    it('should skip a failing iteration and still schedule the next one', function() {
+        spyOn(configuration, 'all').andThrow(new Error('configuration is unreadable'));
+        spyOn(dispatcher, 'sendOrderToSellers');
+        expect(dispatcher.startBuying(1)).toEqual(2);
+        expect(dispatcher.sendOrderToSellers).not.toHaveBeenCalled();
+    });
+
+    it('should schedule the next iteration with a usable interval after a failure', function() {
+        spyOn(configuration, 'all').andThrow(new Error('configuration is unreadable'));
+        spyOn(dispatcher, 'sendOrderToSellers');
+
+        dispatcher.startBuying(1);
+
+        expect(setTimeout.calls.length).toEqual(1);
+        expect(setTimeout.calls[0].args[1]).toEqual(5000);
     });
 });
 
