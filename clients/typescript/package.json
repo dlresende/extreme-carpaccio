@@ -12,7 +12,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.3",
     "@types/supertest": "^7.2.1",
     "jest": "^30.5.2",
     "supertest": "^7.0.0",
