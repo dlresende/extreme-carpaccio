@@ -1,11 +1,11 @@
 const fs = require('fs')
 const utils = require('../javascripts/utils')
-const _ = require('lodash')
 const chalk = require('chalk')
 
 const Configuration = function (filepath) {
   this.filepath = filepath
   this.props = {}
+  this.loaded = false
 }
 
 Configuration.prototype = (function () {
@@ -18,6 +18,7 @@ Configuration.prototype = (function () {
       } else {
         try {
           self.props = utils.jsonify(data)
+          self.loaded = true
 
           if (typeof callback !== 'undefined') {
             callback(err)
@@ -43,8 +44,10 @@ Configuration.prototype = (function () {
     all: function () {
       const self = this
 
-      if (_.isEmpty(self.props)) {
+      // _.isEmpty would re-read for a legitimately empty configuration.
+      if (!self.loaded) {
         self.props = readContent(self)
+        self.loaded = true
       }
 
       return self.props

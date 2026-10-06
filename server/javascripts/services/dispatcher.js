@@ -207,22 +207,30 @@ Dispatcher.prototype = (function () {
     },
 
     startBuying: function (iteration) {
-      const reductionStrategy = getConfiguration(this).reduction
-      const period = getReductionPeriodFor(reductionStrategy)
-      const badRequest = this.badRequest.shouldSendBadRequest(iteration)
-      let message = '>>> Shopping iteration ' + iteration
       let nextIteration = iteration + 1
+      let period = new Period(Reduction.STANDARD, 5000)
 
-      if (badRequest) {
-        message = message + ' (bad request)'
-      }
+      // A throw here would be uncaught and would take the server down.
+      try {
+        const reductionStrategy = getConfiguration(this).reduction
+        period = getReductionPeriodFor(reductionStrategy)
+        const badRequest = this.badRequest.shouldSendBadRequest(iteration)
+        let message = '>>> Shopping iteration ' + iteration
 
-      if (shouldSendOrders(this)) {
-        console.info(chalk.green(message))
-        this.sendOrderToSellers(period.reduction, iteration, badRequest)
-      } else {
-        nextIteration = iteration
-        console.info(chalk.red('Order dispatching disabled'))
+        if (badRequest) {
+          message = message + ' (bad request)'
+        }
+
+        if (shouldSendOrders(this)) {
+          console.info(chalk.green(message))
+          this.sendOrderToSellers(period.reduction, iteration, badRequest)
+        } else {
+          nextIteration = iteration
+          console.info(chalk.red('Order dispatching disabled'))
+        }
+      } catch (exception) {
+        console.error(chalk.red('Shopping iteration ' + iteration + ' failed and was skipped: ' + exception.message))
+        console.error(exception.stack)
       }
 
       scheduleNextIteration(this, nextIteration, period.shoppingIntervalInMillis)
