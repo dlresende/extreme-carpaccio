@@ -10,6 +10,6 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "supertest": "^7.0.0"
+    "supertest": "^7.3.1"
   }
 }
