@@ -7,7 +7,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.3.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
